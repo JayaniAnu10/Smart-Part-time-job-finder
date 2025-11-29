@@ -1,0 +1,73 @@
+package com.smartparttime.parttimebackend.modules.Job;
+
+import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.User.User;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "job")
+public class Job {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "title")
+    private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private User employee;
+
+    @Lob
+    @Column(name = "description")
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private JobCategory category;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "job_type")
+    private String jobType;
+
+    @Column(name = "deadline")
+    private LocalDateTime deadline;
+
+    @Column(name = "posted_date")
+    private LocalDate postedDate;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "salary")
+    private BigDecimal salary;
+
+    @Column(name = "working_hours")
+    private Integer workingHours;
+
+    @Column(name = "skills")
+    private String skills;
+
+    @OneToMany(mappedBy = "job")
+    private Set<Attendance> attendances = new HashSet<>();
+
+    @OneToMany(mappedBy = "job")
+    private Set<JobApplication> jobApplications = new HashSet<>();
+
+    @OneToMany(mappedBy = "job")
+    private Set<Promotion> promotions = new HashSet<>();
+
+}
