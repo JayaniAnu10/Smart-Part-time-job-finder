@@ -1,9 +1,14 @@
 package com.smartparttime.parttimebackend.modules.User;
 
+import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.modules.User.UserDtos.ChangePasswordRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
+import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -26,7 +31,29 @@ public class UserService{
         user.setTrustScore(0);
         var savedUser = userRepository.save(user);
 
-        return userMapper.toDto(savedUser);
+        return userMapper.toResponse(savedUser);
 
+    }
+
+    public User getUserById(Long id){
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        return user;
+    }
+
+    public void changePassword(Long id, ChangePasswordRequest request){
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        if(!passwordEncoder.matches(request.getOldPassword(),user.getPassword())){
+            throw new PasswordMismatchException("Old Password Mismatch");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 }

@@ -62,7 +62,7 @@ public class User {
     @Column(name = "contact")
     private String contact;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "language_id")
     private Language language;
 
