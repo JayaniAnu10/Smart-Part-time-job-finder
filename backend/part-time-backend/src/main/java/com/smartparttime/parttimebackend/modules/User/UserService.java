@@ -2,11 +2,9 @@ package com.smartparttime.parttimebackend.modules.User;
 
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -24,7 +22,6 @@ public class UserService{
         user.setIsVerified(false);
         user.setTrustScore(0);
         var savedUser = userRepository.save(user);
-        System.out.println("Saved user ID: " + savedUser.getId());
 
         return userMapper.toDto(savedUser);
 

@@ -36,9 +36,10 @@ public class UserController {
            );
         }
         var userDto = userService.registerUser(request);
-        System.out.println(userDto.getId());
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userDto);
 
     }
+
+
 }
