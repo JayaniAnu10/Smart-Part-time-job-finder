@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,7 +57,7 @@ public class User {
     private String skills;
 
     @Column(name = "created_at")
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "contact")
     private String contact;
@@ -92,7 +93,7 @@ public class User {
     @OneToMany(mappedBy = "rater")
     private Set<Rate> rater = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<Rate> ratedUser = new HashSet<>();
+    @OneToMany(mappedBy = "rateReceiver")
+    private Set<Rate> rateReceiver = new HashSet<>();
 
 }
