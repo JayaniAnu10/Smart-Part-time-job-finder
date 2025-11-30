@@ -1,10 +1,13 @@
 package com.smartparttime.parttimebackend.modules.User;
 
+import com.smartparttime.parttimebackend.modules.User.UserDtos.ChangePasswordRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Map;
@@ -17,6 +20,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping
     public ResponseEntity<?> addUser(
@@ -49,6 +53,20 @@ public class UserController {
     }
 
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        var user= userService.getUserById(id);
+        return ResponseEntity.ok(userMapper.toDto(user));
+    }
 
+
+    @PostMapping("/{id}/change-password")
+    public ResponseEntity<Void> changeUserPassword(
+            @PathVariable Long id,
+            @Valid @RequestBody ChangePasswordRequest request
+    ){
+        userService.changePassword(id,request);
+        return ResponseEntity.noContent().build();
+    }
 
 }

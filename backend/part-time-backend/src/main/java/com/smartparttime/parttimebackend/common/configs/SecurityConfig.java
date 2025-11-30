@@ -24,8 +24,9 @@ public class SecurityConfig {
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c->c
-                        .requestMatchers(HttpMethod.POST,"/user").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/user").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/user/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/user/*").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/user/*/change-password").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }
