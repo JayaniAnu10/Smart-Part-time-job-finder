@@ -1,13 +1,11 @@
 package com.smartparttime.parttimebackend.modules.User;
 
+import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Map;
 
@@ -18,6 +16,7 @@ import java.util.Map;
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @PostMapping
     public ResponseEntity<?> addUser(
@@ -40,6 +39,16 @@ public class UserController {
         return ResponseEntity.created(uri).body(userDto);
 
     }
+
+    @GetMapping
+    public Iterable<UserDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
+
+
 
 
 }

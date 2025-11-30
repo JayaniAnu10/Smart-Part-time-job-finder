@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.User;
 
+import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import org.mapstruct.Mapper;
@@ -10,6 +11,8 @@ public interface UserMapper {
     @Mapping(target = "language", ignore = true)
     User toEntity(UserRegisterRequest request);
 
-    UserRegisterResponse toDto(User user);
+    UserRegisterResponse toResponse(User user);
+
+    UserDto toDto(User user);
 }
 

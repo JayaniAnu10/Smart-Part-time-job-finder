@@ -26,7 +26,7 @@ public class UserService{
         user.setTrustScore(0);
         var savedUser = userRepository.save(user);
 
-        return userMapper.toDto(savedUser);
+        return userMapper.toResponse(savedUser);
 
     }
 }
