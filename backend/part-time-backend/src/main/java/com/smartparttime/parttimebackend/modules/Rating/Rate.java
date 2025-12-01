@@ -1,6 +1,9 @@
-package com.smartparttime.parttimebackend.modules.User;
+package com.smartparttime.parttimebackend.modules.Rating;
 
+import com.smartparttime.parttimebackend.modules.Job.Job;
+import com.smartparttime.parttimebackend.modules.User.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,5 +35,9 @@ public class Rate {
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+
+    @ManyToOne
+    @JoinColumn(name = "job_id")
+    private Job job;
 
 }

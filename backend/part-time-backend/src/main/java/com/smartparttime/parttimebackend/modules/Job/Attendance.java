@@ -2,8 +2,11 @@ package com.smartparttime.parttimebackend.modules.Job;
 
 import com.smartparttime.parttimebackend.modules.User.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -33,5 +36,8 @@ public class Attendance {
 
     @Column(name = "qr_code")
     private String qrCode;
+
+    @Column(name = "status")
+    private String status;
 
 }
