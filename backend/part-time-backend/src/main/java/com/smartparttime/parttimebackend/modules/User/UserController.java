@@ -33,6 +33,12 @@ public class UserController {
             );
         }
 
+        if(userRepository.existsByNic(request.getNic())){
+            return ResponseEntity.badRequest().body(
+                    Map.of("NIC","You have already been registered.")
+            );
+        }
+
         if(!request.getPassword().equals(request.getConfirmPassword())){
            return ResponseEntity.badRequest().body(
                    Map.of("confirmPassword","Passwords do not match")

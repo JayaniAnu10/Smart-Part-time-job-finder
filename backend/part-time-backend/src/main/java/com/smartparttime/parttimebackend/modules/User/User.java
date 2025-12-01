@@ -5,12 +5,12 @@ import com.smartparttime.parttimebackend.modules.Job.Job;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
 import com.smartparttime.parttimebackend.modules.Notification.Notification;
 import com.smartparttime.parttimebackend.modules.Payment.Payment;
+import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
