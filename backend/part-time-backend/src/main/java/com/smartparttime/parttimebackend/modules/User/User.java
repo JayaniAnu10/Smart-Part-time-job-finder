@@ -1,8 +1,8 @@
 package com.smartparttime.parttimebackend.modules.User;
 
 import com.smartparttime.parttimebackend.modules.Employer.Employer;
-import com.smartparttime.parttimebackend.modules.Job.Attendance;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Job.entity.Attendance;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.Notification.Notification;
 import com.smartparttime.parttimebackend.modules.Payment.Payment;
@@ -10,7 +10,6 @@ import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

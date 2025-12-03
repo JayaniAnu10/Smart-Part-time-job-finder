@@ -1,11 +1,10 @@
-package com.smartparttime.parttimebackend.modules.Job;
+package com.smartparttime.parttimebackend.modules.Job.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,9 +12,9 @@ import java.util.UUID;
 @Table(name = "promotion")
 public class Promotion {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private UUID id;
+    private Long id;
 
     @Column(name = "promotion_category")
     private String promotionCategory;

@@ -1,0 +1,89 @@
+package com.smartparttime.parttimebackend.modules.Job.controller;
+
+import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
+import com.smartparttime.parttimebackend.modules.Job.service.JobService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/jobs")
+@CrossOrigin
+@RequiredArgsConstructor
+public class JobController {
+
+    private final JobService jobService;
+
+
+    @PostMapping("/create/{employerId}")
+    public ResponseEntity<?> addJob(@RequestBody JobRequestDto jobRequestDto,
+                                    @PathVariable UUID employerId) {
+        try {
+            JobResponseDto savedJob = jobService.createJob(jobRequestDto, employerId);
+            return new ResponseEntity<>(savedJob, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+    @GetMapping
+    public ResponseEntity<List<JobResponseDto>> getAllJobs() {
+        List<JobResponseDto> jobs = jobService.getAllJobs();
+        return ResponseEntity.ok(jobs);
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JobResponseDto> getJobById(@PathVariable Long id) {
+        JobResponseDto job = jobService.getJobById(id);
+        return ResponseEntity.ok(job);
+    }
+
+
+
+    @GetMapping("/employer/{employerId}")
+    public ResponseEntity<List<JobResponseDto>> getJobsByEmployer(@PathVariable UUID employerId) {
+        List<JobResponseDto> jobs = jobService.getJobsByEmployer(employerId);
+        return ResponseEntity.ok(jobs);
+    }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<JobResponseDto>> searchJobs(
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String jobType,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<JobResponseDto> jobs = jobService.searchJobs(
+                categoryId, location, jobType, keyword, page, size
+        );
+        return ResponseEntity.ok(jobs);
+    }
+
+
+    @PutMapping("/{jobId}")
+    public ResponseEntity<JobResponseDto> updateJob(@PathVariable Long jobId,
+                                                    @RequestBody JobRequestDto jobRequestDto) {
+        JobResponseDto updated = jobService.updateJob(jobId, jobRequestDto);
+        return ResponseEntity.ok(updated);
+    }
+
+
+    @DeleteMapping("/{jobId}")
+    public ResponseEntity<String> deleteJob(@PathVariable Long jobId) {
+        jobService.deleteJob(jobId);
+        return ResponseEntity.ok("Job deleted successfully");
+    }
+}
