@@ -2,6 +2,7 @@ package com.smartparttime.parttimebackend.modules.User;
 
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
+import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import org.mapstruct.Mapper;
 
@@ -11,6 +12,9 @@ public interface UserMapper {
     UserRegisterResponse toResponse(User user);
 
     User seekerToEntity(JobSeekerRegisterRequest request);
+
+    UserDto toDto(User user);
 }
+
 
 
