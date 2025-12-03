@@ -5,7 +5,6 @@ import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -17,33 +16,16 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private final UserRepository userRepository;
+    /*private final UserRepository userRepository;
     private final UserService userService;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
 
     @PostMapping
     public ResponseEntity<?> addUser(
              @Valid @RequestBody UserRegisterRequest request,
             UriComponentsBuilder uriBuilder
             ) {
-        if(userRepository.existsUserByEmail(request.getEmail())){
-            return ResponseEntity.badRequest().body(
-                    Map.of("email","Email already exists")
-            );
-        }
 
-        if(userRepository.existsByNic(request.getNic())){
-            return ResponseEntity.badRequest().body(
-                    Map.of("NIC","You have already been registered.")
-            );
-        }
-
-        if(!request.getPassword().equals(request.getConfirmPassword())){
-           return ResponseEntity.badRequest().body(
-                   Map.of("confirmPassword","Passwords do not match")
-           );
-        }
         var userDto = userService.registerUser(request);
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userDto);
@@ -73,6 +55,6 @@ public class UserController {
     ){
         userService.changePassword(id,request);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
 }

@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.User;
 
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.ChangePasswordRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
@@ -7,35 +8,28 @@ import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRespo
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+
 
 @Service
 @AllArgsConstructor
 public class UserService{
     private final LanguageRepository languageRepository;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public  UserRegisterResponse registerUser(@Valid UserRegisterRequest request){
-        Language language = languageRepository.findByLanguageIgnoreCase(request.getLanguage()).orElseThrow();
-        var user = userMapper.toEntity(request);
+    public  User registerUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setLanguage(language);
+        Language defaultLang = languageRepository.findById(1).orElseThrow();
+        user.setLanguage(defaultLang);
         user.setCreatedAt(LocalDateTime.now());
         user.setIsVerified(false);
-        user.setTrustScore(0);
-        var savedUser = userRepository.save(user);
-
-        return userMapper.toResponse(savedUser);
-
+        return userRepository.save(user);
     }
 
-    public User getUserById(Long id){
+    /*public User getUserById(Long id){
         var user = userRepository.findById(id).orElse(null);
         if (user == null) {
             throw new NotFoundException("User not found");
@@ -55,5 +49,5 @@ public class UserService{
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
-    }
+    }*/
 }

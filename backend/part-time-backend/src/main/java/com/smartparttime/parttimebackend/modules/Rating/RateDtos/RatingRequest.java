@@ -19,6 +19,5 @@ public class RatingRequest {
     @Max(value = 5, message = "Rating must be between 0 and 5")
     private Integer rating;
 
-    @NotBlank(message = "Field is required")
     private String comment;
 }

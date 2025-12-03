@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,16 +16,16 @@ import java.time.LocalDateTime;
 @Table(name = "rate")
 public class Rate {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "rater_id")
     private User rater;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "rate_receiver_id")
     private User rateReceiver;
 
     @Column(name = "rating")
