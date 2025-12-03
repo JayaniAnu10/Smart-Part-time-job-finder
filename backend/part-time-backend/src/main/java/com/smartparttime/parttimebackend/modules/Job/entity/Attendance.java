@@ -1,15 +1,11 @@
-package com.smartparttime.parttimebackend.modules.Job;
+package com.smartparttime.parttimebackend.modules.Job.entity;
 
 import com.smartparttime.parttimebackend.modules.User.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,9 +13,9 @@ import java.util.UUID;
 @Table(name = "attendance")
 public class Attendance {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private UUID id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
