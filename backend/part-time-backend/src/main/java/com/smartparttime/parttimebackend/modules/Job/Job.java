@@ -1,7 +1,8 @@
 package com.smartparttime.parttimebackend.modules.Job;
 
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
-import com.smartparttime.parttimebackend.modules.User.User;
+import com.smartparttime.parttimebackend.modules.Rating.Rate;
+import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,16 +20,16 @@ import java.util.Set;
 @Table(name = "job")
 public class Job {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "title")
     private String title;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private User employee;
+    private Employer employer;
 
     @Lob
     @Column(name = "description")
@@ -69,5 +71,8 @@ public class Job {
 
     @OneToMany(mappedBy = "job")
     private Set<Promotion> promotions = new HashSet<>();
+
+    @OneToMany(mappedBy = "job")
+    private Set<Rate> rates = new HashSet<>();
 
 }

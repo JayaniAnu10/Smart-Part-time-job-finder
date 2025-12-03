@@ -1,18 +1,16 @@
 package com.smartparttime.parttimebackend.modules.User;
 
-import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
-import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
+import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mapping(target = "language", ignore = true)
-    User toEntity(UserRegisterRequest request);
-
+    User employeeToEntity(EmployerRegisterRequest request);
     UserRegisterResponse toResponse(User user);
 
-    UserDto toDto(User user);
+    User seekerToEntity(JobSeekerRegisterRequest request);
 }
+
 

@@ -17,14 +17,12 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/ratings")
 public class RateController {
-
-
-    private final RateService rateService;
+   /* private final RateService rateService;
 
     @PostMapping
     public void submitRate(
             @Valid @RequestBody RatingRequest request
     ){
         rateService.addRate(request);
-    }
+    }*/
 }

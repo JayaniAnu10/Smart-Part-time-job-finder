@@ -1,8 +1,9 @@
 package com.smartparttime.parttimebackend.modules.User;
 
+import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Job.Attendance;
-import com.smartparttime.parttimebackend.modules.Job.Job;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.Notification.Notification;
 import com.smartparttime.parttimebackend.modules.Payment.Payment;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
@@ -11,9 +12,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,12 +24,9 @@ import java.util.Set;
 @Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
+    private UUID id;
 
     @Column(name = "email")
     private String email;
@@ -34,30 +34,22 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private String role;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "profile_picture")
-    private String profilePicture;
-
-    @Column(name = "nic")
-    private String nic;
+    private Role role;
 
     @Column(name = "is_verified")
     private Boolean isVerified = false;
 
-    @ColumnDefault("0")
     @Column(name = "trust_score")
-    private Integer trustScore;
+    private Integer trustScore=0;
 
-    @Column(name = "skills")
-    private String skills;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
     @Column(name = "contact")
     private String contact;
@@ -74,9 +66,6 @@ public class User {
 
     @OneToMany(mappedBy = "target")
     private Set<Complaint> target = new HashSet<>();
-
-    @OneToMany(mappedBy = "employee")
-    private Set<Job> jobs = new HashSet<>();
 
     @OneToMany(mappedBy = "jobseeker")
     private Set<JobApplication> jobApplications = new HashSet<>();
@@ -95,5 +84,13 @@ public class User {
 
     @OneToMany(mappedBy = "rateReceiver")
     private Set<Rate> rateReceiver = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Employer employer;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private JobSeeker jobSeeker;
 
 }

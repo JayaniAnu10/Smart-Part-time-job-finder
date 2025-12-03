@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Service
 public class RateService {
-    private final JobRepository jobRepository;
+   /* private final JobRepository jobRepository;
     private final RateRepository rateRepository;
     private final RateMapper rateMapper;
 
@@ -39,9 +39,10 @@ public class RateService {
         }
 
         var newRate = rateMapper.toEntity(request);
+        newRate.setJob(job);
         newRate.setCreatedDate(LocalDateTime.now());
         rateRepository.save(newRate);
 
         return  ResponseEntity.ok().build();
-    }
+    }*/
 }
