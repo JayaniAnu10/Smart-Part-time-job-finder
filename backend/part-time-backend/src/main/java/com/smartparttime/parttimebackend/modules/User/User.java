@@ -48,7 +48,7 @@ public class User {
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "contact")
     private String contact;

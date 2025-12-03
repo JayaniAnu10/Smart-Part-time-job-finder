@@ -3,10 +3,11 @@ package com.smartparttime.parttimebackend.modules.User.UserDtos;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 public class UserDto {
-    private Long id;
+    private UUID id;
     private String email;
     private String role;
     private String contact;
