@@ -30,7 +30,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/user/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/user").permitAll()
                         .requestMatchers(HttpMethod.POST,"/employer/register").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/employer/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/employer").permitAll()
                         .requestMatchers(HttpMethod.POST,"/jobseeker/register").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/jobseeker/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/jobseeker").permitAll()
                         .requestMatchers(HttpMethod.POST,"/user/*/change-password").permitAll()
                         .anyRequest().authenticated());
         return http.build();

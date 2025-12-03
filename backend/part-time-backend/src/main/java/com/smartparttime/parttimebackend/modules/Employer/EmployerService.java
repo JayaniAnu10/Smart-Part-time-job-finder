@@ -1,11 +1,15 @@
 package com.smartparttime.parttimebackend.modules.Employer;
 
+import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @AllArgsConstructor
 @Service
@@ -27,4 +31,11 @@ public class EmployerService {
         return userMapper.toResponse(savedUser);
     }
 
+    public Employer getEmployerById(UUID id) {
+        var employer = employerRepository.findById(id).orElse(null);
+        if (employer == null) {
+            throw new NotFoundException("User not found");
+        }
+        return employer;
+    }
 }
