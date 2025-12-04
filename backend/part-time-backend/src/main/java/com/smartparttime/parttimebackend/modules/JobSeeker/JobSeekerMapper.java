@@ -3,10 +3,10 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerAllDto;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
 import com.smartparttime.parttimebackend.modules.User.User;
 import jakarta.validation.Valid;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface JobSeekerMapper {
@@ -23,4 +23,10 @@ public interface JobSeekerMapper {
     @Mapping(source = "user.updatedAt",target = "updatedAt")
     @Mapping(source = "user.contact",target = "contact")
     JobSeekerDto toJobSeekerDto(JobSeeker jobSeeker);
+
+    @Mapping(source = "email",target = "user.email")
+    @Mapping(source = "contact",target = "user.contact")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void update(UpdateJobSeekerRequest request,@MappingTarget JobSeeker jobSeeker);
+
 }

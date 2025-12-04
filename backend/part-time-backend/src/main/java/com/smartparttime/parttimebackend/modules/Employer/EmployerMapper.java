@@ -3,8 +3,8 @@ package com.smartparttime.parttimebackend.modules.Employer;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerAllDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface EmployerMapper {
@@ -21,5 +21,11 @@ public interface EmployerMapper {
     @Mapping(source = "user.updatedAt",target = "updatedAt")
     @Mapping(source = "user.contact",target = "contact")
     EmployerDto toEmployerDto(Employer employer);
+
+    @Mapping(source = "email",target = "user.email")
+    @Mapping(source = "contact",target = "user.contact")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void  update(UpdateEmployerRequest request, @MappingTarget Employer employer);
+
 }
 
