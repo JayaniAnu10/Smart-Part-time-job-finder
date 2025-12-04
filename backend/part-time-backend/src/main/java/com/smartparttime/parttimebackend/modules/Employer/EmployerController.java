@@ -3,8 +3,10 @@ package com.smartparttime.parttimebackend.modules.Employer;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerAllDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
+import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
+import com.smartparttime.parttimebackend.modules.User.UserMapper;
 import com.smartparttime.parttimebackend.modules.User.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,7 @@ public class EmployerController {
     private final UserRepository userRepository;
     private final EmployerRepository employerRepository;
     private final EmployerMapper employerMapper;
+    private final UserMapper userMapper;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerEmployee(
@@ -60,5 +63,29 @@ public class EmployerController {
     public ResponseEntity<EmployerDto> getEmployerById(@PathVariable UUID id) {
         var employer= employerService.getEmployerById(id);
         return ResponseEntity.ok(employerMapper.toEmployerDto(employer));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateEmployer(
+            @PathVariable UUID id,
+            @RequestBody UpdateEmployerRequest request
+    ){
+        if(userRepository.existsUserByEmail(request.getEmail())){
+            return ResponseEntity.badRequest().body(
+                    Map.of("email","Email already exists"));
+        }
+
+        if(employerRepository.existsByRegistrationId(request.getRegistrationId())){
+            return ResponseEntity.badRequest().body(
+                    Map.of("registrationId","Your registration id already exists"));
+        }
+
+        var employer=employerRepository.findById(id).orElse(null);
+        if(employer==null){
+            return ResponseEntity.notFound().build();
+        }
+
+        var user = employerService.updateEmployer(request,employer);
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 }

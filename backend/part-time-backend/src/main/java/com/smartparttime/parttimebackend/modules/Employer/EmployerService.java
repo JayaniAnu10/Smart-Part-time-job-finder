@@ -2,13 +2,16 @@ package com.smartparttime.parttimebackend.modules.Employer;
 
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
+import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -18,6 +21,7 @@ public class EmployerService {
     private final EmployerMapper employerMapper;
     private final UserMapper userMapper;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     public UserRegisterResponse addEmployee(@Valid EmployerRegisterRequest request) {
         var user = userMapper.employeeToEntity(request);
@@ -37,5 +41,11 @@ public class EmployerService {
             throw new NotFoundException("User not found");
         }
         return employer;
+    }
+
+    public User updateEmployer(UpdateEmployerRequest request,Employer employer) {
+        employerMapper.update(request,employer);
+        employerRepository.save(employer);
+        return userRepository.findById(employer.getId()).orElseThrow();
     }
 }
