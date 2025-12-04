@@ -1,11 +1,13 @@
 package com.smartparttime.parttimebackend.modules.Employer;
 
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
+import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,12 @@ public class EmployerService {
     private final UserRepository userRepository;
 
     public UserRegisterResponse addEmployee(@Valid EmployerRegisterRequest request) {
+        availabilityCheck(request.getEmail(), request.getRegistrationId());
+
+        if(!request.getPassword().equals(request.getConfirmPassword())){
+            throw new PasswordMismatchException("Passwords do not match");
+        }
+
         var user = userMapper.employeeToEntity(request);
         user.setRole(Role.EMPLOYER);
         var savedUser = userService.registerUser(user);
@@ -35,17 +43,36 @@ public class EmployerService {
         return userMapper.toResponse(savedUser);
     }
 
+
     public Employer getEmployerById(UUID id) {
         var employer = employerRepository.findById(id).orElse(null);
-        if (employer == null) {
+        if(employer == null){
             throw new NotFoundException("User not found");
         }
         return employer;
     }
 
-    public User updateEmployer(UpdateEmployerRequest request,Employer employer) {
+
+    public User updateEmployer(UpdateEmployerRequest request,UUID id) {
+        var employer=employerRepository.findById(id).orElse(null);
+        if(employer==null){
+            throw new NotFoundException("User not found");
+        }
+
+        availabilityCheck(request.getEmail(), request.getRegistrationId());
+
         employerMapper.update(request,employer);
         employerRepository.save(employer);
         return userRepository.findById(employer.getId()).orElseThrow();
+    }
+
+    private void availabilityCheck(String email, String registrationId) {
+        if (userRepository.existsUserByEmail(email)) {
+            throw new BadRequestException("Email already exists");
+        }
+
+        if (employerRepository.existsByRegistrationId(registrationId)) {
+            throw new BadRequestException("Registration id already exists");
+        }
     }
 }

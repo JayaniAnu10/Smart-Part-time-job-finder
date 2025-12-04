@@ -47,4 +47,8 @@ public class UserService{
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
+
+    public void checkUser(UUID id){
+        var user = userRepository.findById(id).orElse(null);
+    }
 }

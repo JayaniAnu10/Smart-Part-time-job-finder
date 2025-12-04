@@ -31,24 +31,11 @@ public class EmployerController {
     public ResponseEntity<?> registerEmployee(
             @Valid @RequestBody EmployerRegisterRequest request,
             UriComponentsBuilder uriBuilder)  {
-        if(userRepository.existsUserByEmail(request.getEmail())){
-            return ResponseEntity.badRequest().body(
-                    Map.of("email","Email already exists"));
-        }
-
-        if(employerRepository.existsByRegistrationId(request.getRegistrationId())){
-            return ResponseEntity.badRequest().body(
-                    Map.of("registrationId","Your registration id already exists"));
-        }
-
-        if(!request.getPassword().equals(request.getConfirmPassword())){
-            return ResponseEntity.badRequest().body(
-                    Map.of("password","Passwords do not match"));
-        }
 
         var userDto = employerService.addEmployee(request);
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userDto);
+
     }
 
     @GetMapping
@@ -59,33 +46,21 @@ public class EmployerController {
                 .toList();
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<EmployerDto> getEmployerById(@PathVariable UUID id) {
         var employer= employerService.getEmployerById(id);
         return ResponseEntity.ok(employerMapper.toEmployerDto(employer));
     }
 
+
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateEmployer(
             @PathVariable UUID id,
-            @RequestBody UpdateEmployerRequest request
+            @Valid @RequestBody UpdateEmployerRequest request
     ){
-        if(userRepository.existsUserByEmail(request.getEmail())){
-            return ResponseEntity.badRequest().body(
-                    Map.of("email","Email already exists"));
-        }
-
-        if(employerRepository.existsByRegistrationId(request.getRegistrationId())){
-            return ResponseEntity.badRequest().body(
-                    Map.of("registrationId","Your registration id already exists"));
-        }
-
-        var employer=employerRepository.findById(id).orElse(null);
-        if(employer==null){
-            return ResponseEntity.notFound().build();
-        }
-
-        var user = employerService.updateEmployer(request,employer);
+        var user = employerService.updateEmployer(request,id);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
+
 }
