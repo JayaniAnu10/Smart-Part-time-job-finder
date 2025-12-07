@@ -3,6 +3,7 @@ package com.smartparttime.parttimebackend.modules.Job.controller;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class JobController {
 
 
     @PostMapping("/create/{employerId}")
-    public ResponseEntity<?> addJob(@RequestBody JobRequestDto jobRequestDto,
+    public ResponseEntity<?> addJob(@Valid @RequestBody JobRequestDto jobRequestDto,
                                     @PathVariable UUID employerId) {
         try {
             JobResponseDto savedJob = jobService.createJob(jobRequestDto, employerId);
