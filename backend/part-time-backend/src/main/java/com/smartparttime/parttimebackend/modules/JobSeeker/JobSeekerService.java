@@ -2,6 +2,7 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.common.imageStorage.ImageStorageClient;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
 import com.smartparttime.parttimebackend.modules.User.*;
@@ -11,7 +12,9 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -22,19 +25,32 @@ public class JobSeekerService {
     private final JobSeekerRepository jobSeekerRepository;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final ImageStorageClient imageStorageClient;
 
-    public UserRegisterResponse addSeeker(@Valid JobSeekerRegisterRequest request) {
+    public UserRegisterResponse addSeeker(@Valid JobSeekerRegisterRequest request,
+                                          MultipartFile profilePicture) throws IOException {
         availabilityCheck(request.getEmail(), request.getNic());
 
         if(!request.getPassword().equals(request.getConfirmPassword())){
             throw new PasswordMismatchException("Passwords do not match");
         }
+
         var user = userMapper.seekerToEntity(request);
         user.setRole(Role.JOBSEEKER);
         var savedUser = userService.registerUser(user);
 
         var seeker=jobSeekerMapper.toEntity(request);
         seeker.setUser(savedUser);
+
+        if(profilePicture!=null && !profilePicture.isEmpty()){
+            String containerName="blob-posts";
+            try(InputStream inputStream=profilePicture.getInputStream()){
+                String contentType = profilePicture.getContentType();
+                String imageUrl= imageStorageClient.uploadImage(containerName, profilePicture.getOriginalFilename(),inputStream,contentType);
+                seeker.setProfilePicture(imageUrl);
+            }
+        }
+
         jobSeekerRepository.save(seeker);
 
         return userMapper.toResponse(savedUser);
