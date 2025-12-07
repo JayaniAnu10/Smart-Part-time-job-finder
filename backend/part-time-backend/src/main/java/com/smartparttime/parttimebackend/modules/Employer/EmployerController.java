@@ -75,7 +75,19 @@ public class EmployerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployer(@PathVariable UUID id){
+
         return employerService.deleteEmployer(id);
+    }
+
+    @PutMapping(value = "/{id}/logo",consumes =MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity<Void> updateLogo(
+            @PathVariable UUID id,
+            @RequestPart("image") MultipartFile logo
+    ) throws IOException {
+
+        employerService.updateProfile(logo,id);
+
+        return ResponseEntity.ok().build();
     }
 
 }

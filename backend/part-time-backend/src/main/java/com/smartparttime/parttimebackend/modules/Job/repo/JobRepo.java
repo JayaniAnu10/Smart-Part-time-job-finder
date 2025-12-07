@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.UUID;
 
-public interface JobRepo extends JpaRepository<Job, Long> {
+public interface JobRepo extends JpaRepository<Job, UUID> {
 
     Page<Job> findByCategory_Id(Integer categoryId, Pageable pageable);
 

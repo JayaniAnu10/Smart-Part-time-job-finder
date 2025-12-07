@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/jobs")
-@CrossOrigin
+@RequestMapping("/jobs")
 @RequiredArgsConstructor
 public class JobController {
 
@@ -43,7 +42,7 @@ public class JobController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobResponseDto> getJobById(@PathVariable Long id) {
+    public ResponseEntity<JobResponseDto> getJobById(@PathVariable UUID id) {
         JobResponseDto job = jobService.getJobById(id);
         return ResponseEntity.ok(job);
     }
@@ -73,8 +72,8 @@ public class JobController {
     }
 
 
-    @PutMapping("/{jobId}")
-    public ResponseEntity<JobResponseDto> updateJob(@PathVariable Long jobId,
+    @PatchMapping("/{jobId}")
+    public ResponseEntity<JobResponseDto> updateJob(@PathVariable UUID jobId,
                                                     @RequestBody JobRequestDto jobRequestDto) {
         JobResponseDto updated = jobService.updateJob(jobId, jobRequestDto);
         return ResponseEntity.ok(updated);
@@ -82,7 +81,7 @@ public class JobController {
 
 
     @DeleteMapping("/{jobId}")
-    public ResponseEntity<String> deleteJob(@PathVariable Long jobId) {
+    public ResponseEntity<String> deleteJob(@PathVariable UUID jobId) {
         jobService.deleteJob(jobId);
         return ResponseEntity.ok("Job deleted successfully");
     }
