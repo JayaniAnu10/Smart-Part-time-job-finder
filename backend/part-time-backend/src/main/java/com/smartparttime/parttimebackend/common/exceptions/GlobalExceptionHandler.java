@@ -35,4 +35,11 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", e.getMessage())) ;
     }
 
+    @ExceptionHandler(CustomBlobStorageException.class)
+    public ResponseEntity<Map<String, String>> handleImageStorage(CustomBlobStorageException e){
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", e.getMessage())) ;
+    }
+
 }

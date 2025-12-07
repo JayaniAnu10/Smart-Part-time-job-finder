@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.JobSeeker;
 
+import com.smartparttime.parttimebackend.common.imageStorage.ImageStorageClient;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerAllDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerMapper;
@@ -15,10 +16,13 @@ import com.smartparttime.parttimebackend.modules.User.UserRepository;
 import com.smartparttime.parttimebackend.modules.User.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,20 +31,24 @@ import java.util.UUID;
 @RequestMapping("/jobseeker")
 public class JobSeekerController {
     private final UserMapper userMapper;
-    private final UserRepository userRepository;
     private final JobSeekerService jobSeekerService;
     private final JobSeekerRepository jobSeekerRepository;
     private final JobSeekerMapper jobSeekerMapper;
 
-    @PostMapping("/register")
+    @PostMapping(path = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerSeeker(
-            @Valid @RequestBody JobSeekerRegisterRequest request,
+            @Valid @RequestPart("request") JobSeekerRegisterRequest request,
+            @RequestPart(value = "image",required = false) MultipartFile profilePicture,
             UriComponentsBuilder uriBuilder
             ){
 
-        var userDto = jobSeekerService.addSeeker(request);
-        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
-        return ResponseEntity.created(uri).body(userDto);
+        try{
+            var userDto = jobSeekerService.addSeeker(request,profilePicture);
+            var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+            return ResponseEntity.created(uri).body(userDto);
+        } catch(IOException e){
+            return ResponseEntity.badRequest().body(Map.of("error","Failed to upload profile picture"));
+        }
 
     }
 
