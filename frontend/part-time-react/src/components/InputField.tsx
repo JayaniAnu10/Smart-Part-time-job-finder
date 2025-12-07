@@ -6,6 +6,7 @@ interface InputFieldProps {
     placeholder?: string;
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    icon?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -14,10 +15,22 @@ const InputField: React.FC<InputFieldProps> = ({
     placeholder,
     value,
     onChange,
+    icon,
 }) => {
     return (
         <div className="flex flex-col gap-1">
             <label className="font-roboto text-[14px] font-medium text-[#0F1F3D]">{label}</label>
+
+            <div className="relative">
+                {icon && (
+                    <img
+                        src={icon}
+                        alt="icon"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-70"
+                    />
+                )}
+            </div>
+
             <input
                 type={type}
                 placeholder={placeholder}
