@@ -1,14 +1,12 @@
 spring:
   application:
     name: part-time-backend
+
   datasource:
     url: jdbc:mysql://localhost:3306/store?createDatabaseIfNotExist=true
     username: root
     password:
+
   jpa:
     show-sql: true
-  cloud:
-    azure:
-      storage:
-        account-name: ${AZURE_STORAGE_ACCOUNT_NAME}
-        account-key: ${AZURE_STORAGE_ACCOUNT_KEY}
+
