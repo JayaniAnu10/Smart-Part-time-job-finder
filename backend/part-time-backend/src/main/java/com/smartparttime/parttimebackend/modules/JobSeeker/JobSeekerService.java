@@ -2,8 +2,6 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
-import com.smartparttime.parttimebackend.modules.Employer.Employer;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
 import com.smartparttime.parttimebackend.modules.User.*;
@@ -14,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -64,6 +61,17 @@ public class JobSeekerService {
         jobSeekerMapper.update(request,jobSeeker);
         jobSeekerRepository.save(jobSeeker);
         return userRepository.findById(jobSeeker.getId()).orElseThrow();
+    }
+
+
+    public ResponseEntity<Void> deleteSeeker(UUID id) {
+        var seeker = jobSeekerRepository.findById(id).orElse(null);
+        if(seeker == null){
+            return ResponseEntity.notFound().build();
+        }
+        jobSeekerRepository.deleteById(id);
+        userRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 

@@ -63,4 +63,10 @@ public class EmployerController {
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployer(@PathVariable UUID id){
+        return employerService.deleteEmployer(id);
+    }
+
 }

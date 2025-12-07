@@ -4,6 +4,13 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/store?createDatabaseIfNotExist=true
     username: root
-    password:
+    password: jayani@10
   jpa:
     show-sql: true
+  cloud:
+    azure:
+      storage:
+        account-name: ${AZURE_STORAGE_ACCOUNT_NAME}
+        account-key: ${AZURE_STORAGE_ACCOUNT_KEY}
+azure:
+  sas: sv=2024-11-04&ss=bfqt&srt=o&sp=rwdlacupiytfx&se=2025-12-05T11:30:12Z&st=2025-12-05T03:15:12Z&spr=https&sig=rwJvhlt%2BhGKC3zrWzYMEMzlomr8dOylKiGqWSfPvdmM%3D

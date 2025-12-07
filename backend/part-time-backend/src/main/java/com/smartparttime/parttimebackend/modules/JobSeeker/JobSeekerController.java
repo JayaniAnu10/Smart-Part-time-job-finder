@@ -58,7 +58,6 @@ public class JobSeekerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<JobSeekerDto> getSeekerById(@PathVariable UUID id) {
-
         var seeker= jobSeekerService.getJobSeekerById(id);
         return ResponseEntity.ok(jobSeekerMapper.toJobSeekerDto(seeker));
 
@@ -74,5 +73,10 @@ public class JobSeekerController {
         var user = jobSeekerService.updateJobSeeker(request,id);
         return ResponseEntity.ok(userMapper.toDto(user));
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteJobSeeker(@PathVariable UUID id){
+        return jobSeekerService.deleteSeeker(id);
     }
 }

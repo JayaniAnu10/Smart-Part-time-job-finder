@@ -66,6 +66,17 @@ public class EmployerService {
         return userRepository.findById(employer.getId()).orElseThrow();
     }
 
+
+    public ResponseEntity<Void> deleteEmployer(UUID id) {
+        var employer = employerRepository.findById(id).orElse(null);
+        if(employer == null){
+            return ResponseEntity.notFound().build();
+        }
+        employerRepository.deleteById(id);
+        userRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
     private void availabilityCheck(String email, String registrationId) {
         if (userRepository.existsUserByEmail(email)) {
             throw new BadRequestException("Email already exists");

@@ -32,11 +32,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/employer/register").permitAll()
                         .requestMatchers(HttpMethod.GET,"/employer/*").permitAll()
                         .requestMatchers(HttpMethod.PATCH,"/employer/*").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/employer/*").permitAll()
                         .requestMatchers(HttpMethod.PATCH,"/jobseeker/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/employer").permitAll()
                         .requestMatchers(HttpMethod.POST,"/jobseeker/register").permitAll()
                         .requestMatchers(HttpMethod.GET,"/jobseeker/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/jobseeker").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/jobseeker/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/user/*/change-password").permitAll()
                         .anyRequest().authenticated());
         return http.build();
