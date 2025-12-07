@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 public class JobResponseDto {
 
-    private Long id;
+    private UUID id;
 
     private String title;
 
@@ -37,5 +37,4 @@ public class JobResponseDto {
     private String skills;
 
     private UUID employerId;
-    private String employerName;
 }

@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.JobSeeker;
 
+import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
 import com.smartparttime.parttimebackend.common.imageStorage.ImageStorageClient;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerAllDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
@@ -34,6 +35,7 @@ public class JobSeekerController {
     private final JobSeekerService jobSeekerService;
     private final JobSeekerRepository jobSeekerRepository;
     private final JobSeekerMapper jobSeekerMapper;
+    private final AzureImageStorageClient imageStorageClient;
 
     @PostMapping(path = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerSeeker(
@@ -86,5 +88,16 @@ public class JobSeekerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteJobSeeker(@PathVariable UUID id){
         return jobSeekerService.deleteSeeker(id);
+    }
+
+    @PutMapping(value = "/{id}/profile-picture",consumes =MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity<Void> updateProfilePicture(
+            @PathVariable UUID id,
+            @RequestPart("image") MultipartFile profilePicture
+    ) throws IOException {
+
+        jobSeekerService.updateProfile(profilePicture,id);
+
+        return ResponseEntity.ok().build();
     }
 }

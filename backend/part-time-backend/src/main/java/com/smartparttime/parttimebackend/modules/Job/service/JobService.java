@@ -14,7 +14,7 @@ public interface JobService {
 
     List<JobResponseDto> getAllJobs();
 
-    JobResponseDto getJobById(Long jobId);
+    JobResponseDto getJobById(UUID jobId);
 
 
     List<JobResponseDto> getJobsByEmployer(UUID employerId);
@@ -26,7 +26,7 @@ public interface JobService {
                                     int page,
                                     int size);
 
-    JobResponseDto updateJob(Long jobId, JobRequestDto dto);
+    JobResponseDto updateJob(UUID jobId, JobRequestDto dto);
 
-    void deleteJob(Long jobId);
+    void deleteJob(UUID jobId);
 }

@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
+import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
@@ -26,11 +27,12 @@ public class JobServiceImpl implements JobService {
     @Autowired
     private JobRepo jobRepo;
 
-    @Autowired
-    private UserRepository userRepo;
 
     @Autowired
     private JobCategoryRepo categoryRepo;
+
+    @Autowired
+    private EmployerRepository employerRepository;
 
 
     @Override
@@ -53,7 +55,7 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public JobResponseDto getJobById(Long jobId) {
+    public JobResponseDto getJobById(UUID jobId) {
         Job job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
@@ -102,7 +104,7 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public JobResponseDto updateJob(Long jobId, JobRequestDto dto) {
+    public JobResponseDto updateJob(UUID jobId, JobRequestDto dto) {
         Job job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
@@ -126,13 +128,14 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public void deleteJob(Long jobId) {
+    public void deleteJob(UUID jobId) {
         jobRepo.deleteById(jobId);
     }
 
 
     private Job mapToJob(JobRequestDto dto, UUID employerId) {
 
+        var user = employerRepository.findById(employerId).orElseThrow();
         Job job = new Job();
 
         job.setTitle(dto.getTitle());
@@ -140,13 +143,11 @@ public class JobServiceImpl implements JobService {
         job.setLocation(dto.getLocation());
         job.setJobType(dto.getJobType());
         job.setDeadline(dto.getDeadline());
+        job.setEmployee(user);
         job.setSalary(dto.getSalary());
         job.setWorkingHours(dto.getWorkingHours());
         job.setSkills(dto.getSkills());
-//
-//        User employer = userRepo.findById(employerId)
-//                .orElseThrow(() -> new RuntimeException("Employer not found"));
-//        job.setEmployee(employer);
+
 
         JobCategory category = categoryRepo.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -177,8 +178,6 @@ public class JobServiceImpl implements JobService {
 
         if (job.getEmployee() != null) {
             dto.setEmployerId(job.getEmployee().getId());
-
-            dto.setEmployerName(job.getEmployee().getEmail());
         }
 
         if (job.getCategory() != null) {

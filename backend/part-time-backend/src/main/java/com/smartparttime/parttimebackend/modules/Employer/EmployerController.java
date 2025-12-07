@@ -5,15 +5,19 @@ import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerD
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserMapper;
 import com.smartparttime.parttimebackend.modules.User.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,19 +26,24 @@ import java.util.UUID;
 @RequestMapping("/employer")
 public class EmployerController {
     private final EmployerService employerService;
-    private final UserRepository userRepository;
     private final EmployerRepository employerRepository;
     private final EmployerMapper employerMapper;
     private final UserMapper userMapper;
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerEmployee(
-            @Valid @RequestBody EmployerRegisterRequest request,
-            UriComponentsBuilder uriBuilder)  {
+            @Valid @RequestPart("request") EmployerRegisterRequest request,
+            @RequestPart(value = "image",required = false) MultipartFile logo,
+            UriComponentsBuilder uriBuilder){
 
-        var userDto = employerService.addEmployee(request);
-        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
-        return ResponseEntity.created(uri).body(userDto);
+        try{
+            var userDto = employerService.addEmployee(request,logo);
+            var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+            return ResponseEntity.created(uri).body(userDto);
+        } catch(IOException e){
+            return ResponseEntity.badRequest().body(Map.of("error","Failed to upload logo"));
+        }
+
 
     }
 
@@ -66,7 +75,19 @@ public class EmployerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployer(@PathVariable UUID id){
+
         return employerService.deleteEmployer(id);
+    }
+
+    @PutMapping(value = "/{id}/logo",consumes =MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity<Void> updateLogo(
+            @PathVariable UUID id,
+            @RequestPart("image") MultipartFile logo
+    ) throws IOException {
+
+        employerService.updateProfile(logo,id);
+
+        return ResponseEntity.ok().build();
     }
 
 }

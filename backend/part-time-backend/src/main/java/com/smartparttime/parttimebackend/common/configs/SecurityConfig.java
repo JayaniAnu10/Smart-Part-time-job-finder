@@ -37,9 +37,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/employer").permitAll()
                         .requestMatchers(HttpMethod.POST,"/jobseeker/register").permitAll()
                         .requestMatchers(HttpMethod.GET,"/jobseeker/*").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/jobseeker/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/employer/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/jobseeker").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/jobseeker/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/user/*/change-password").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/jobs/create/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/jobs/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/jobs").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/jobs/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }
