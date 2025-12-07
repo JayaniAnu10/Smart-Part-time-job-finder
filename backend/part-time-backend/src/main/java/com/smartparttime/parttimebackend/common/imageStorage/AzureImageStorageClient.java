@@ -42,4 +42,19 @@ public class AzureImageStorageClient implements ImageStorageClient{
         }
 
     }
+
+    @Override
+    public void deleteImage(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return;
+        }
+
+        String blobName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+        String containerName = "blob-posts";
+        BlobClient blobClient = blobServiceClient
+                    .getBlobContainerClient(containerName)
+                    .getBlobClient(blobName);
+
+        blobClient.deleteIfExists();
+    }
 }

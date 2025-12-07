@@ -47,17 +47,7 @@ public class JobSeekerService {
 
 
         if(profilePicture!=null && !profilePicture.isEmpty()){
-            String originalFilename = profilePicture.getOriginalFilename();
-            if (originalFilename == null || originalFilename.isBlank()) {
-                originalFilename = "unknown_file.jpg";
-            }
-
-            String containerName="blob-posts";
-            try(InputStream inputStream=profilePicture.getInputStream()){
-                String contentType = profilePicture.getContentType();
-                String imageUrl= imageStorageClient.uploadImage(containerName, originalFilename,inputStream,contentType);
-                seeker.setProfilePicture(imageUrl);
-            }
+            uploadImage(profilePicture, seeker);
         }
 
         jobSeekerRepository.save(seeker);
@@ -86,6 +76,40 @@ public class JobSeekerService {
         jobSeekerMapper.update(request,jobSeeker);
         jobSeekerRepository.save(jobSeeker);
         return userRepository.findById(jobSeeker.getId()).orElseThrow();
+    }
+
+    @Transactional
+    public void updateProfile(MultipartFile profilePicture,UUID id) throws IOException {
+        var seeker = jobSeekerRepository.findById(id).orElseThrow();
+        var oldImageUrl = seeker.getProfilePicture();
+        boolean isImageUpdated = false;
+
+        if(profilePicture!=null && !profilePicture.isEmpty()){
+            uploadImage(profilePicture, seeker);
+            isImageUpdated = true;
+        }
+
+        jobSeekerRepository.save(seeker);
+
+        if (isImageUpdated && oldImageUrl!= null) {
+            imageStorageClient.deleteImage(oldImageUrl);
+        }
+    }
+
+
+
+    private void uploadImage(MultipartFile profilePicture, JobSeeker seeker) throws IOException {
+        String originalFilename = profilePicture.getOriginalFilename();
+        if (originalFilename == null || originalFilename.isBlank()) {
+            originalFilename = "unknown_file.jpg";
+        }
+
+        String containerName="blob-posts";
+        try(InputStream inputStream= profilePicture.getInputStream()){
+            String contentType = profilePicture.getContentType();
+            String imageUrl= imageStorageClient.uploadImage(containerName, originalFilename,inputStream,contentType);
+            seeker.setProfilePicture(imageUrl);
+        }
     }
 
 
