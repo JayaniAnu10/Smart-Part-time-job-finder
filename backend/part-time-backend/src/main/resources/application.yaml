@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/store?createDatabaseIfNotExist=true
     username: root
-    password: jayani@10
+    password:
   jpa:
     show-sql: true
   cloud:
