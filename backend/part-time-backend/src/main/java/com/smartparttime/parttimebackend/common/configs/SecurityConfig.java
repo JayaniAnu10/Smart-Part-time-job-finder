@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/jobs/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/jobs").permitAll()
                         .requestMatchers(HttpMethod.GET,"/jobs/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH,"/jobs/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }

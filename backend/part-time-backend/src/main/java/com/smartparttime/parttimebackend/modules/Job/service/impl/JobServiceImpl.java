@@ -116,18 +116,20 @@ public class JobServiceImpl implements JobService {
         Job job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
-        job.setTitle(dto.getTitle());
-        job.setDescription(dto.getDescription());
-        job.setLocation(dto.getLocation());
-        job.setJobType(dto.getJobType());
-        job.setDeadline(dto.getDeadline());
-        job.setSalary(dto.getSalary());
-        job.setWorkingHours(dto.getWorkingHours());
-        job.setSkills(dto.getSkills());
+        if (dto.getTitle() != null) job.setTitle(dto.getTitle());
+        if (dto.getDescription() != null) job.setDescription(dto.getDescription());
+        if (dto.getLocation() != null) job.setLocation(dto.getLocation());
+        if (dto.getJobType() != null) job.setJobType(dto.getJobType());
+        if (dto.getDeadline() != null) job.setDeadline(dto.getDeadline());
+        if (dto.getSalary() != null) job.setSalary(dto.getSalary());
+        if (dto.getWorkingHours() != null) job.setWorkingHours(dto.getWorkingHours());
+        if (dto.getSkills() != null) job.setSkills(dto.getSkills());
 
-        JobCategory category = categoryRepo.findById(dto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        job.setCategory(category);
+        if (dto.getCategoryId() != null) {
+            JobCategory category = categoryRepo.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            job.setCategory(category);
+        }
 
         Job updated = jobRepo.save(job);
 
