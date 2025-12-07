@@ -179,3 +179,127 @@ const App: React.FC = () => {
             onChange={handleChange}
             placeholder="Select category"
           />
+
+          {/* Salary Range */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CustomInput
+              label="Minimum Salary (LKR/day)"
+              id="minSalary"
+              type="number"
+              placeholder="2500"
+              value={formData.minSalary}
+              onChange={handleSalaryChange}
+              min={0}
+            />
+            <CustomInput
+              label="Maximum Salary (LKR/day)"
+              id="maxSalary"
+              type="number"
+              placeholder="3000"
+              value={formData.maxSalary}
+              onChange={handleSalaryChange}
+              min={formData.minSalary} // Max should be greater than Min
+            />
+          </div>
+
+          {/* Job Location */}
+          <CustomInput
+            label="Job Location"
+            id="jobLocation"
+            placeholder=""
+            value={formData.jobLocation}
+            onChange={handleChange}
+          />
+
+          {/* Start and End Time */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CustomInput
+              label="Start Time"
+              id="startTime"
+              type="time"
+              placeholder="--"
+              value={formData.startTime}
+              onChange={handleChange}
+            />
+            <CustomInput
+              label="End Time"
+              id="endTime"
+              type="time"
+              placeholder="--"
+              value={formData.endTime}
+              onChange={handleChange}
+            />
+          </div>
+
+
+          {/* Job Description (Resizable Textarea) */}
+          <CustomTextarea
+            label="Job Description"
+            id="description"
+            placeholder=""
+            value={formData.description}
+            onChange={handleChange}
+            rows={5} // Increased default rows for better visibility
+          />
+
+          {/* Requirements (Resizable Textarea) */}
+          <CustomTextarea
+            label="Requirements"
+            id="requirements"
+            placeholder=""
+            value={formData.requirements}
+            onChange={handleChange}
+            rows={5}
+          />
+
+          {/* Benefits (Optional, Resizable Textarea) */}
+          <CustomTextarea
+            label="Benefits"
+            id="benefits"
+            placeholder=""
+            value={formData.benefits}
+            onChange={handleChange}
+            optional
+            rows={4}
+          />
+
+          {/* Number of Vacancies */}
+          <CustomInput
+            label="Number of vacancies"
+            id="vacancies"
+            type="number"
+            placeholder="1"
+            value={formData.vacancies}
+            onChange={handleSalaryChange} // Reusing handleSalaryChange to ensure positive number
+            min={1}
+          />
+
+          {/* Action Buttons */}
+          <div className="flex justify-end pt-4 space-x-4">
+            {/* Publish Button */}
+            <button
+              type="button"
+              onClick={() => handleSubmit('Publish')}
+              className="px-6 py-2 border border-transparent text-sm font-medium rounded-lg text-gray-900 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-150"
+            >
+              Publish Job
+            </button>
+            {/* Cancel Button */}
+            <button
+              type="button"
+              onClick={() => handleSubmit('Cancel')}
+              className="px-6 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white 
+               hover:bg-yellow-500 hover:border-yellow-400 
+               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 
+               transition duration-150"
+            >
+              Cancel  
+            </button>
+        </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default App;
