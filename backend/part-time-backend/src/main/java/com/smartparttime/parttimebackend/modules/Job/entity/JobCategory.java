@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.Job;
+package com.smartparttime.parttimebackend.modules.Job.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,14 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Rating;
 
-import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
-import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
-import com.smartparttime.parttimebackend.modules.Job.JobRepository;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Service
