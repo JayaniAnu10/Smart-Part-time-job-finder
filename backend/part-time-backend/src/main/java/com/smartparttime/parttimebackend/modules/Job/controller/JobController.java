@@ -61,12 +61,14 @@ public class JobController {
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String jobType,
-            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String keywords,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String skill,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Page<JobResponseDto> jobs = jobService.searchJobs(
-                categoryId, location, jobType, keyword, page, size
+                categoryId, location, jobType, title,keywords,skill, page, size
         );
         return ResponseEntity.ok(jobs);
     }

@@ -20,4 +20,8 @@ public interface JobRepo extends JpaRepository<Job, UUID> {
 
 
     List<Job> findByEmployee_Id(UUID employerId);
+
+    Page<Job> findByDescriptionContainingIgnoreCase(String description, Pageable pageable);
+
+    Page<Job> findBySkillsContainingIgnoreCase(String skills, Pageable pageable);
 }

@@ -76,7 +76,9 @@ public class JobServiceImpl implements JobService {
     public Page<JobResponseDto> searchJobs(Integer categoryId,
                                            String location,
                                            String jobType,
+                                           String title,
                                            String keyword,
+                                           String skill,
                                            int page,
                                            int size) {
 
@@ -92,8 +94,14 @@ public class JobServiceImpl implements JobService {
         else if (jobType != null && !jobType.isBlank()) {
             jobsPage = jobRepo.findByJobType(jobType, pageable);
         }
+        else if (title != null && !title.isBlank()) {
+            jobsPage = jobRepo.findByTitleContainingIgnoreCase(title, pageable);
+        }
         else if (keyword != null && !keyword.isBlank()) {
-            jobsPage = jobRepo.findByTitleContainingIgnoreCase(keyword, pageable);
+            jobsPage = jobRepo.findByDescriptionContainingIgnoreCase(keyword, pageable);
+        }
+        else if (skill != null && !skill.isBlank()) {
+            jobsPage = jobRepo.findBySkillsContainingIgnoreCase(skill, pageable);
         }
         else {
             jobsPage = jobRepo.findAll(pageable);
