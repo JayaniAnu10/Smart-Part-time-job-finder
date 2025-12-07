@@ -21,7 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
         <div className="flex flex-col gap-1">
             <label className="font-roboto text-[14px] font-medium text-[#0F1F3D]">{label}</label>
 
-            <div className="relative">
+            <div className="relative w-full h-[40px] ">
                 {icon && (
                     <img
                         src={icon}
@@ -29,7 +29,7 @@ const InputField: React.FC<InputFieldProps> = ({
                         className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-70"
                     />
                 )}
-            </div>
+            
 
             <input
                 type={type}
@@ -37,14 +37,11 @@ const InputField: React.FC<InputFieldProps> = ({
                 value={value}
                 onChange={onChange}
                 className="
-                    w-full px-4 h-[40px] 
-                    border border-[#A5A8AD] rounded-lg
-                    text-[14px] font-roboto text-[#111827]
-                    placeholder:text-[14px] placeholder:font-roboto placeholder:text-[#364D7D]
-                    focus:ring-1 focus:ring-[#FACC15]
-                    focus:border-[#FACC15] focus:outline-none
-                    transition-all duration-200"
+                    w-full h-[40px] pl-10 pr-4 bg-white border border-[#A5A8AD] rounded-lg text-[14px] 
+                    font-roboto text-[#111827] placeholder:text-[14px] placeholder:font-roboto placeholder:text-[#364D7D] 
+                    outline-none focus:ring-1 focus:ring-[#FACC15] focus:border-[#FACC15] transition-all duration-200"
             />
+            </div>
         </div>
     );
 };
