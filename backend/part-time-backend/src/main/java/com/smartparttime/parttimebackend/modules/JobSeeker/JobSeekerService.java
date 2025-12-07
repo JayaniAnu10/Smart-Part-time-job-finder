@@ -2,12 +2,14 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
 import com.smartparttime.parttimebackend.common.imageStorage.ImageStorageClient;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +27,9 @@ public class JobSeekerService {
     private final JobSeekerRepository jobSeekerRepository;
     private final UserService userService;
     private final UserRepository userRepository;
-    private final ImageStorageClient imageStorageClient;
+    private final AzureImageStorageClient imageStorageClient;
 
+    @Transactional
     public UserRegisterResponse addSeeker(@Valid JobSeekerRegisterRequest request,
                                           MultipartFile profilePicture) throws IOException {
         availabilityCheck(request.getEmail(), request.getNic());
@@ -42,11 +45,17 @@ public class JobSeekerService {
         var seeker=jobSeekerMapper.toEntity(request);
         seeker.setUser(savedUser);
 
+
         if(profilePicture!=null && !profilePicture.isEmpty()){
+            String originalFilename = profilePicture.getOriginalFilename();
+            if (originalFilename == null || originalFilename.isBlank()) {
+                originalFilename = "unknown_file.jpg";
+            }
+
             String containerName="blob-posts";
             try(InputStream inputStream=profilePicture.getInputStream()){
                 String contentType = profilePicture.getContentType();
-                String imageUrl= imageStorageClient.uploadImage(containerName, profilePicture.getOriginalFilename(),inputStream,contentType);
+                String imageUrl= imageStorageClient.uploadImage(containerName, originalFilename,inputStream,contentType);
                 seeker.setProfilePicture(imageUrl);
             }
         }
