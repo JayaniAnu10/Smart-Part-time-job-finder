@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
@@ -157,6 +158,8 @@ public class JobServiceImpl implements JobService {
         job.setSalary(dto.getSalary());
         job.setWorkingHours(dto.getWorkingHours());
         job.setSkills(dto.getSkills());
+        job.setAvailableVacancies(dto.getAvailableVacancies());
+        job.setTotalVacancies(dto.getTotalVacancies());
 
 
         JobCategory category = categoryRepo.findById(dto.getCategoryId())
@@ -164,7 +167,7 @@ public class JobServiceImpl implements JobService {
         job.setCategory(category);
 
         job.setPostedDate(LocalDate.now());
-        job.setStatus("ACTIVE");
+        job.setStatus(JobStatus.ACTIVE);
 
         return job;
     }
@@ -185,6 +188,8 @@ public class JobServiceImpl implements JobService {
         dto.setSalary(job.getSalary());
         dto.setWorkingHours(job.getWorkingHours());
         dto.setSkills(job.getSkills());
+        dto.setAvailableVacancies(job.getAvailableVacancies());
+        dto.setTotalVacancies(job.getTotalVacancies());
 
         if (job.getEmployee() != null) {
             dto.setEmployerId(job.getEmployee().getId());

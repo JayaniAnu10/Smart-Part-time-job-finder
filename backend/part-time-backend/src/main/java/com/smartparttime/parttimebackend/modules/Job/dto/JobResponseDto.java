@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Job.dto;
 
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -28,13 +29,17 @@ public class JobResponseDto {
 
     private LocalDate postedDate;
 
-    private String status;
+    private JobStatus status;
 
     private BigDecimal salary;
 
     private Integer workingHours;
 
     private String skills;
+
+    private Long availableVacancies;
+
+    private Long totalVacancies;
 
     private UUID employerId;
 }

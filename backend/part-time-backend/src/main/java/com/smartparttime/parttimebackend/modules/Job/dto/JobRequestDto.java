@@ -36,4 +36,11 @@ public class JobRequestDto {
 
     @NotBlank(message = "Required field")
     private String skills;
+
+    @NotNull(message = "Required field")
+    private Long totalVacancies;
+
+    @NotNull(message = "Required field")
+    private Long availableVacancies;
+
 }
