@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
@@ -76,7 +77,9 @@ public class JobServiceImpl implements JobService {
     public Page<JobResponseDto> searchJobs(Integer categoryId,
                                            String location,
                                            String jobType,
+                                           String title,
                                            String keyword,
+                                           String skill,
                                            int page,
                                            int size) {
 
@@ -92,8 +95,14 @@ public class JobServiceImpl implements JobService {
         else if (jobType != null && !jobType.isBlank()) {
             jobsPage = jobRepo.findByJobType(jobType, pageable);
         }
+        else if (title != null && !title.isBlank()) {
+            jobsPage = jobRepo.findByTitleContainingIgnoreCase(title, pageable);
+        }
         else if (keyword != null && !keyword.isBlank()) {
-            jobsPage = jobRepo.findByTitleContainingIgnoreCase(keyword, pageable);
+            jobsPage = jobRepo.findByDescriptionContainingIgnoreCase(keyword, pageable);
+        }
+        else if (skill != null && !skill.isBlank()) {
+            jobsPage = jobRepo.findBySkillsContainingIgnoreCase(skill, pageable);
         }
         else {
             jobsPage = jobRepo.findAll(pageable);
@@ -108,18 +117,20 @@ public class JobServiceImpl implements JobService {
         Job job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
-        job.setTitle(dto.getTitle());
-        job.setDescription(dto.getDescription());
-        job.setLocation(dto.getLocation());
-        job.setJobType(dto.getJobType());
-        job.setDeadline(dto.getDeadline());
-        job.setSalary(dto.getSalary());
-        job.setWorkingHours(dto.getWorkingHours());
-        job.setSkills(dto.getSkills());
+        if (dto.getTitle() != null) job.setTitle(dto.getTitle());
+        if (dto.getDescription() != null) job.setDescription(dto.getDescription());
+        if (dto.getLocation() != null) job.setLocation(dto.getLocation());
+        if (dto.getJobType() != null) job.setJobType(dto.getJobType());
+        if (dto.getDeadline() != null) job.setDeadline(dto.getDeadline());
+        if (dto.getSalary() != null) job.setSalary(dto.getSalary());
+        if (dto.getWorkingHours() != null) job.setWorkingHours(dto.getWorkingHours());
+        if (dto.getSkills() != null) job.setSkills(dto.getSkills());
 
-        JobCategory category = categoryRepo.findById(dto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        job.setCategory(category);
+        if (dto.getCategoryId() != null) {
+            JobCategory category = categoryRepo.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            job.setCategory(category);
+        }
 
         Job updated = jobRepo.save(job);
 
@@ -147,6 +158,8 @@ public class JobServiceImpl implements JobService {
         job.setSalary(dto.getSalary());
         job.setWorkingHours(dto.getWorkingHours());
         job.setSkills(dto.getSkills());
+        job.setAvailableVacancies(dto.getAvailableVacancies());
+        job.setTotalVacancies(dto.getTotalVacancies());
 
 
         JobCategory category = categoryRepo.findById(dto.getCategoryId())
@@ -154,7 +167,7 @@ public class JobServiceImpl implements JobService {
         job.setCategory(category);
 
         job.setPostedDate(LocalDate.now());
-        job.setStatus("ACTIVE");
+        job.setStatus(JobStatus.ACTIVE);
 
         return job;
     }
@@ -175,6 +188,8 @@ public class JobServiceImpl implements JobService {
         dto.setSalary(job.getSalary());
         dto.setWorkingHours(job.getWorkingHours());
         dto.setSkills(job.getSkills());
+        dto.setAvailableVacancies(job.getAvailableVacancies());
+        dto.setTotalVacancies(job.getTotalVacancies());
 
         if (job.getEmployee() != null) {
             dto.setEmployerId(job.getEmployee().getId());

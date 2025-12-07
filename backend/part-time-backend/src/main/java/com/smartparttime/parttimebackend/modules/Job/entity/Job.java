@@ -2,8 +2,11 @@ package com.smartparttime.parttimebackend.modules.Job.entity;
 
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
 import com.smartparttime.parttimebackend.modules.Employer.Employer;
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
+import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import com.smartparttime.parttimebackend.modules.User.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,7 +32,7 @@ public class Job {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employer_id")
     private Employer employee;
 
     @Column(name = "description")
@@ -50,8 +54,9 @@ public class Job {
     @Column(name = "posted_date")
     private LocalDate postedDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private JobStatus status;
 
     @Column(name = "salary")
     private BigDecimal salary;
@@ -62,6 +67,12 @@ public class Job {
     @Column(name = "skills")
     private String skills;
 
+    @Column(name = "total_vacancies")
+    private Long totalVacancies;
+
+    @Column(name = "available_vacancies")
+    private Long availableVacancies;
+
     @OneToMany(mappedBy = "job")
     private Set<Attendance> attendances = new HashSet<>();
 
@@ -70,5 +81,9 @@ public class Job {
 
     @OneToMany(mappedBy = "job")
     private Set<Promotion> promotions = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "job")
+    private Set<Rate> rates = new HashSet<>();
 
 }

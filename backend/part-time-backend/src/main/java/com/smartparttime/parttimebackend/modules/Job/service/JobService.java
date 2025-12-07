@@ -22,7 +22,9 @@ public interface JobService {
     Page<JobResponseDto> searchJobs(Integer categoryId,
                                     String location,
                                     String jobType,
+                                    String title,
                                     String keyword,
+                                    String skill,
                                     int page,
                                     int size);
 
