@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "employee")
+@Table(name = "employer")
 public class Employer {
     @Id
     private UUID id;
@@ -51,7 +51,7 @@ public class Employer {
     private String industry;
 
     @OneToMany
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employer_id")
     private Set<Job> jobs = new HashSet<>();
 
 }

@@ -1,22 +1,32 @@
 package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
+import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
+import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
+import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
+import com.smartparttime.parttimebackend.modules.Job.mappers.JobMapper;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
 import com.smartparttime.parttimebackend.modules.User.User;
 import com.smartparttime.parttimebackend.modules.User.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,19 +37,41 @@ public class JobServiceImpl implements JobService {
     private JobRepo jobRepo;
 
     @Autowired
-    private UserRepository userRepo;
-
-    @Autowired
     private JobCategoryRepo categoryRepo;
 
+    @Autowired
+    private EmployerRepository employerRepository;
+    @Autowired
+    private JobMapper jobMapper;
 
+
+    @Transactional
     @Override
     public JobResponseDto createJob(JobRequestDto request, UUID employerId) {
+        var employer = employerRepository.findById(employerId).orElseThrow();
+        var job = jobMapper.toEntity(request);
 
-        Job job = mapToJob(request, employerId);
-        Job savedJob = jobRepo.save(job);
+        var category = categoryRepo.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        job.setCategory(category);
+        job.setEmployer(employer);
+        job.setPostedDate(LocalDate.now());
+        job.setStatus(JobStatus.ACTIVE);
 
-        return mapToResponse(savedJob);
+        Set<JobSchedule> schedules = request.getSchedules().stream()
+                .map(dto -> {
+                    JobSchedule schedule = new JobSchedule();
+                    schedule.setStartDatetime(dto.getStartDatetime());
+                    schedule.setEndDatetime(dto.getEndDatetime());
+                    schedule.setJob(job);
+                    return schedule;
+                }).collect(Collectors.toSet());
+
+        job.setJobSchedules(schedules);
+
+        var savedJob = jobRepo.save(job);
+
+        return jobMapper.toDto(savedJob);
     }
 
 
@@ -47,145 +79,91 @@ public class JobServiceImpl implements JobService {
     public List<JobResponseDto> getAllJobs() {
         return jobRepo.findAll()
                 .stream()
-                .map(this::mapToResponse)
+                .map(jobMapper::toDto)
                 .collect(Collectors.toList());
     }
 
 
     @Override
-    public JobResponseDto getJobById(Long jobId) {
-        Job job = jobRepo.findById(jobId)
+    public JobResponseDto getJobById(UUID jobId) {
+        var job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
-        return mapToResponse(job);
+        return jobMapper.toDto(job);
     }
 
 
     @Override
-    public List<JobResponseDto> getJobsByEmployer(UUID employerId) {
-        return jobRepo.findByEmployee_Id(employerId)
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-
-    @Override
-    public Page<JobResponseDto> searchJobs(Integer categoryId,
-                                           String location,
-                                           String jobType,
-                                           String keyword,
-                                           int page,
-                                           int size) {
-
+    public List<JobResponseDto> getJobsByEmployer(UUID employerId,int page,int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Job> jobsPage;
-
-        if (categoryId != null) {
-            jobsPage = jobRepo.findByCategory_Id(categoryId, pageable);
-        }
-        else if (location != null && !location.isBlank()) {
-            jobsPage = jobRepo.findByLocationContainingIgnoreCase(location, pageable);
-        }
-        else if (jobType != null && !jobType.isBlank()) {
-            jobsPage = jobRepo.findByJobType(jobType, pageable);
-        }
-        else if (keyword != null && !keyword.isBlank()) {
-            jobsPage = jobRepo.findByTitleContainingIgnoreCase(keyword, pageable);
-        }
-        else {
-            jobsPage = jobRepo.findAll(pageable);
-        }
-
-        return jobsPage.map(this::mapToResponse);
+        return jobRepo.findByEmployer_Id(employerId,pageable)
+                .stream()
+                .map(jobMapper::toDto)
+                .collect(Collectors.toList());
     }
 
 
     @Override
-    public JobResponseDto updateJob(Long jobId, JobRequestDto dto) {
-        Job job = jobRepo.findById(jobId)
+    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String skills, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, int page,int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Specification<Job> spec = Specification.allOf();
+
+        if (location != null) {
+            spec = spec.and(JobSpec.hasLocation(location));
+        }
+        if (jobType != null) {
+            spec = spec.and(JobSpec.hasJobType(jobType));
+        }
+        if (title != null) {
+            spec = spec.and(JobSpec.hasTitle(title));
+        }
+        if (skills != null) {
+            spec = spec.and(JobSpec.hasSkills(skills));
+        }
+        if (category != null) {
+            spec = spec.and(JobSpec.hasCategory(category));
+        }
+        if (description != null) {
+            spec = spec.and(JobSpec.hasDescription(description));
+        }
+        if (date != null) {
+            spec = spec.and(JobSpec.hasDate(date));
+        }
+        if (minSalary != null) {
+            spec =spec.and(JobSpec.hasSalaryGreaterThanOrEqualTo(minSalary));
+        }
+        if (maxSalary != null) {
+            spec =spec.and(JobSpec.hasSalaryLessThanOrEqualTo(maxSalary));
+        }
+
+        Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
+        return jobsPage.map(jobMapper::toDto);
+    }
+
+
+    @Override
+    public JobResponseDto updateJob(UUID jobId, JobRequestDto request) {
+        var job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
 
-        job.setTitle(dto.getTitle());
-        job.setDescription(dto.getDescription());
-        job.setLocation(dto.getLocation());
-        job.setJobType(dto.getJobType());
-        job.setDeadline(dto.getDeadline());
-        job.setSalary(dto.getSalary());
-        job.setWorkingHours(dto.getWorkingHours());
-        job.setSkills(dto.getSkills());
+        jobMapper.update(request,job);
 
-        JobCategory category = categoryRepo.findById(dto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        job.setCategory(category);
+        if (request.getCategoryId() != null) {
+            JobCategory category = categoryRepo.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            job.setCategory(category);
+        }
 
-        Job updated = jobRepo.save(job);
+        var updated = jobRepo.save(job);
 
-        return mapToResponse(updated);
+        return jobMapper.toDto(updated);
     }
 
 
     @Override
-    public void deleteJob(Long jobId) {
+    public void deleteJob(UUID jobId) {
         jobRepo.deleteById(jobId);
     }
 
-
-    private Job mapToJob(JobRequestDto dto, UUID employerId) {
-
-        Job job = new Job();
-
-        job.setTitle(dto.getTitle());
-        job.setDescription(dto.getDescription());
-        job.setLocation(dto.getLocation());
-        job.setJobType(dto.getJobType());
-        job.setDeadline(dto.getDeadline());
-        job.setSalary(dto.getSalary());
-        job.setWorkingHours(dto.getWorkingHours());
-        job.setSkills(dto.getSkills());
-//
-//        User employer = userRepo.findById(employerId)
-//                .orElseThrow(() -> new RuntimeException("Employer not found"));
-//        job.setEmployee(employer);
-
-        JobCategory category = categoryRepo.findById(dto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        job.setCategory(category);
-
-        job.setPostedDate(LocalDate.now());
-        job.setStatus("ACTIVE");
-
-        return job;
-    }
-
-
-    private JobResponseDto mapToResponse(Job job) {
-
-        JobResponseDto dto = new JobResponseDto();
-
-        dto.setId(job.getId());
-        dto.setTitle(job.getTitle());
-        dto.setDescription(job.getDescription());
-        dto.setLocation(job.getLocation());
-        dto.setJobType(job.getJobType());
-        dto.setDeadline(job.getDeadline());
-        dto.setPostedDate(job.getPostedDate());
-        dto.setStatus(job.getStatus());
-        dto.setSalary(job.getSalary());
-        dto.setWorkingHours(job.getWorkingHours());
-        dto.setSkills(job.getSkills());
-
-        if (job.getEmployee() != null) {
-            dto.setEmployerId(job.getEmployee().getId());
-
-            dto.setEmployerName(job.getEmployee().getEmail());
-        }
-
-        if (job.getCategory() != null) {
-            dto.setCategoryId(job.getCategory().getId());
-            dto.setCategoryName(job.getCategory().getCategory());
-        }
-
-        return dto;
-    }
 }

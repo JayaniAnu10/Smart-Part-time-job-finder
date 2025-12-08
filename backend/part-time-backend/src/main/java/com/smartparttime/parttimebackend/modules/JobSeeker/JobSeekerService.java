@@ -2,16 +2,21 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
+import com.smartparttime.parttimebackend.common.imageStorage.ImageStorageClient;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -22,19 +27,29 @@ public class JobSeekerService {
     private final JobSeekerRepository jobSeekerRepository;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final AzureImageStorageClient imageStorageClient;
 
-    public UserRegisterResponse addSeeker(@Valid JobSeekerRegisterRequest request) {
+    @Transactional
+    public UserRegisterResponse addSeeker(@Valid JobSeekerRegisterRequest request,
+                                          MultipartFile profilePicture) throws IOException {
         availabilityCheck(request.getEmail(), request.getNic());
 
         if(!request.getPassword().equals(request.getConfirmPassword())){
             throw new PasswordMismatchException("Passwords do not match");
         }
+
         var user = userMapper.seekerToEntity(request);
         user.setRole(Role.JOBSEEKER);
         var savedUser = userService.registerUser(user);
 
         var seeker=jobSeekerMapper.toEntity(request);
         seeker.setUser(savedUser);
+
+
+        if(profilePicture!=null && !profilePicture.isEmpty()){
+            uploadImage(profilePicture, seeker);
+        }
+
         jobSeekerRepository.save(seeker);
 
         return userMapper.toResponse(savedUser);
@@ -61,6 +76,40 @@ public class JobSeekerService {
         jobSeekerMapper.update(request,jobSeeker);
         jobSeekerRepository.save(jobSeeker);
         return userRepository.findById(jobSeeker.getId()).orElseThrow();
+    }
+
+    @Transactional
+    public void updateProfile(MultipartFile profilePicture,UUID id) throws IOException {
+        var seeker = jobSeekerRepository.findById(id).orElseThrow();
+        var oldImageUrl = seeker.getProfilePicture();
+        boolean isImageUpdated = false;
+
+        if(profilePicture!=null && !profilePicture.isEmpty()){
+            uploadImage(profilePicture, seeker);
+            isImageUpdated = true;
+        }
+
+        jobSeekerRepository.save(seeker);
+
+        if (isImageUpdated && oldImageUrl!= null) {
+            imageStorageClient.deleteImage(oldImageUrl);
+        }
+    }
+
+
+
+    private void uploadImage(MultipartFile profilePicture, JobSeeker seeker) throws IOException {
+        String originalFilename = profilePicture.getOriginalFilename();
+        if (originalFilename == null || originalFilename.isBlank()) {
+            originalFilename = "unknown_file.jpg";
+        }
+
+        String containerName="blob-posts";
+        try(InputStream inputStream= profilePicture.getInputStream()){
+            String contentType = profilePicture.getContentType();
+            String imageUrl= imageStorageClient.uploadImage(containerName, originalFilename,inputStream,contentType);
+            seeker.setProfilePicture(imageUrl);
+        }
     }
 
 

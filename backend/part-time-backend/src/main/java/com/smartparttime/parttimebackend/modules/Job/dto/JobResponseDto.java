@@ -1,24 +1,27 @@
 package com.smartparttime.parttimebackend.modules.Job.dto;
 
+import com.smartparttime.parttimebackend.modules.Employer.Employer;
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
+import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
 public class JobResponseDto {
 
-    private Long id;
+    private UUID id;
 
     private String title;
 
     private String description;
 
-    private Integer categoryId;
-
-    private String categoryName;
+    private Integer category;
 
     private String location;
 
@@ -28,14 +31,19 @@ public class JobResponseDto {
 
     private LocalDate postedDate;
 
-    private String status;
+    private JobStatus status;
 
     private BigDecimal salary;
+
+    private List<JobScheduleDto> jobSchedules;
 
     private Integer workingHours;
 
     private String skills;
 
-    private UUID employerId;
-    private String employerName;
+    private Long availableVacancies;
+
+    private Long totalVacancies;
+
+    private UUID employer;
 }
