@@ -1,9 +1,12 @@
 package com.smartparttime.parttimebackend.modules.Job.Specifications;
 
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
+import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -35,8 +38,15 @@ public class JobSpec {
         return (root, query, cb) ->   cb.like( cb.lower(root.get("category")), category.toLowerCase() );
     }
 
-    public static Specification<Job> hasDate(LocalDateTime date) {
-        return (root, query, cb) -> cb.equal(root.get("date"), date);
+    public static Specification<Job> hasDate(LocalDate date) {
+        return (root, query, cb) -> {
+            Join<Job, JobSchedule> scheduleJoin = root.join("jobSchedules");
+
+            return cb.equal(
+                    cb.function("DATE", LocalDate.class, scheduleJoin.get("startDatetime")),
+                    date
+            );
+        };
     }
 
     public static Specification<Job> hasLocation(String location) {

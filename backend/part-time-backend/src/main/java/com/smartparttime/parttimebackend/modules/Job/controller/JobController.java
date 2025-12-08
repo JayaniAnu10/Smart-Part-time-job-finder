@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -22,8 +23,6 @@ import java.util.UUID;
 public class JobController {
 
     private final JobService jobService;
-    private final JobCategoryRepo jobCategoryRepo;
-
 
     @PostMapping("/create/{employerId}")
     public ResponseEntity<?> addJob(@Valid @RequestBody JobRequestDto jobRequestDto,
@@ -55,8 +54,12 @@ public class JobController {
 
 
     @GetMapping("/employer/{employerId}")
-    public ResponseEntity<List<JobResponseDto>> getJobsByEmployer(@PathVariable UUID employerId) {
-        List<JobResponseDto> jobs = jobService.getJobsByEmployer(employerId);
+    public ResponseEntity<List<JobResponseDto>> getJobsByEmployer(
+            @PathVariable UUID employerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        List<JobResponseDto> jobs = jobService.getJobsByEmployer(employerId,page,size);
         return ResponseEntity.ok(jobs);
     }
 
@@ -69,7 +72,7 @@ public class JobController {
             @RequestParam(required = false) String keywords,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String skills,
-            @RequestParam(required = false) LocalDateTime date,
+            @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) BigDecimal minSalary,
             @RequestParam(required = false) BigDecimal maxSalary,
             @RequestParam(defaultValue = "0") int page,
