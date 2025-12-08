@@ -26,4 +26,7 @@ public interface JobService {
     JobResponseDto updateJob(UUID jobId, JobRequestDto dto);
 
     void deleteJob(UUID jobId);
+
+    Page<JobResponseDto> getByLocation(int page, int size, String location);
+
 }

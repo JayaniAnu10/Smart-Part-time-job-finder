@@ -31,7 +31,7 @@ public class Job {
     @Column(name = "title")
     private String title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id")
     private Employer employer;
 
