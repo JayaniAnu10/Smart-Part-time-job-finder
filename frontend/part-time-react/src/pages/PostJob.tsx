@@ -100,7 +100,7 @@ const JobCategoryDropdown: React.FC<InputProps> = ({ label, id, value, onChange 
 };
 
 
-const App: React.FC = () => {
+const PostJobPage: React.FC = () => {
   const [formData, setFormData] = useState<JobFormData>({
     jobTitle: '',
     jobCategory: '',

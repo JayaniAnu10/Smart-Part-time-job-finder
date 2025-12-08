@@ -16,7 +16,7 @@ const App: React.FC = () => {
             
             <Routes>
                 
-                <Route path="/post-job" element={<PostJobPage />} />
+                <Route path="/" element={<PostJobPage />} />
 
                 
             </Routes>
