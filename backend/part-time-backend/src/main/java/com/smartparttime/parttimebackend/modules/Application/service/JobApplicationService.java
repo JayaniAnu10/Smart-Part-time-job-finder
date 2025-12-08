@@ -17,5 +17,7 @@ public interface JobApplicationService {
 
     List<JobApplicationResponse> getApplicationsByStatus(UUID id, ApplicationStatus status, int page ,int size);
 
+    List<JobApplicationResponse> getApplicationsByJob(UUID jobId, int page, int size);
 
+    JobApplicationResponse updateApplicationStatus(UUID id,ApplicationStatus status);
 }

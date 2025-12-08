@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/applications").permitAll()
                         .requestMatchers(HttpMethod.GET,"/applications/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/applications/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH,"/applications/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }

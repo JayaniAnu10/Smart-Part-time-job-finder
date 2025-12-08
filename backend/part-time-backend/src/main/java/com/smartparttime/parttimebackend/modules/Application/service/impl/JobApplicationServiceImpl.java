@@ -79,7 +79,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             throw new NotFoundException("User not found");
         }
         var applications = jobApplicationRepository.findByJobseeker_Id(id,pageable);
-        if (applications == null) {
+        if (applications.isEmpty()) {
             throw new NotFoundException("Application not found");
         }
 
@@ -99,7 +99,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         }
         var applications = jobApplicationRepository.findByStatus(status,pageable);
 
-        if (applications == null) {
+        if (applications.isEmpty()) {
             throw new NotFoundException("Application not found");
         }
 
@@ -107,5 +107,40 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                 .stream()
                 .map(jobApplicationMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public List<JobApplicationResponse> getApplicationsByJob(UUID jobId, int page, int size) {
+        Pageable  pageable = PageRequest.of(page,size);
+        var job = jobRepo.findById(jobId).orElse(null);
+        if (job == null) {
+            throw new NotFoundException("Job not found");
+        }
+
+        var applications = jobApplicationRepository.findByJob_Id(jobId,pageable);
+        if (applications.isEmpty()) {
+            throw new NotFoundException("Application not found");
+        }
+
+        return applications
+                .stream()
+                .map(jobApplicationMapper::toDto)
+                .toList();
+
+
+    }
+
+    @Override
+    public JobApplicationResponse updateApplicationStatus(UUID id, ApplicationStatus status) {
+        var application = jobApplicationRepository.findById(id).orElse(null);
+        if (application == null) {
+            throw new NotFoundException("Application not found");
+        }
+
+        application.setStatus(status);
+        jobApplicationRepository.save(application);
+
+        return jobApplicationMapper.toDto(application);
+
     }
 }

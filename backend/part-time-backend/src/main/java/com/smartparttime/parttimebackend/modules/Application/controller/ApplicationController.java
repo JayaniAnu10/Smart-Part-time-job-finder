@@ -5,6 +5,7 @@ import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplication
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,22 @@ public class ApplicationController {
         }
 
         return jobApplicationService.getUserApplications(id, page, size);
+    }
+
+    @GetMapping("/job/{id}")
+    public List<JobApplicationResponse> getApplicationsByJobId(
+            @PathVariable UUID id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return jobApplicationService.getApplicationsByJob(id, page, size);
+
+    }
+
+    @PatchMapping("/{id}")
+    public JobApplicationResponse updateApplicationStatus(
+            @PathVariable UUID id,
+            @RequestParam ApplicationStatus status) {
+        return jobApplicationService.updateApplicationStatus(id, status);
     }
 
 
