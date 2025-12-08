@@ -26,7 +26,7 @@ const InputField: React.FC<InputFieldProps> = ({
                     <img
                         src={icon}
                         alt="icon"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-70"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-100"
                     />
                 )}
             
@@ -36,10 +36,13 @@ const InputField: React.FC<InputFieldProps> = ({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                className="
-                    w-full h-[40px] pl-10 pr-4 bg-white border border-[#A5A8AD] rounded-lg text-[14px] 
+                className={`
+                    w-full h-[40px] pr-4 bg-[#FAFAFA] border border-[#A5A8AD] rounded-lg text-[14px] 
                     font-roboto text-[#111827] placeholder:text-[14px] placeholder:font-roboto placeholder:text-[#364D7D] 
-                    outline-none focus:ring-1 focus:ring-[#FACC15] focus:border-[#FACC15] transition-all duration-200"
+                    outline-none focus:ring-1 focus:ring-[#FACC15] focus:border-[#FACC15] transition-all duration-200
+                    
+                    ${icon ? "pl-10" : "pl-4"} pr-4
+                `}
             />
             </div>
         </div>
