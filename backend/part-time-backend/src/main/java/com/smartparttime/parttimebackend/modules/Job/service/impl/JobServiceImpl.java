@@ -2,6 +2,7 @@ package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
+import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
@@ -15,9 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -74,40 +78,40 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public Page<JobResponseDto> searchJobs(Integer categoryId,
-                                           String location,
-                                           String jobType,
-                                           String title,
-                                           String keyword,
-                                           String skill,
-                                           int page,
-                                           int size) {
-
+    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String skills, String category, String description, LocalDateTime date, BigDecimal minSalary, BigDecimal maxSalary, int page,int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Job> jobsPage;
 
-        if (categoryId != null) {
-            jobsPage = jobRepo.findByCategory_Id(categoryId, pageable);
+        Specification<Job> spec = Specification.allOf();
+
+        if (location != null) {
+            spec = spec.and(JobSpec.hasLocation(location));
         }
-        else if (location != null && !location.isBlank()) {
-            jobsPage = jobRepo.findByLocationContainingIgnoreCase(location, pageable);
+        if (jobType != null) {
+            spec = spec.and(JobSpec.hasJobType(jobType));
         }
-        else if (jobType != null && !jobType.isBlank()) {
-            jobsPage = jobRepo.findByJobType(jobType, pageable);
+        if (title != null) {
+            spec = spec.and(JobSpec.hasTitle(title));
         }
-        else if (title != null && !title.isBlank()) {
-            jobsPage = jobRepo.findByTitleContainingIgnoreCase(title, pageable);
+        if (skills != null) {
+            spec = spec.and(JobSpec.hasSkills(skills));
         }
-        else if (keyword != null && !keyword.isBlank()) {
-            jobsPage = jobRepo.findByDescriptionContainingIgnoreCase(keyword, pageable);
+        if (category != null) {
+            spec = spec.and(JobSpec.hasCategory(category));
         }
-        else if (skill != null && !skill.isBlank()) {
-            jobsPage = jobRepo.findBySkillsContainingIgnoreCase(skill, pageable);
+        if (description != null) {
+            spec = spec.and(JobSpec.hasDescription(description));
         }
-        else {
-            jobsPage = jobRepo.findAll(pageable);
+        if (date != null) {
+            spec = spec.and(JobSpec.hasDate(date));
+        }
+        if (minSalary != null) {
+            spec =spec.and(JobSpec.hasSalaryGreaterThanOrEqualTo(minSalary));
+        }
+        if (maxSalary != null) {
+            spec =spec.and(JobSpec.hasSalaryLessThanOrEqualTo(maxSalary));
         }
 
+        Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
         return jobsPage.map(this::mapToResponse);
     }
 

@@ -4,6 +4,8 @@ import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,17 +18,9 @@ public interface JobService {
 
     JobResponseDto getJobById(UUID jobId);
 
-
     List<JobResponseDto> getJobsByEmployer(UUID employerId);
 
-    Page<JobResponseDto> searchJobs(Integer categoryId,
-                                    String location,
-                                    String jobType,
-                                    String title,
-                                    String keyword,
-                                    String skill,
-                                    int page,
-                                    int size);
+    Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String skills , String category, String description, LocalDateTime date, BigDecimal minSalary, BigDecimal maxSalary,int page,int size);
 
     JobResponseDto updateJob(UUID jobId, JobRequestDto dto);
 
