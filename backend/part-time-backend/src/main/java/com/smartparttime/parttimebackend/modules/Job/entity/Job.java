@@ -33,7 +33,7 @@ public class Job {
 
     @ManyToOne
     @JoinColumn(name = "employer_id")
-    private Employer employee;
+    private Employer employer;
 
     @Column(name = "description")
     private String description;
@@ -85,5 +85,8 @@ public class Job {
 
     @OneToMany(mappedBy = "job")
     private Set<Rate> rates = new HashSet<>();
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<JobSchedule> jobSchedules = new HashSet<>();
 
 }
