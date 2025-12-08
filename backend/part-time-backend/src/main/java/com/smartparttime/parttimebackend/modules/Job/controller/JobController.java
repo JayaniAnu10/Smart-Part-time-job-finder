@@ -3,10 +3,13 @@ package com.smartparttime.parttimebackend.modules.Job.controller;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
+import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,7 @@ import java.util.UUID;
 public class JobController {
 
     private final JobService jobService;
+    private final JobRepo jobRepo;
 
     @PostMapping("/create/{employerId}")
     public ResponseEntity<?> addJob(@Valid @RequestBody JobRequestDto jobRequestDto,
@@ -99,6 +103,15 @@ public class JobController {
                                                     @RequestBody JobRequestDto jobRequestDto) {
         JobResponseDto updated = jobService.updateJob(jobId, jobRequestDto);
         return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/location")
+    public ResponseEntity<?> getJobsByLocation(
+            @RequestParam String location,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        Page<JobResponseDto> jobs = jobService.getByLocation(page,size,location);
+        return ResponseEntity.ok(jobs);
     }
 
 

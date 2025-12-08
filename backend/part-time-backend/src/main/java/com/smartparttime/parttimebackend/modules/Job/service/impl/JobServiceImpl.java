@@ -166,4 +166,11 @@ public class JobServiceImpl implements JobService {
         jobRepo.deleteById(jobId);
     }
 
+    @Override
+    public Page<JobResponseDto> getByLocation(int page, int size, String location) {
+        Pageable pageable = PageRequest.of(page, size);
+        var jobs = jobRepo.findByLocationContainingIgnoreCase(location,pageable);
+        return jobs.map(jobMapper::toDto);
+    }
+
 }
