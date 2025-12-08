@@ -12,6 +12,7 @@ interface InputFieldProps {
 const InputField: React.FC<InputFieldProps> = ({
     label,
     type = "text",
+    
     placeholder,
     value,
     onChange,

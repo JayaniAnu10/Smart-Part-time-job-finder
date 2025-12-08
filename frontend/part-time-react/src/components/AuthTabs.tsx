@@ -6,7 +6,7 @@ interface AuthTabsProps {
 const AuthTabs = ({ activeTab, setActiveTab }: AuthTabsProps) => {
   return (
     <div className="w-full max-w-sm bg-[#E7ECF7] p-1 rounded-xl flex shadow-sm">
-      {/* Login Tab */}
+      
       <button
         onClick={() => setActiveTab("login")}
         className={`
@@ -21,7 +21,6 @@ const AuthTabs = ({ activeTab, setActiveTab }: AuthTabsProps) => {
         Login
       </button>
 
-      {/* Signup Tab */}
       <button
         onClick={() => setActiveTab("signup")}
         className={`

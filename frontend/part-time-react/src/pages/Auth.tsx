@@ -2,7 +2,6 @@ import { useState } from "react";
 import AuthTabs from "../components/AuthTabs";
 import InputField from "../components/InputField";
 import SelectField from "../components/SelectField";
-import { Link } from "react-router-dom";
 
 import logoIcon from "../assets/logo-icon.svg";
 
@@ -27,7 +26,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center 
-      bg-gradient-to-br from-[#FFFFFF] via-[#FFF8E5] to-[#FFF4D0] p-6">
+      bg-gradient-to-br from-[#FFFFFF] via-[#FAF5E8] to-[#FCF5DE] p-6">
 
         <div className="flex items-center gap-2 mt-4 mb-2">
         
@@ -59,6 +58,7 @@ const Auth = () => {
         
         {activeTab === "login" ? (
           <form className="flex flex-col gap-4 mt-4" onSubmit={handleLogin}>
+            
             <InputField
               label="Email"
               type="email"
@@ -66,7 +66,7 @@ const Auth = () => {
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
             />
-
+            
             <InputField
               label="Password"
               type="password"
