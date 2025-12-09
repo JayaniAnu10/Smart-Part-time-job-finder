@@ -1,7 +1,5 @@
 package com.smartparttime.parttimebackend.modules.Admin.dto;
 
-
-
 import lombok.Data;
 
 @Data
