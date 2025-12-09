@@ -92,7 +92,7 @@ export default function JobSeekerStep3() {
             placeholder="Tell employers about yourself..."
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            className="w-full h-[90px] border border-[#CCD7E9] rounded-lg p-3 text-[#364D7D] placeholder:text-[#364D7D] bg-[#FAFAFA] "
+            className="w-full h-[90px] border border-[#A5A8AD] rounded-lg p-3 text-[#364D7D] placeholder:text-[#364D7D] bg-[#FAFAFA] "
           ></textarea>
         </div>
 
@@ -102,7 +102,7 @@ export default function JobSeekerStep3() {
             <span className="text-[14px] text-[#0F1F3D]">(Select at least one)</span>
           </p>
 
-          <div className="border border-[#CCD7E9] rounded-lg p-4 flex flex-wrap gap-1 bg-[#FAFAFA]">
+          <div className="border border-[#A5A8AD] rounded-lg p-4 flex flex-wrap gap-1 bg-[#FAFAFA]">
             {skillOptions.map((skill) => (
               <SkillTag
                 key={skill}
@@ -136,7 +136,7 @@ export default function JobSeekerStep3() {
 
         <div className="flex justify-between mt-6">
           <Link to="/jobseeker/register/step2">
-            <button className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#F7C01D] transition">
+            <button className="px-6 h-[40px] rounded-[12px] border border-[#A5A8AD] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#F7C01D] transition">
               ← Back
             </button>
           </Link>

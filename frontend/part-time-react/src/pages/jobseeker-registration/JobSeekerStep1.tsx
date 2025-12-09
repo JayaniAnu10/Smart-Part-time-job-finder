@@ -9,7 +9,7 @@ import logoIcon from "../../assets/logo-icon.svg";
 
 export default function JobSeekerStep1() {
   return (
-    <div className="min-h-screen bg-[#FAFAfA] flex flex-col items-center py-10">
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center py-10">
       
       <div className="flex items-center gap-2 mt-4 mb-2">
         
@@ -53,9 +53,11 @@ export default function JobSeekerStep1() {
           />
 
           <div className="flex justify-between mt-6">
-            <button className="px-6 h-[40px] rounded-[12px] border border-[#cCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200">
-              ← Back
-            </button>
+            <Link to="/get-started">
+              <button className="px-6 h-[40px] rounded-[12px] border border-[#cCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200">
+                ← Back
+              </button>
+            </Link>
 
             <Link to="/jobseeker/register/step2">
               <button className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold">
