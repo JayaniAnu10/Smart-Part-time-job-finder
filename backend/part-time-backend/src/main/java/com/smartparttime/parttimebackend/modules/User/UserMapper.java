@@ -4,6 +4,7 @@ import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerR
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
+import com.smartparttime.parttimebackend.modules.User.entities.User;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

@@ -5,10 +5,11 @@ import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
+import com.smartparttime.parttimebackend.modules.User.entities.User;
+import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -45,7 +46,9 @@ public class EmployerService {
         var emp=employerMapper.toEntity(request);
         emp.setUser(savedUser);
 
-        uploadImage(logo,emp);
+        if (logo != null && !logo.isEmpty()) {
+            uploadImage(logo,emp);
+        }
 
         employerRepository.save(emp);
 
@@ -62,7 +65,7 @@ public class EmployerService {
     }
 
 
-    public User updateEmployer(UpdateEmployerRequest request,UUID id) {
+    public User updateEmployer(UpdateEmployerRequest request, UUID id) {
         var employer=employerRepository.findById(id).orElse(null);
         if(employer==null){
             throw new NotFoundException("User not found");

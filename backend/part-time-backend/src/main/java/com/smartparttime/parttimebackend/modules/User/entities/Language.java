@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.User;
+package com.smartparttime.parttimebackend.modules.User.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,17 +10,17 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "complaint_type")
-public class ComplaintType {
+@Table(name = "language")
+public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "language")
+    private String language;
 
-    @OneToMany(mappedBy = "type")
-    private Set<Complaint> complaints = new HashSet<>();
+    @OneToMany(mappedBy = "language")
+    private Set<User> users = new HashSet<>();
 
 }

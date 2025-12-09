@@ -12,8 +12,6 @@ import com.smartparttime.parttimebackend.modules.Job.mappers.JobMapper;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
-import com.smartparttime.parttimebackend.modules.User.User;
-import com.smartparttime.parttimebackend.modules.User.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Notification;
 
-import com.smartparttime.parttimebackend.modules.User.User;
+import com.smartparttime.parttimebackend.modules.User.entities.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
