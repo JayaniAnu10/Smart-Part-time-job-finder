@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.User;
+package com.smartparttime.parttimebackend.modules.User.entities;
 
 import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
@@ -7,11 +7,11 @@ import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.Notification.Notification;
 import com.smartparttime.parttimebackend.modules.Payment.Payment;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
+import com.smartparttime.parttimebackend.modules.User.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;

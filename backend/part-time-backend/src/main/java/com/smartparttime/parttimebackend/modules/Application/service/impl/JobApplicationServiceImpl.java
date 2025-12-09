@@ -10,11 +10,10 @@ import com.smartparttime.parttimebackend.modules.Application.repo.JobApplication
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
-import com.smartparttime.parttimebackend.modules.User.UserRepository;
+import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;

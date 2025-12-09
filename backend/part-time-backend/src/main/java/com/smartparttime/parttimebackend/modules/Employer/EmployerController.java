@@ -4,11 +4,7 @@ import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerA
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
-import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserMapper;
-import com.smartparttime.parttimebackend.modules.User.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;

@@ -4,9 +4,7 @@ import com.smartparttime.parttimebackend.modules.Application.JobApplication;
 import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
-import com.smartparttime.parttimebackend.modules.User.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 

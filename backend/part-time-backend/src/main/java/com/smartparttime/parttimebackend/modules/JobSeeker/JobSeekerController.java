@@ -1,20 +1,11 @@
 package com.smartparttime.parttimebackend.modules.JobSeeker;
 
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
-import com.smartparttime.parttimebackend.common.imageStorage.ImageStorageClient;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerAllDto;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerMapper;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerService;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerAllDto;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
-import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserMapper;
-import com.smartparttime.parttimebackend.modules.User.UserRepository;
-import com.smartparttime.parttimebackend.modules.User.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;

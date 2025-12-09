@@ -3,12 +3,13 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
-import com.smartparttime.parttimebackend.common.imageStorage.ImageStorageClient;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
+import com.smartparttime.parttimebackend.modules.User.entities.User;
+import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -65,7 +66,7 @@ public class JobSeekerService {
     }
 
 
-    public User updateJobSeeker(UpdateJobSeekerRequest request,UUID id) {
+    public User updateJobSeeker(UpdateJobSeekerRequest request, UUID id) {
         var jobSeeker=jobSeekerRepository.findById(id).orElse(null);
         if(jobSeeker==null){
             throw new NotFoundException("JobSeeker not found");

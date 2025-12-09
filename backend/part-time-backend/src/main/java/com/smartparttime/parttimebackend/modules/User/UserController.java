@@ -2,6 +2,7 @@ package com.smartparttime.parttimebackend.modules.User;
 
 import com.smartparttime.parttimebackend.modules.User.UserDtos.ChangePasswordRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
+import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

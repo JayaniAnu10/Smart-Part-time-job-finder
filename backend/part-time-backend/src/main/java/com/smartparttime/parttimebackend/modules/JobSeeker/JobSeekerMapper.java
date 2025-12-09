@@ -4,8 +4,6 @@ import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeek
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
-import com.smartparttime.parttimebackend.modules.User.User;
-import jakarta.validation.Valid;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
