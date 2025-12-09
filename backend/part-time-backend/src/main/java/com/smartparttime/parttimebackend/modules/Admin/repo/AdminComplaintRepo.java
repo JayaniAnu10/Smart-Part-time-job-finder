@@ -3,21 +3,35 @@ package com.smartparttime.parttimebackend.modules.Admin.repo;
 import com.smartparttime.parttimebackend.modules.User.Complaint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 public interface AdminComplaintRepo extends JpaRepository<Complaint, UUID> {
 
-    // Get all complaints sorted newest first
-    List<Complaint> findAllByOrderByCreatedAtDesc();
 
-    // Filter by status (PENDING, RESOLVED, REJECTED)
-    List<Complaint> findByStatus(String status);
+    @Query("""
+            SELECT c FROM Complaint c
+            LEFT JOIN FETCH c.reporter r
+            LEFT JOIN FETCH c.target t
+            LEFT JOIN FETCH c.type ct
+            ORDER BY c.createdAt DESC
+           """)
+    List<Complaint> findAllComplaints();
 
-    // Search by reporter or target (email)
-    @Query("SELECT c FROM Complaint c WHERE " +
-            "c.reporter.email LIKE %?1% OR " +
-            "c.target.email LIKE %?1%")
+
+    List<Complaint> findByStatusOrderByCreatedAtDesc(String status);
+
+
+    @Query("""
+            SELECT c FROM Complaint c
+            LEFT JOIN c.reporter r
+            LEFT JOIN c.target t
+            WHERE LOWER(c.description) LIKE LOWER(CONCAT('%', :keyword, '%'))
+               OR LOWER(r.email) LIKE LOWER(CONCAT('%', :keyword, '%'))
+               OR LOWER(t.email) LIKE LOWER(CONCAT('%', :keyword, '%'))
+           """)
     List<Complaint> searchComplaints(String keyword);
 }
