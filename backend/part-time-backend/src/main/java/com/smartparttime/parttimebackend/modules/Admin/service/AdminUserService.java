@@ -9,11 +9,11 @@ public interface AdminUserService {
 
         List<AdminUserDto> getAllUsers();
 
-        AdminUserDto getuserById(UUID userId);
+        AdminUserDto getUserById(UUID userId);
 
         AdminUserDto updateUserStatus(UUID userId, boolean isActive);
 
-        List<AdminUserDto> searchUser(String keyword);
+        List<AdminUserDto> searchUsers(String keyword);
 
 
 
