@@ -5,11 +5,14 @@ import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingResponse;
+import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingStats;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateRequest;
 import com.smartparttime.parttimebackend.modules.Rating.RateMapper;
 import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
 import com.smartparttime.parttimebackend.modules.Rating.service.RateService;
+import com.smartparttime.parttimebackend.modules.User.entities.User;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +32,8 @@ public class RateServiceImpl implements RateService {
     private final RateMapper rateMapper;
     private final UserRepository userRepository;
 
+
+    @Transactional
     public RatingResponse addRate(RatingRequest request) {
         var rater = userRepository.findById(request.getRaterId()).orElse(null);
         var rateReceiver = userRepository.findById(request.getRateReceiverId()).orElse(null);
@@ -64,7 +69,15 @@ public class RateServiceImpl implements RateService {
         newRate.setCreatedDate(LocalDateTime.now());
         rateRepository.save(newRate);
 
+        updateUserRatingStats(rateReceiver.getId());
+
         return  rateMapper.toDto(newRate);
+    }
+
+    private void updateUserRatingStats(UUID userId) {
+        RatingStats stats = rateRepository.getRatingStatsByUserId(userId);
+        userRepository.updateRatingStats(userId,stats.getTotalRating(),stats.getAverageRating());
+
     }
 
     @Override

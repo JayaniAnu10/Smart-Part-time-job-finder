@@ -9,9 +9,12 @@ import com.smartparttime.parttimebackend.modules.Payment.Payment;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import com.smartparttime.parttimebackend.modules.User.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -91,5 +94,11 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private JobSeeker jobSeeker;
+
+    @Column(name = "average_rate")
+    private BigDecimal averageRate;
+
+    @Column(name = "total_ratings")
+    private Integer totalRatings;
 
 }

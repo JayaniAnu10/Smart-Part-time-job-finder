@@ -46,7 +46,9 @@ public class EmployerService {
         var emp=employerMapper.toEntity(request);
         emp.setUser(savedUser);
 
-        uploadImage(logo,emp);
+        if (logo != null && !logo.isEmpty()) {
+            uploadImage(logo,emp);
+        }
 
         employerRepository.save(emp);
 
