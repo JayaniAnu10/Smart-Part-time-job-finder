@@ -4,11 +4,7 @@ import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerA
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
-import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserMapper;
-import com.smartparttime.parttimebackend.modules.User.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -28,7 +24,7 @@ public class EmployerController {
     private final EmployerService employerService;
     private final EmployerRepository employerRepository;
     private final EmployerMapper employerMapper;
-    private final UserMapper userMapper;
+
 
     @PostMapping(value = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerEmployee(
@@ -64,12 +60,11 @@ public class EmployerController {
 
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateEmployer(
+    public EmployerDto updateEmployer(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateEmployerRequest request
     ){
-        var user = employerService.updateEmployer(request,id);
-        return ResponseEntity.ok(userMapper.toDto(user));
+       return employerService.updateEmployer(request,id);
     }
 
 

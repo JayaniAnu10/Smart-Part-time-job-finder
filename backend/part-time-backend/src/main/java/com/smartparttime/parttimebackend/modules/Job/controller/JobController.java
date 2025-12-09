@@ -26,7 +26,6 @@ import java.util.UUID;
 public class JobController {
 
     private final JobService jobService;
-    private final JobRepo jobRepo;
 
     @PostMapping("/create/{employerId}")
     public ResponseEntity<?> addJob(@Valid @RequestBody JobRequestDto jobRequestDto,

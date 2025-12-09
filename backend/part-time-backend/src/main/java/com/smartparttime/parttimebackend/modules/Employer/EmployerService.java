@@ -3,12 +3,14 @@ package com.smartparttime.parttimebackend.modules.Employer;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
+import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
+import com.smartparttime.parttimebackend.modules.User.entities.User;
+import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,25 +33,26 @@ public class EmployerService {
     private final AzureImageStorageClient imageStorageClient;
 
     @Transactional
-    public UserRegisterResponse addEmployee(@Valid EmployerRegisterRequest request, MultipartFile logo) throws IOException {
-        availabilityCheck(request.getEmail(), request.getRegistrationId());
+    public EmployerDto addEmployee(@Valid EmployerRegisterRequest request, MultipartFile logo) throws IOException {
+        availabilityCheck(request.getId(), request.getRegistrationId());
 
-        if(!request.getPassword().equals(request.getConfirmPassword())){
-            throw new PasswordMismatchException("Passwords do not match");
+        var user = userRepository.findById(request.getId()).orElse(null);
+        if (user == null) {
+            throw new NotFoundException("User is not registered");
         }
 
-        var user = userMapper.employeeToEntity(request);
-        user.setRole(Role.EMPLOYER);
-        var savedUser = userService.registerUser(user);
-
         var emp=employerMapper.toEntity(request);
-        emp.setUser(savedUser);
+        emp.setUser(user);
 
-        uploadImage(logo,emp);
+        if (logo != null && !logo.isEmpty()) {
+            uploadImage(logo,emp);
+        }
 
+        user.setIsEmployer(true);
+        userRepository.save(user);
         employerRepository.save(emp);
 
-        return userMapper.toResponse(savedUser);
+        return employerMapper.toEmployerDto(emp);
     }
 
 
@@ -62,17 +65,20 @@ public class EmployerService {
     }
 
 
-    public User updateEmployer(UpdateEmployerRequest request,UUID id) {
+    public EmployerDto updateEmployer(UpdateEmployerRequest request, UUID id) {
         var employer=employerRepository.findById(id).orElse(null);
         if(employer==null){
             throw new NotFoundException("User not found");
         }
 
-        availabilityCheck(request.getEmail(), request.getRegistrationId());
+        if (employerRepository.existsByRegistrationId(request.getRegistrationId())) {
+            throw new BadRequestException("Registration id already exists");
+        }
+
 
         employerMapper.update(request,employer);
         employerRepository.save(employer);
-        return userRepository.findById(employer.getId()).orElseThrow();
+        return employerMapper.toEmployerDto(employer);
     }
 
 
@@ -111,19 +117,22 @@ public class EmployerService {
     }
 
 
+    @Transactional
     public ResponseEntity<Void> deleteEmployer(UUID id) {
         var employer = employerRepository.findById(id).orElse(null);
         if(employer == null){
             return ResponseEntity.notFound().build();
         }
+        var user = userRepository.findById(employer.getId()).orElseThrow();
+        user.setIsEmployer(false);
+        userRepository.save(user);
         employerRepository.deleteById(id);
-        userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    private void availabilityCheck(String email, String registrationId) {
-        if (userRepository.existsUserByEmail(email)) {
-            throw new BadRequestException("Email already exists");
+    private void availabilityCheck(UUID id, String registrationId) {
+        if (employerRepository.existsById(id)) {
+            throw new BadRequestException("Already registered as an employer");
         }
 
         if (employerRepository.existsByRegistrationId(registrationId)) {

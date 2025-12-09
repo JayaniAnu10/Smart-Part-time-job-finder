@@ -10,11 +10,10 @@ import com.smartparttime.parttimebackend.modules.Application.repo.JobApplication
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
-import com.smartparttime.parttimebackend.modules.User.UserRepository;
+import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +39,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public JobApplicationResponse createApplication(JobApplicationRequest request) {
 
-        var seeker = userRepository.findById(request.getJobseeker()).orElse(null);
+        var seeker = jobSeekerRepository.findById(request.getJobseeker()).orElse(null);
         if (seeker == null) {
             throw new NotFoundException("User not found");
         }
@@ -50,9 +49,11 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             throw new NotFoundException("Job not found");
         }
 
+        var user = userRepository.findById(request.getJobseeker()).orElseThrow();
+
         var application = new JobApplication();
         application.setJob(job);
-        application.setJobseeker(seeker);
+        application.setJobseeker(user);
         application.setAppliedDate(LocalDateTime.now());
         application.setStatus(ApplicationStatus.PENDING);
 
@@ -74,7 +75,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public List<JobApplicationResponse> getUserApplications(UUID id, int page, int size) {
         Pageable pageable = PageRequest.of(page,size);
-        var user = userRepository.findById(id).orElse(null);
+        var user = jobSeekerRepository.findById(id).orElse(null);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -93,7 +94,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public List<JobApplicationResponse> getApplicationsByStatus(UUID id,ApplicationStatus status, int page ,int size) {
         Pageable  pageable = PageRequest.of(page,size);
-        var user = userRepository.findById(id).orElse(null);
+        var user = jobSeekerRepository.findById(id).orElse(null);
         if (user == null) {
             throw new NotFoundException("User not found");
         }

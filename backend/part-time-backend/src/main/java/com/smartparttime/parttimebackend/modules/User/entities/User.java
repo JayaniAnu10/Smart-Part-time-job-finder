@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.User;
+package com.smartparttime.parttimebackend.modules.User.entities;
 
 import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
@@ -7,11 +7,14 @@ import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.Notification.Notification;
 import com.smartparttime.parttimebackend.modules.Payment.Payment;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
+import com.smartparttime.parttimebackend.modules.User.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,9 +36,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private Role role;
 
     @Column(name = "is_verified")
     private Boolean isVerified = false;
@@ -91,5 +91,17 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private JobSeeker jobSeeker;
+
+    @Column(name = "average_rate")
+    private BigDecimal averageRate;
+
+    @Column(name = "total_ratings")
+    private Integer totalRatings;
+
+    @Column(name = "is_employer")
+    private Boolean isEmployer = false;
+
+    @Column(name = "is_jobseeker")
+    private Boolean isJobseeker = false;
 
 }

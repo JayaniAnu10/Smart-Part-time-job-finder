@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.User;
+package com.smartparttime.parttimebackend.modules.User.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

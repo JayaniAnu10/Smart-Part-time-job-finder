@@ -3,12 +3,14 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
-import com.smartparttime.parttimebackend.common.imageStorage.ImageStorageClient;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
+import com.smartparttime.parttimebackend.modules.User.entities.User;
+import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -30,29 +32,28 @@ public class JobSeekerService {
     private final AzureImageStorageClient imageStorageClient;
 
     @Transactional
-    public UserRegisterResponse addSeeker(@Valid JobSeekerRegisterRequest request,
-                                          MultipartFile profilePicture) throws IOException {
-        availabilityCheck(request.getEmail(), request.getNic());
+    public JobSeekerDto addSeeker(@Valid JobSeekerRegisterRequest request,
+                                  MultipartFile profilePicture) throws IOException {
+        availabilityCheck(request.getId(), request.getNic());
 
-        if(!request.getPassword().equals(request.getConfirmPassword())){
-            throw new PasswordMismatchException("Passwords do not match");
+        var user = userRepository.findById(request.getId()).orElse(null);
+
+        if (user == null) {
+            throw new NotFoundException("User has not registered");
         }
 
-        var user = userMapper.seekerToEntity(request);
-        user.setRole(Role.JOBSEEKER);
-        var savedUser = userService.registerUser(user);
-
         var seeker=jobSeekerMapper.toEntity(request);
-        seeker.setUser(savedUser);
-
+        seeker.setUser(user);
 
         if(profilePicture!=null && !profilePicture.isEmpty()){
             uploadImage(profilePicture, seeker);
         }
 
+        user.setIsJobseeker(true);
+        userRepository.save(user);
         jobSeekerRepository.save(seeker);
 
-        return userMapper.toResponse(savedUser);
+        return jobSeekerMapper.toJobSeekerDto(seeker);
     }
 
 
@@ -65,17 +66,19 @@ public class JobSeekerService {
     }
 
 
-    public User updateJobSeeker(UpdateJobSeekerRequest request,UUID id) {
+    public JobSeekerDto updateJobSeeker(UpdateJobSeekerRequest request, UUID id) {
         var jobSeeker=jobSeekerRepository.findById(id).orElse(null);
         if(jobSeeker==null){
             throw new NotFoundException("JobSeeker not found");
         }
 
-        availabilityCheck(request.getEmail(), request.getNic());
+        if (jobSeekerRepository.existsByNic(request.getNic())) {
+            throw new BadRequestException("Job seeker already exists");
+        }
 
         jobSeekerMapper.update(request,jobSeeker);
         jobSeekerRepository.save(jobSeeker);
-        return userRepository.findById(jobSeeker.getId()).orElseThrow();
+        return jobSeekerMapper.toJobSeekerDto(jobSeeker);
     }
 
     @Transactional
@@ -112,20 +115,24 @@ public class JobSeekerService {
         }
     }
 
-
+    @Transactional
     public ResponseEntity<Void> deleteSeeker(UUID id) {
         var seeker = jobSeekerRepository.findById(id).orElse(null);
         if(seeker == null){
             return ResponseEntity.notFound().build();
         }
+
+        var user = userRepository.findById(seeker.getId()).orElseThrow();
+        user.setIsJobseeker(false);
+        userRepository.save(user);
+
         jobSeekerRepository.deleteById(id);
-        userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
 
-    private void availabilityCheck(String email, String nic) {
-        if (userRepository.existsUserByEmail(email)) {
+    private void availabilityCheck(UUID id, String nic) {
+        if (jobSeekerRepository.existsById(id)) {
             throw new BadRequestException("Email already exists");
         }
 
