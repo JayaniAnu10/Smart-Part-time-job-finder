@@ -36,7 +36,7 @@ public class AdminUserController {
         return adminUserService.updateUserStatus(id, isActive);
     }
 
-    
+
     @GetMapping("/search")
     public List<AdminUserDto> searchUsers(@RequestParam String keyword) {
         return adminUserService.searchUsers(keyword);

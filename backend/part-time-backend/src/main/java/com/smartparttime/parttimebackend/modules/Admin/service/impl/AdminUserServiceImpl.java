@@ -36,7 +36,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public AdminUserDto getuserById(UUID userId) {
+    public AdminUserDto getUserById(UUID userId) {
 
         User user = adminUserRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -61,7 +61,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public List<AdminUserDto> searchUser(String keyword) {
+    public List<AdminUserDto> searchUsers(String keyword) {
 
        return adminUserRepo.searchUsers(keyword)
                .stream()
