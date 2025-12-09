@@ -6,4 +6,6 @@ import java.util.UUID;
 
 public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
     boolean existsByNic(String nic);
+
+
 }

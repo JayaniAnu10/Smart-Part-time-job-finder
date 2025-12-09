@@ -30,7 +30,8 @@ public class JobApplication {
     @Column(name = "applied_date")
     private LocalDateTime appliedDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private ApplicationStatus status;
 
 }
