@@ -1,7 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Admin.mapper;
 
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminComplaintDto;
-import com.smartparttime.parttimebackend.modules.User.Complaint;
+import com.smartparttime.parttimebackend.modules.User.entities.Complaint;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -36,7 +36,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-
     @Column(name = "is_verified")
     private Boolean isVerified = false;
 

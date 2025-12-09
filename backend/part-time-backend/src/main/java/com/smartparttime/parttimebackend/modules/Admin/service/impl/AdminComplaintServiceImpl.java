@@ -4,7 +4,7 @@ import com.smartparttime.parttimebackend.modules.Admin.dto.AdminComplaintDto;
 import com.smartparttime.parttimebackend.modules.Admin.mapper.AdminComplaintMapper;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminComplaintRepo;
 import com.smartparttime.parttimebackend.modules.Admin.service.AdminComplaintService;
-import com.smartparttime.parttimebackend.modules.User.Complaint;
+import com.smartparttime.parttimebackend.modules.User.entities.Complaint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -4,7 +4,7 @@ import com.smartparttime.parttimebackend.modules.Admin.dto.AdminUserDto;
 import com.smartparttime.parttimebackend.modules.Admin.mapper.AdminUserMapper;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminUserRepo;
 import com.smartparttime.parttimebackend.modules.Admin.service.AdminUserService;
-import com.smartparttime.parttimebackend.modules.User.User;
+import com.smartparttime.parttimebackend.modules.User.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

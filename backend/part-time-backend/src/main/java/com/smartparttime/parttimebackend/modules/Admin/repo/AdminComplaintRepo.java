@@ -1,6 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Admin.repo;
 
-import com.smartparttime.parttimebackend.modules.User.Complaint;
+import com.smartparttime.parttimebackend.modules.User.entities.Complaint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
