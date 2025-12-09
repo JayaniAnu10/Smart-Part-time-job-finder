@@ -31,7 +31,7 @@ const RoleCard: React.FC<RoleCardProps> = ({
         hover:shadow-[0_8px_20px_rgba(251,189,35,0.4)]
       "
     >
-      {/* Image */}
+      
       <div className="w-[80px] h-[80px] rounded-full bg-[#fef8e9] flex items-center justify-center mb-6">
         <img
           src={image || "https://via.placeholder.com/40"} 
@@ -39,19 +39,16 @@ const RoleCard: React.FC<RoleCardProps> = ({
         />
       </div>
 
-      {/* Title */}
       <h3 className="text-[24px] font-bold text-[#0F1F3D] text-center mb-3">
         {title}
       </h3>
 
-      {/* Description */}
       {description && (
         <p className="text-[16px] text-[#364D7D] text-center leading-relaxed mb-6">
           {description}
         </p>
       )}
 
-      {/* Bullets */}
       {bullets.length > 0 && (
         <ul className="text-[14px] text-[#0F1F3D] space-y-1 mb-6">
           {bullets.map((item, index) => (
@@ -63,7 +60,6 @@ const RoleCard: React.FC<RoleCardProps> = ({
         </ul>
       )}
 
-      {/* Button */}
       <button
         onClick={() => navigate(navigateTo)}
         className="
