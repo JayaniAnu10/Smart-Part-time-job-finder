@@ -2,6 +2,7 @@ package com.smartparttime.parttimebackend.modules.Rating.service.impl;
 
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingResponse;
@@ -10,6 +11,7 @@ import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateReq
 import com.smartparttime.parttimebackend.modules.Rating.RateMapper;
 import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
 import com.smartparttime.parttimebackend.modules.Rating.service.RateService;
+import com.smartparttime.parttimebackend.modules.User.Role;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -62,6 +65,8 @@ public class RateServiceImpl implements RateService {
             throw  new BadRequestException("You have already rated");
         }
 
+        validateRatingPermission(rater,rateReceiver,job);
+
         var newRate = rateMapper.toEntity(request);
         newRate.setJob(job);
         newRate.setRater(rater);
@@ -72,6 +77,35 @@ public class RateServiceImpl implements RateService {
         updateUserRatingStats(rateReceiver.getId());
 
         return  rateMapper.toDto(newRate);
+    }
+
+    private void validateRatingPermission(User rater, User rateReceiver, Job job) {
+        /*boolean raterIsEmployer = rater.getRole() == Role.EMPLOYER &&
+                job.getEmployer().getId().equals(rater.getId());
+        boolean raterIsJobSeeker = rater.getRole() == Role.JOBSEEKER;
+
+        if (!raterIsEmployer && !raterIsJobSeeker) {
+            throw new BadRequestException("You are not authorized to rate this job");
+        }
+
+
+        if (rater.getRole() == Role.EMPLOYER) {
+            if (rateReceiver.getRole() != Role.JOBSEEKER) {
+                throw new BadRequestException("Employers can only rate job seekers");
+            }
+
+        }else if(rater.getRole() == Role.JOBSEEKER) {
+            if (rateReceiver.getRole() != Role.EMPLOYER) {
+                throw new BadRequestException("Job seekers can only rate employers");
+            }
+
+            if (!job.getEmployer().getId().equals(rateReceiver.getId())) {
+                throw new BadRequestException("You can only rate the employer who posted this job");
+            }
+        } else {
+            throw new BadRequestException("Invalid user role for rating");
+        }*/
+
     }
 
     private void updateUserRatingStats(UUID userId) {
@@ -169,5 +203,15 @@ public class RateServiceImpl implements RateService {
 
         rateRepository.delete(rate);
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public BigDecimal getAverageRateOfUser(UUID id) {
+        var user =userRepository.findById(id).orElse(null);
+        if(user==null){
+            throw new NotFoundException("User not found");
+        }
+
+        return user.getAverageRate();
     }
 }

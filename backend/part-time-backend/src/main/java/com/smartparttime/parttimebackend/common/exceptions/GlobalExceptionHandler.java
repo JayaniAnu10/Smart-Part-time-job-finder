@@ -42,4 +42,11 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", e.getMessage())) ;
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, String>> handleImageStorage(BadRequestException e){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", e.getMessage())) ;
+    }
+
 }

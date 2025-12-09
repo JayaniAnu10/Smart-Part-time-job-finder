@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -62,6 +63,11 @@ public class RateController {
     @PatchMapping
     public RatingResponse updateRate(@Valid @RequestBody RatingUpdateRequest request){
         return rateService.updateRate(request);
+    }
+
+    @GetMapping("/user/{id}/average")
+    public BigDecimal getAverageRateOfUser(@PathVariable UUID id){
+        return rateService.getAverageRateOfUser(id);
     }
 
     @DeleteMapping("/user/{userId}/{id}")

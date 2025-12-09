@@ -66,13 +66,11 @@ public class JobSeekerController {
 
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateJobSeeker(
+    public JobSeekerDto updateJobSeeker(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateJobSeekerRequest request
     ){
-
-        var user = jobSeekerService.updateJobSeeker(request,id);
-        return ResponseEntity.ok(userMapper.toDto(user));
+        return jobSeekerService.updateJobSeeker(request,id);
 
     }
 

@@ -24,7 +24,7 @@ public class EmployerController {
     private final EmployerService employerService;
     private final EmployerRepository employerRepository;
     private final EmployerMapper employerMapper;
-    private final UserMapper userMapper;
+
 
     @PostMapping(value = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerEmployee(
@@ -60,12 +60,11 @@ public class EmployerController {
 
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateEmployer(
+    public EmployerDto updateEmployer(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateEmployerRequest request
     ){
-        var user = employerService.updateEmployer(request,id);
-        return ResponseEntity.ok(userMapper.toDto(user));
+       return employerService.updateEmployer(request,id);
     }
 
 

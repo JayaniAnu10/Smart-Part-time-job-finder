@@ -36,9 +36,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private Role role;
 
     @Column(name = "is_verified")
     private Boolean isVerified = false;
@@ -100,5 +97,11 @@ public class User {
 
     @Column(name = "total_ratings")
     private Integer totalRatings;
+
+    @Column(name = "is_employer")
+    private Boolean isEmployer = false;
+
+    @Column(name = "is_jobseeker")
+    private Boolean isJobseeker = false;
 
 }

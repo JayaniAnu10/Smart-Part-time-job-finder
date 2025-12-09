@@ -6,6 +6,7 @@ import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateReq
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface RateService {
@@ -22,5 +23,7 @@ public interface RateService {
     RatingResponse updateRate(RatingUpdateRequest request);
 
     ResponseEntity<Void> deleteRateById(UUID userId, UUID id);
+
+    BigDecimal getAverageRateOfUser(UUID id);
 
 }

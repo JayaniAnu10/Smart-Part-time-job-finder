@@ -5,8 +5,6 @@ import lombok.Data;
 
 @Data
 public class UpdateEmployerRequest {
-    @Email
-    private String email;
 
     private String contact;
     private String companyName;
