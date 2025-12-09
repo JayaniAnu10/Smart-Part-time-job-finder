@@ -47,11 +47,25 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public AdminUserDto updateUserStatus(UUID userId, boolean isActive) {
-        return null;
+
+        User user =  adminUserRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setIsVerified(isActive);
+        adminUserRepo.save(user);
+        return adminUserMapper.mapToDto(user);
+
+
+
+
     }
 
     @Override
-    public AdminUserDto searchUser(String keyword) {
-        return null;
+    public List<AdminUserDto> searchUser(String keyword) {
+
+       return adminUserRepo.searchUsers(keyword)
+               .stream()
+               .map(adminUserMapper::mapToDto)
+               .collect(Collectors.toList());
     }
 }

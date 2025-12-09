@@ -13,7 +13,7 @@ public interface AdminUserService {
 
         AdminUserDto updateUserStatus(UUID userId, boolean isActive);
 
-        AdminUserDto searchUser(String keyword);
+        List<AdminUserDto> searchUser(String keyword);
 
 
 
