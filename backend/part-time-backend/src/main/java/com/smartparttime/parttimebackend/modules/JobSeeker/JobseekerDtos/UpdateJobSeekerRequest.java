@@ -7,8 +7,7 @@ import java.util.Date;
 
 @Data
 public class UpdateJobSeekerRequest {
-    @Email
-    private String email;
+
     private String contact;
     private String firstName;
     private String lastName;

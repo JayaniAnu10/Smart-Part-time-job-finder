@@ -2,24 +2,19 @@ package com.smartparttime.parttimebackend.modules.Employer.EmployerDtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.UUID;
 
 @Data
 public class EmployerRegisterRequest {
     @NotBlank(message = "Name is required")
     private String companyName;
 
-    @NotBlank(message = "Email is required")
-    @Email
-    private String email;
-
-    @NotBlank(message = "Password is required")
-    @Size(min=6,max=16 ,message = "Password should be at least 6 characters")
-    private String password;
-
-    @NotBlank(message = "Confirm password is required")
-    private String confirmPassword;
+    @NotNull(message = "User id is required")
+    private UUID id;
 
     @NotBlank(message = "Address is required")
     private String companyAddress;
@@ -28,9 +23,6 @@ public class EmployerRegisterRequest {
 
     @NotBlank(message = "Registration Id is required")
     private String registrationId;
-
-    @NotBlank(message = "Contact number is required")
-    private String contact;
 
     private String website;
 

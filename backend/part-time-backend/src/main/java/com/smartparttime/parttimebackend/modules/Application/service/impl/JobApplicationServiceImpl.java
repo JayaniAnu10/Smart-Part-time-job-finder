@@ -39,7 +39,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public JobApplicationResponse createApplication(JobApplicationRequest request) {
 
-        var seeker = userRepository.findById(request.getJobseeker()).orElse(null);
+        var seeker = jobSeekerRepository.findById(request.getJobseeker()).orElse(null);
         if (seeker == null) {
             throw new NotFoundException("User not found");
         }
@@ -49,9 +49,11 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             throw new NotFoundException("Job not found");
         }
 
+        var user = userRepository.findById(request.getJobseeker()).orElseThrow();
+
         var application = new JobApplication();
         application.setJob(job);
-        application.setJobseeker(seeker);
+        application.setJobseeker(user);
         application.setAppliedDate(LocalDateTime.now());
         application.setStatus(ApplicationStatus.PENDING);
 
@@ -73,7 +75,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public List<JobApplicationResponse> getUserApplications(UUID id, int page, int size) {
         Pageable pageable = PageRequest.of(page,size);
-        var user = userRepository.findById(id).orElse(null);
+        var user = jobSeekerRepository.findById(id).orElse(null);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
@@ -92,7 +94,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public List<JobApplicationResponse> getApplicationsByStatus(UUID id,ApplicationStatus status, int page ,int size) {
         Pageable  pageable = PageRequest.of(page,size);
-        var user = userRepository.findById(id).orElse(null);
+        var user = jobSeekerRepository.findById(id).orElse(null);
         if (user == null) {
             throw new NotFoundException("User not found");
         }

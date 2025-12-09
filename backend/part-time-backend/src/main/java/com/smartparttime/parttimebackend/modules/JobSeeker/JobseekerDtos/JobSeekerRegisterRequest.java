@@ -7,9 +7,13 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 public class JobSeekerRegisterRequest {
+    @NotNull(message = "User id is required")
+    private UUID id;
+
     @NotBlank(message = "Name is required")
     private String firstName;
 
@@ -35,17 +39,5 @@ public class JobSeekerRegisterRequest {
 
     private String skills;
 
-    @NotBlank(message = "Email is required")
-    @Email
-    private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min=6,max=16 ,message = "Password should be at least 6 characters")
-    private String password;
-
-    @NotBlank(message = "Confirm password is required")
-    private String confirmPassword;
-
-    @NotBlank(message = "Contact number is required")
-    private String contact;
 }

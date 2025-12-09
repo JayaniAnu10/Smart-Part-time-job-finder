@@ -2,6 +2,9 @@ package com.smartparttime.parttimebackend.modules.User;
 
 import com.smartparttime.parttimebackend.modules.User.UserDtos.ChangePasswordRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
+import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
+import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
+import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,6 +21,10 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
+    @PostMapping
+    public UserRegisterResponse registerUser(@Valid @RequestBody UserRegisterRequest request) {
+        return userService.registerUser(request);
+    }
 
     @GetMapping
     public Iterable<UserDto> getAllUsers() {

@@ -4,14 +4,14 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 public class JobSeekerDto {
+    private UUID id;
     private String firstName;
     private String lastName;
     private String email;
-    private String isVerified;
-    private String trustScore;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String gender;
