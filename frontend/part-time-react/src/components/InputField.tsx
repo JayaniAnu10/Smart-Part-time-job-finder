@@ -20,7 +20,7 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => {
     return (
         <div className="flex flex-col gap-1">
-            <label className="font-roboto text-[14px] font-medium text-[#0F1F3D]">{label}</label>
+            <label className="font-roboto text-[14px]  text-[#0F1F3D]">{label}</label>
 
             <div className="relative w-full h-[40px] ">
                 {icon && (
