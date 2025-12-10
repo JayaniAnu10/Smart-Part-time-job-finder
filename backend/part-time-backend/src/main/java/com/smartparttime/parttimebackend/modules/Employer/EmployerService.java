@@ -121,9 +121,15 @@ public class EmployerService {
             return ResponseEntity.notFound().build();
         }
         var user = userRepository.findById(employer.getId()).orElseThrow();
-        user.setIsEmployer(false);
-        userRepository.save(user);
+
+
         employerRepository.deleteById(id);
+
+        user.setIsEmployer(false);
+        user.setEmployer(null);
+        userRepository.save(user);
+
+
         return ResponseEntity.noContent().build();
     }
 
