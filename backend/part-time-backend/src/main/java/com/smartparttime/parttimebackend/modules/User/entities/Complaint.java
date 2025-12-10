@@ -1,0 +1,41 @@
+package com.smartparttime.parttimebackend.modules.User.entities;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "complaint")
+public class Complaint {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    private UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "reporter_id")
+    private User reporter;
+
+    @ManyToOne
+    @JoinColumn(name = "target_id")
+    private User target;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private ComplaintType type;
+
+    @Column(name = "status")
+    private String status;
+
+}
