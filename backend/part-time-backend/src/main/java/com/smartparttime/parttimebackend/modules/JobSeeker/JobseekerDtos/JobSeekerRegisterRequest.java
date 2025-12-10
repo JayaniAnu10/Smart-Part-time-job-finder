@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 public class JobSeekerRegisterRequest {
     @NotNull(message = "User id is required")
-    private UUID id;
+    private UUID userId;
 
     @NotBlank(message = "Name is required")
     private String firstName;
@@ -31,8 +31,6 @@ public class JobSeekerRegisterRequest {
 
     @NotBlank(message = "Address is required")
     private String address;
-
-    private String profilePicture;
 
     @NotBlank(message = "nic is required")
     private String nic;

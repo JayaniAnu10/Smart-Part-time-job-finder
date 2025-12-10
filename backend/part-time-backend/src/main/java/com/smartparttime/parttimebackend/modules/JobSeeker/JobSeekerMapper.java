@@ -18,6 +18,7 @@ public interface JobSeekerMapper {
     @Mapping(source = "user.createdAt",target = "createdAt")
     @Mapping(source = "user.updatedAt",target = "updatedAt")
     @Mapping(source = "user.contact",target = "contact")
+    @Mapping(source = "user.id",target="userId")
     JobSeekerDto toJobSeekerDto(JobSeeker jobSeeker);
 
 

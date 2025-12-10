@@ -37,7 +37,7 @@ public class JobSeekerController {
 
         try{
             var userDto = jobSeekerService.addSeeker(request,profilePicture);
-            var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+            var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getUserId()).toUri();
             return ResponseEntity.created(uri).body(userDto);
         } catch(IOException e){
             return ResponseEntity.badRequest().body(Map.of("error","Failed to upload profile picture"));

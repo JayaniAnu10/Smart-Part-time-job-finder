@@ -8,12 +8,13 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface EmployerMapper {
-    Employer toEntity(EmployerRegisterRequest employee);
+    Employer toEntity(EmployerRegisterRequest employer);
 
     @Mapping(source = "user.email",target = "email")
     @Mapping(source = "user.trustScore",target = "trustScore")
     EmployerAllDto toDto(Employer employer);
 
+    @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.email",target = "email")
     @Mapping(source = "user.createdAt",target = "createdAt")
     @Mapping(source = "user.updatedAt",target = "updatedAt")
