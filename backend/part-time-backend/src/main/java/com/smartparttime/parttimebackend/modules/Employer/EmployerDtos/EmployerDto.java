@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 public class EmployerDto {
-    private UUID id;
+    private UUID userId;
     private String companyName;
     private String companyAddress;
     private String contactPersonName;

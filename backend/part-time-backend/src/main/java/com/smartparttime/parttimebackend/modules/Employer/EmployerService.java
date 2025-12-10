@@ -7,9 +7,6 @@ import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerD
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
 import com.smartparttime.parttimebackend.modules.User.*;
-import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
-import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
-import com.smartparttime.parttimebackend.modules.User.entities.User;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -27,30 +24,30 @@ import java.util.UUID;
 public class EmployerService {
     private final EmployerRepository employerRepository;
     private final EmployerMapper employerMapper;
-    private final UserMapper userMapper;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final AzureImageStorageClient imageStorageClient;
 
     @Transactional
     public EmployerDto addEmployee(@Valid EmployerRegisterRequest request, MultipartFile logo) throws IOException {
-        availabilityCheck(request.getId(), request.getRegistrationId());
+        availabilityCheck(request.getUserId(), request.getRegistrationId());
 
-        var user = userRepository.findById(request.getId()).orElse(null);
+        var user = userRepository.findById(request.getUserId()).orElse(null);
         if (user == null) {
             throw new NotFoundException("User is not registered");
         }
 
+        user.setIsEmployer(true);
+
         var emp=employerMapper.toEntity(request);
         emp.setUser(user);
+
+        user.setEmployer(emp);
 
         if (logo != null && !logo.isEmpty()) {
             uploadImage(logo,emp);
         }
 
-        user.setIsEmployer(true);
         userRepository.save(user);
-        employerRepository.save(emp);
 
         return employerMapper.toEmployerDto(emp);
     }

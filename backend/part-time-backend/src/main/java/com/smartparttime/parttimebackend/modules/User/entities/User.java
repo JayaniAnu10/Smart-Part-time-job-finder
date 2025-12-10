@@ -84,12 +84,10 @@ public class User {
     @OneToMany(mappedBy = "rateReceiver")
     private Set<Rate> rateReceiver = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private Employer employer;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private JobSeeker jobSeeker;
 
     @Column(name = "average_rate")
