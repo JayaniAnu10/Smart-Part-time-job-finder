@@ -32,7 +32,7 @@ export default function JobSeekerStep3() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFDF5] flex flex-col items-center py-10 px-4">
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center py-10 px-4">
 
       <div className="flex items-center gap-2 mt-4 mb-2">
         <div className="w-[40px] h-[40px] bg-[#F7C01D] flex items-center justify-center rounded-[15px]">
