@@ -1,5 +1,8 @@
 package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
+import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
@@ -40,6 +43,8 @@ public class JobServiceImpl implements JobService {
     private EmployerRepository employerRepository;
     @Autowired
     private JobMapper jobMapper;
+    @Autowired
+    private JobApplicationRepository jobApplicationRepository;
 
 
     @Transactional
@@ -160,6 +165,13 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void deleteJob(UUID jobId) {
+        var job = jobRepo.findById(jobId).orElse(null);
+        if (job == null) {
+            throw new NotFoundException("Job not found");
+        }
+        if(jobApplicationRepository.existsByJob_Id(jobId)) {
+            throw new BadRequestException("Cannot delete job. Applications already exist.");
+        }
         jobRepo.deleteById(jobId);
     }
 

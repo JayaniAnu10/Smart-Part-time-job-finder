@@ -85,7 +85,8 @@ public class RateServiceImpl implements RateService {
     private void validateRatingPermission(User rater, User rateReceiver, Job job) {
         boolean raterIsEmployer = isUserTheEmployerOfJob(rater, job);
         boolean raterIsJobSeeker = isUserAJobSeekerOfJob(rater, job);
-
+        System.out.println(raterIsEmployer);
+        System.out.println(raterIsJobSeeker);
 
         if (!raterIsEmployer && !raterIsJobSeeker) {
             throw new BadRequestException("You are not authorized to rate this job");
