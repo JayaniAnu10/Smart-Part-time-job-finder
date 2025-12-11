@@ -22,12 +22,10 @@ const RoleCard: React.FC<RoleCardProps> = ({
     <div
       className="
         w-full max-w-[324px] bg-[#ffffff]
-        border border-[#cbd5e9]
         rounded-[12px] shadow-md
         px-6 py-8
         flex flex-col items-center
         transition-all duration-300
-        hover:border-[#fbbd23]
         hover:shadow-[0_8px_20px_rgba(251,189,35,0.4)]
       "
     >
