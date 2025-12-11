@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
+import GetStarted from "./pages/GetStarted";
+import Auth from "./pages/Auth";
+
+import JobSeekerStep1 from "./pages/jobseeker-registration/JobSeekerStep1";
+import JobSeekerStep2 from "./pages/jobseeker-registration/JobSeekerStep2";
+import JobSeekerStep3 from "./pages/jobseeker-registration/JobSeekerStep3";
+
+import EmployerStep1 from "./pages/employer-registration/EmployerStep1";
+import EmployerStep2 from "./pages/employer-registration/EmployerStep2";
+import EmployerStep3 from "./pages/employer-registration/EmployerStep3";
+
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Routes>
+      
+      <Route path="/" element={<GetStarted />} />
 
-export default App
+      <Route path="/auth" element={<Auth />} />
+
+      <Route path="/jobseeker/register/step1" element={<JobSeekerStep1 />} />
+      <Route path="/jobseeker/register/step2" element={<JobSeekerStep2 />} />
+      <Route path="/jobseeker/register/step3" element={<JobSeekerStep3 />} />
+
+      <Route path="/employer/register/step1" element={<EmployerStep1 />} />
+      <Route path="/employer/register/step2" element={<EmployerStep2 />} />
+      <Route path="/employer/register/step3" element={<EmployerStep3 />} />
+
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  );
+};
+
+export default App;
