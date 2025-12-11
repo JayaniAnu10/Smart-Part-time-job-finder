@@ -9,6 +9,8 @@ import idIcon from "../../assets/nic.svg";
 import userIcon from "../../assets/person.svg";
 import phoneIcon from "../../assets/phone.svg";
 import locationIcon from "../../assets/location.svg";
+import arrowBack from "../../assets/arrow-back.svg";
+import arrowForward from "../../assets/arrow-forward.svg";
 
 export default function EmployerStep2() {
   const navigate = useNavigate();
@@ -74,16 +76,18 @@ export default function EmployerStep2() {
          <div className="flex justify-between mt-6">
           <button
             onClick={() => navigate("/employer/register/step1")}
-            className="px-6 h-[40px] rounded-[12px] border border-[#A5A8AD] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200"
+            className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200"
           >
-            ← Back
+             <img src={arrowBack} alt="back arrow" className="w-4 h-4" />
+            Back
           </button>
 
           <button
             onClick={() => navigate("/employer/register/step3")}
-            className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold"
+            className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold flex items-center gap-2"
           >
-            Next →
+            Next
+            <img src={arrowForward} alt="forward arrow" className="w-4 h-4" />
           </button>
          </div>
         </div>

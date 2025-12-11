@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import emailIcon from "../../assets/email.svg";
 import lockIcon from "../../assets/lock.svg";
 import logoIcon from "../../assets/logo-icon.svg";
+import arrowBack from "../../assets/arrow-back.svg";
+import arrowForward from "../../assets/arrow-forward.svg";
 
 export default function EmployerStep1() {
   return (
@@ -54,14 +56,16 @@ export default function EmployerStep1() {
 
           <div className="flex justify-between mt-6">
             <Link to="/get-started">
-              <button className="px-6 h-[40px] rounded-[12px] border border-[#A5A8AD] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200">
-                ← Back
+              <button className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200">
+                <img src={arrowBack} alt="left arrow" className="w-4 h-4" />
+                Back
               </button>
             </Link>
 
             <Link to="/employer/register/step2">
-              <button className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold">
-                Next →
+              <button className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold flex items-center gap-2">
+                Next
+                <img src={arrowForward} alt="right arrow" className="w-4 h-4" />
               </button>
             </Link>
           </div>
