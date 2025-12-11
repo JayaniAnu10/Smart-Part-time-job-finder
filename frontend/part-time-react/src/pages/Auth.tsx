@@ -1,7 +1,6 @@
 import { useState } from "react";
 import AuthTabs from "../components/AuthTabs";
 import InputField from "../components/InputField";
-import SelectField from "../components/SelectField";
 
 import logoIcon from "../assets/logo-icon.svg";
 
@@ -11,10 +10,10 @@ const Auth = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  const [signupName, setSignupName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
+  const [signupContact, setSignupContact] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
-  const [signupRole, setSignupRole] = useState("jobseeker");
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +49,7 @@ const Auth = () => {
       </div>
 
       
-      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg border border-[#F3E8C8]">
+      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg ">
 
        
         <AuthTabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -82,12 +81,7 @@ const Auth = () => {
           </form>
         ) : (
           <form className="flex flex-col gap-4 mt-4" onSubmit={handleSignup}>
-            <InputField
-              label="Full Name"
-              placeholder="John Doe"
-              value={signupName}
-              onChange={(e) => setSignupName(e.target.value)}
-            />
+           
             <InputField
               label="Email"
               type="email"
@@ -95,6 +89,15 @@ const Auth = () => {
               value={signupEmail}
               onChange={(e) => setSignupEmail(e.target.value)}
             />
+
+            <InputField
+              label="Contact Number"
+              type="tel"
+              placeholder="+94 77 234 5678"
+              value={signupContact}
+              onChange={(e) => setSignupContact(e.target.value)}
+            />
+
             <InputField
               label="Password"
               type="password"
@@ -103,14 +106,12 @@ const Auth = () => {
               onChange={(e) => setSignupPassword(e.target.value)}
             />
 
-            <SelectField
-              label="I am a"
-              value={signupRole}
-              onChange={(e) => setSignupRole(e.target.value)}
-              options={[
-                { value: "jobseeker", label: "Jobseeker" },
-                { value: "employer", label: "Employer" },
-              ]}
+            <InputField
+              label="Confirm Password"
+              type="password"
+              placeholder="••••••••"
+              value={signupConfirmPassword}
+              onChange={(e) => setSignupConfirmPassword(e.target.value)}
             />
 
             <button className="w-full h-[40px] bg-[#FACC15] text-[#0f1f3d]
