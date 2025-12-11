@@ -8,6 +8,8 @@ import logoIcon from "../../assets/logo-icon.svg";
 import calendarIcon from "../../assets/calendar.svg";
 import locationIcon from "../../assets/location.svg";
 import nicIcon from "../../assets/nic.svg";
+import arrowBack from "../../assets/arrow-back.svg";
+import arrowForward from "../../assets/arrow-forward.svg";
 
 export default function JobSeekerStep2() {
   return (
@@ -90,14 +92,16 @@ export default function JobSeekerStep2() {
 
           <div className="flex justify-between mt-6">
             <Link to="/jobseeker/register/step1">
-              <button className="px-6 h-[40px] rounded-[12px] border border-[#cCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200">
-                ← Back
+              <button className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200">
+                <img src={arrowBack} alt="back arrow" className="w-4 h-4" /> 
+                Back
               </button>
             </Link>
 
             <Link to="/jobseeker/register/step3">
-              <button className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold">
-                Next →
+              <button className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold flex items-center gap-2">
+                Next
+                <img src={arrowForward} alt="forward arrow" className="w-4 h-4" />
               </button>
             </Link>
           </div>

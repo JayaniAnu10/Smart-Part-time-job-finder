@@ -10,6 +10,8 @@ import Checkbox from "../../components/Checkbox";
 import logoIcon from "../../assets/logo-icon.svg";
 import Logo from "../../assets/briefcase.svg";
 import webSite from "../../assets/link.svg";
+import arrowBack from "../../assets/arrow-back.svg";
+import downArrow from "../../assets/arrow-down.svg";
 
 export default function EmployerStep3() {
   const navigate = useNavigate();
@@ -75,23 +77,30 @@ export default function EmployerStep3() {
 
           <div className="flex flex-col gap-3">
             <p className="text-[14px] text-[#0F1F3D] mb-2">Industry *</p>
-            <select className="w-full border border-[#A5A8AD] rounded-[12px] px-4 py-3 bg-[#FAFAFA] text-[#0F1F3D]">
-              <option disabled selected>Select industry</option>
-              <option>Retail</option>
-              <option>Hospitality</option>
-              <option>Food & Beverage</option>
-              <option>Healthcare</option>
-              <option>Education</option>
-              <option>IT & Software</option>
-              <option>Construction</option>
-              <option>Manufacturing</option>
-              <option>Logistic</option>
-              <option>Finance</option>
-              <option>Entertainment</option>
-              <option>Real Estate</option>
-              <option>Agriculture</option>
-              <option>Other</option>
-            </select>
+            <div className="relative w-full">
+              <select className="w-full border border-[#A5A8AD] rounded-[12px] px-4 py-3 bg-[#FAFAFA] text-[#0F1F3D] appearance-none">
+                <option disabled selected>Select industry</option>
+                <option>Retail</option>
+                <option>Hospitality</option>
+                <option>Food & Beverage</option>
+                <option>Healthcare</option>
+                <option>Education</option>
+                <option>IT & Software</option>
+                <option>Construction</option>
+                <option>Manufacturing</option>
+                <option>Logistic</option>
+                <option>Finance</option>
+                <option>Entertainment</option>
+                <option>Real Estate</option>
+                <option>Agriculture</option>
+                <option>Other</option>
+              </select>
+
+              <img
+                src={downArrow}
+                className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              />
+            </div>
           </div>
 
           <InputField
@@ -130,13 +139,14 @@ export default function EmployerStep3() {
         <div className="flex justify-between mt-6">
           <button
             onClick={() => navigate("/employer/register/step2")}
-            className="px-6 h-[40px] rounded-[12px] border border-[#A5A8AD] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#FACC15] transition"
+            className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] text-[14px] flex items-center gap-2 hover:bg-[#FACC15] transition"
           >
-            ← Back
+            <img src={arrowBack} alt="back arrow" className="w-4 h-4" />
+            Back
           </button>
 
           <button
-            className="px-6 h-[40px] rounded-[12px] bg-[#FACC15] text-[#0F1F3D] text-[14px] font-semibold"
+            className="px-6 h-[40px] rounded-[12px] bg-[#FACC15] text-[#0F1F3D] text-[14px] font-semibold transition-transform duration-150 active:scale-105"
           >
             Create Account
           </button>

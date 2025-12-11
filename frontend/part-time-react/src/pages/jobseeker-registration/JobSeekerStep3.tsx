@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 
 import profileIcon from "../../assets/person.svg";
 import logoIcon from "../../assets/logo-icon.svg";
+import arrowBack from "../../assets/arrow-back.svg";
 
 export default function JobSeekerStep3() {
   const [photo, setPhoto] = useState<File | null>(null);
@@ -136,12 +137,13 @@ export default function JobSeekerStep3() {
 
         <div className="flex justify-between mt-6">
           <Link to="/jobseeker/register/step2">
-            <button className="px-6 h-[40px] rounded-[12px] border border-[#A5A8AD] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] hover:bg-[#F7C01D] transition">
-              ← Back
+            <button className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] transition">
+              <img src={arrowBack} alt="left arrow" className="w-4 h-4" />
+              Back
             </button>
           </Link>
 
-          <button className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold">
+          <button className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold transition-transform duration-150 active:scale-105">
             Create Account
           </button>
         </div>
