@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -12,12 +11,13 @@ import JobSeekerStep3 from "./pages/jobseeker-registration/JobSeekerStep3";
 import EmployerStep1 from "./pages/employer-registration/EmployerStep1";
 import EmployerStep2 from "./pages/employer-registration/EmployerStep2";
 import EmployerStep3 from "./pages/employer-registration/EmployerStep3";
+import HomePage from "./pages/HomePage";
 
 const App: React.FC = () => {
   return (
     <Routes>
-      
-      <Route path="/" element={<GetStarted />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/getstarted" element={<GetStarted />} />
 
       <Route path="/auth" element={<Auth />} />
 
