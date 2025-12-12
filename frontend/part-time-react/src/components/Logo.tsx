@@ -1,4 +1,5 @@
 import logoLight from "@/assets/daybee-lightmode.png";
+import logodark from "@/assets/daybee-darkmode.png";
 import { NavLink } from "react-router-dom";
 
 const Logo = () => {
@@ -8,7 +9,11 @@ const Logo = () => {
         <img
           src={logoLight}
           alt="Logo"
-          className="w-auto h-12  hover:scale-110 transition-transform duration-300"
+          className="w-auto h-12  hover:scale-110 transition-transform duration-300 dark:hidden"
+        />
+        <img
+          src={logodark}
+          className="hidden dark:block hover:scale-110 transition-transform duration-300"
         />
       </NavLink>
     </div>

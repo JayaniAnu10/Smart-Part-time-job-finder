@@ -1,4 +1,5 @@
 import Logo from "./Logo";
+import ThemeToggle from "./ThemeToggle";
 import { Button } from "./ui/button";
 
 const NavBar = () => {
@@ -12,34 +13,39 @@ const NavBar = () => {
         <div className="md:flex items-center mx-2  gap-4">
           <Button
             variant="ghost"
-            className="font-medium text-md hover:bg-secondary/6 cursor-pointer"
+            className="font-medium text-md hover:bg-secondary/6 
+            dark:hover:text-yellow-400
+            cursor-pointer"
           >
             Explore Jobs
           </Button>
           <Button
             variant="ghost"
-            className="font-medium text-md hover:bg-secondary/6 cursor-pointer"
+            className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer"
           >
             Post Jobs
           </Button>
           <Button
             variant="ghost"
-            className="font-medium text-md hover:bg-secondary/6 cursor-pointer"
+            className="font-medium text-md hover:bg-secondary/6  dark:hover:text-yellow-400 cursor-pointer"
           >
             Nearby Map
           </Button>
           <Button
             variant="ghost"
-            className="font-medium text-md hover:bg-secondary/6 cursor-pointer"
+            className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer"
           >
             About
           </Button>
           <Button
             variant="ghost"
-            className="font-medium text-md hover:bg-secondary/6 cursor-pointer"
+            className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer"
           >
             Contact
           </Button>
+        </div>
+        <div>
+          <ThemeToggle />
         </div>
       </div>
     </nav>
