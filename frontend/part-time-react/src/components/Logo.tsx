@@ -5,7 +5,11 @@ const Logo = () => {
   return (
     <div>
       <NavLink to={"/"}>
-        <img src={logoLight} alt="Logo" className="scale-20" />
+        <img
+          src={logoLight}
+          alt="Logo"
+          className="w-auto h-12  hover:scale-110 transition-transform duration-300"
+        />
       </NavLink>
     </div>
   );
