@@ -15,3 +15,14 @@ spring:
       storage:
         account-name: ${AZURE_STORAGE_ACCOUNT_NAME:YOUR_ACCOUNT_NAME}
         account-key: ${AZURE_STORAGE_ACCOUNT_KEY:YOUR_ACCOUNT_KEY}
+
+  ai:
+    model:
+      chat: google-genai
+    google:
+      genai:
+        api-key: ${GOOGLE_GENAI_KEY}
+
+server:
+  port: 8080
+
