@@ -14,7 +14,8 @@ public class EmployerRegisterRequest {
     private String companyName;
 
     @NotNull(message = "User id is required")
-    private UUID id;
+    private UUID userId;
+
 
     @NotBlank(message = "Address is required")
     private String companyAddress;

@@ -34,24 +34,26 @@ public class JobSeekerService {
     @Transactional
     public JobSeekerDto addSeeker(@Valid JobSeekerRegisterRequest request,
                                   MultipartFile profilePicture) throws IOException {
-        availabilityCheck(request.getId(), request.getNic());
+        availabilityCheck(request.getUserId(), request.getNic());
 
-        var user = userRepository.findById(request.getId()).orElse(null);
+        var user = userRepository.findById(request.getUserId()).orElse(null);
 
         if (user == null) {
             throw new NotFoundException("User has not registered");
         }
 
+        user.setIsJobseeker(true);
+
         var seeker=jobSeekerMapper.toEntity(request);
         seeker.setUser(user);
+        user.setJobSeeker(seeker);
 
         if(profilePicture!=null && !profilePicture.isEmpty()){
             uploadImage(profilePicture, seeker);
         }
 
-        user.setIsJobseeker(true);
+
         userRepository.save(user);
-        jobSeekerRepository.save(seeker);
 
         return jobSeekerMapper.toJobSeekerDto(seeker);
     }
@@ -123,17 +125,20 @@ public class JobSeekerService {
         }
 
         var user = userRepository.findById(seeker.getId()).orElseThrow();
+        jobSeekerRepository.deleteById(id);
+
         user.setIsJobseeker(false);
+        user.setJobSeeker(null);
         userRepository.save(user);
 
-        jobSeekerRepository.deleteById(id);
+
         return ResponseEntity.noContent().build();
     }
 
 
     private void availabilityCheck(UUID id, String nic) {
         if (jobSeekerRepository.existsById(id)) {
-            throw new BadRequestException("Email already exists");
+            throw new BadRequestException("Already registered as a seeker");
         }
 
         if (jobSeekerRepository.existsByNic(nic)) {

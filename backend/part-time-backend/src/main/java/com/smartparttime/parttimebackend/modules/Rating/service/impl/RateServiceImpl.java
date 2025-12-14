@@ -2,6 +2,8 @@ package com.smartparttime.parttimebackend.modules.Rating.service.impl;
 
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
+import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
@@ -34,6 +36,7 @@ public class RateServiceImpl implements RateService {
     private final RateRepository rateRepository;
     private final RateMapper rateMapper;
     private final UserRepository userRepository;
+    private final JobApplicationRepository jobApplicationRepository;
 
 
     @Transactional
@@ -80,31 +83,51 @@ public class RateServiceImpl implements RateService {
     }
 
     private void validateRatingPermission(User rater, User rateReceiver, Job job) {
-        /*boolean raterIsEmployer = rater.getRole() == Role.EMPLOYER &&
-                job.getEmployer().getId().equals(rater.getId());
-        boolean raterIsJobSeeker = rater.getRole() == Role.JOBSEEKER;
+        boolean raterIsEmployer = isUserTheEmployerOfJob(rater, job);
+        boolean raterIsJobSeeker = isUserAJobSeekerOfJob(rater, job);
+        System.out.println(raterIsEmployer);
+        System.out.println(raterIsJobSeeker);
 
         if (!raterIsEmployer && !raterIsJobSeeker) {
             throw new BadRequestException("You are not authorized to rate this job");
         }
 
 
-        if (rater.getRole() == Role.EMPLOYER) {
-            if (rateReceiver.getRole() != Role.JOBSEEKER) {
-                throw new BadRequestException("Employers can only rate job seekers");
-            }
-
-        }else if(rater.getRole() == Role.JOBSEEKER) {
-            if (rateReceiver.getRole() != Role.EMPLOYER) {
-                throw new BadRequestException("Job seekers can only rate employers");
-            }
-
-            if (!job.getEmployer().getId().equals(rateReceiver.getId())) {
-                throw new BadRequestException("You can only rate the employer who posted this job");
-            }
+        if (raterIsEmployer) {
+            validateEmployerRating(rateReceiver, job);
         } else {
-            throw new BadRequestException("Invalid user role for rating");
-        }*/
+            validateJobSeekerRating(rateReceiver, job);
+        }
+    }
+
+    private boolean isUserTheEmployerOfJob(User user, Job job) {
+        return job.getEmployer() != null &&
+                job.getEmployer().getUser() != null &&
+                job.getEmployer().getId().equals(user.getId());
+    }
+
+    private boolean isUserAJobSeekerOfJob(User user, Job job) {
+        return jobApplicationRepository.existsByJob_IdAndJobseeker_IdAndStatus(
+                job.getId(),
+                user.getId(),
+                ApplicationStatus.APPROVED
+        );
+    }
+
+    private void validateEmployerRating(User rateReceiver, Job job) {
+        if (!isUserAJobSeekerOfJob(rateReceiver, job)) {
+            throw new BadRequestException(
+                    "You can only rate job seekers who worked on this job"
+            );
+        }
+    }
+
+    private void validateJobSeekerRating(User rateReceiver, Job job) {
+        if (!isUserTheEmployerOfJob(rateReceiver, job)) {
+            throw new BadRequestException(
+                    "You can only rate the employer who posted this job"
+            );
+        }
 
     }
 

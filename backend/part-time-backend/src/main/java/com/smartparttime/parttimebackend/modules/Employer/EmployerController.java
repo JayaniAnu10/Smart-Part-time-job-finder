@@ -34,7 +34,7 @@ public class EmployerController {
 
         try{
             var userDto = employerService.addEmployee(request,logo);
-            var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+            var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getUserId()).toUri();
             return ResponseEntity.created(uri).body(userDto);
         } catch(IOException e){
             return ResponseEntity.badRequest().body(Map.of("error","Failed to upload logo"));
