@@ -57,7 +57,7 @@ export default function JobSeekerStep2() {
             </div>
           </div>
 
-           <div className="flex gap-4">
+           <div className="w-1/2 relative">
             <div className="w-1/2">
               <SelectField
                 label="Gender"
