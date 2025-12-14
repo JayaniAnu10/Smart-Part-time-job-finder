@@ -1,5 +1,5 @@
 import NavBar from "../components/NavBar";
-import heroBackground from "@/assets/hero.png";
+import heroBackground from "@/assets/hero6.png";
 
 const HomePage = () => {
   return (
@@ -12,10 +12,9 @@ const HomePage = () => {
             backgroundImage: `url(${heroBackground})`,
           }}
         >
-          <div className="absolute inset-0 bg-linear-to-b from-background/40 via-background/5 to-background/15 z-10" />
-          <div className="absolute inset-0 bg-linear-to-r from-background/20 via-transparent to-background/40 z-10" />
-          <div className="absolute top-30 right-10 max-w-md text-left z-20 flex flex-col drop-shadow-2xl space-y-2">
-            <span className="text-7xl  font-extrabold text-secondary space-y-2">
+          <div className="absolute inset-0 bg-linear-to-b from-background/50 via-background/35 to-background/20 z-10" />
+          <div className=" text-center z-30 ">
+            <span className="text-7xl  font-extrabold text-secondary dark:text-yellow-50 space-y-2">
               Find Your
             </span>
             <span className="text-7xl  font-extrabold text-secondary space-y-2">
