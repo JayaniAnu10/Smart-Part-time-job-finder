@@ -1,8 +1,11 @@
 package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
+import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
@@ -16,6 +19,7 @@ import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,9 +34,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class JobServiceImpl implements JobService {
 
+    private final EmbeddingService  embeddingService;
     @Autowired
     private JobRepo jobRepo;
 
@@ -49,7 +55,7 @@ public class JobServiceImpl implements JobService {
 
     @Transactional
     @Override
-    public JobResponseDto createJob(JobRequestDto request, UUID employerId) {
+    public JobResponseDto createJob(JobRequestDto request, UUID employerId){
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
 
@@ -70,6 +76,11 @@ public class JobServiceImpl implements JobService {
                 }).collect(Collectors.toSet());
 
         job.setJobSchedules(schedules);
+        try{
+            saveJobEmbedding(job);
+        }catch (Exception e){
+            throw new BadRequestException("Json embedding conflict.");
+        }
 
         var savedJob = jobRepo.save(job);
 
@@ -157,6 +168,12 @@ public class JobServiceImpl implements JobService {
             job.setCategory(category);
         }
 
+        try{
+            saveJobEmbedding(job);
+        }catch (Exception e){
+            throw new BadRequestException("Json embedding conflict.");
+        }
+
         var updated = jobRepo.save(job);
 
         return jobMapper.toDto(updated);
@@ -182,4 +199,35 @@ public class JobServiceImpl implements JobService {
         return jobs.map(jobMapper::toDto);
     }
 
+
+    public void saveJobEmbedding(Job job) throws JsonProcessingException {
+        String fullJobText = String.format("""
+            Job Title: %s
+            Company: %s
+            Location: %s
+            Job Type: %s
+            Salary: %s
+            Description: %s
+            Working hours: %s
+            Deadline: %s
+            Skills: %s
+            Available vacancies: %s
+            """,
+                job.getTitle(),
+                job.getCategory(),
+                job.getLocation(),
+                job.getJobType(),
+                job.getSalary(),
+                job.getDescription(),
+                job.getWorkingHours(),
+                job.getDeadline(),
+                job.getSkills(),
+                job.getAvailableVacancies()
+        );
+
+        List<Float> embedding = embeddingService.getEmbedding(fullJobText);
+
+        String embeddingJson = new ObjectMapper().writeValueAsString(embedding);
+        job.setEmbedding(embeddingJson);
+    }
 }

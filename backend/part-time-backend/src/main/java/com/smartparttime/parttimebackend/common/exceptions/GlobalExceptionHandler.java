@@ -49,4 +49,11 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", e.getMessage())) ;
     }
 
+    @ExceptionHandler(InternalServerException.class)
+    public ResponseEntity<Map<String, String>> handleInternalServer(InternalServerException e){
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", e.getMessage())) ;
+    }
+
 }
