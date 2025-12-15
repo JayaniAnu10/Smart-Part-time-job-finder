@@ -1,5 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Chatbot.Service;
 
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
+import com.smartparttime.parttimebackend.common.exceptions.InternalServerException;
 import com.smartparttime.parttimebackend.modules.Chatbot.Dto.ChatMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
@@ -26,24 +28,29 @@ public class ChatbotService {
         if(prompt.getPrompt()==null){
             throw new IllegalArgumentException("Prompt message is null.");
         }
+        try{
+            ChatMemory memory = MessageWindowChatMemory.builder()
+                    .chatMemoryRepository(memoryRepository)
+                    .maxMessages(100)
+                    .build();
 
-        ChatMemory memory = MessageWindowChatMemory.builder()
-                .chatMemoryRepository(memoryRepository)
-                .maxMessages(20)
-                .build();
+
+            ChatClient chatClient = ChatClient.builder(chatModel)
+                    .defaultAdvisors(
+                            MessageChatMemoryAdvisor.builder(memory).build()
+                    )
+                    .build();
+
+            return chatClient.prompt()
+                    .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, sessionId))
+                    .user(prompt.getPrompt())
+                    .call()
+                    .content();
+        }catch (BadRequestException e){
+            throw new InternalServerException("Failed to generate response.Try again.");
+        }
 
 
-        ChatClient chatClient = ChatClient.builder(chatModel)
-                .defaultAdvisors(
-                        MessageChatMemoryAdvisor.builder(memory).build()
-                )
-                .build();
-
-        return chatClient.prompt()
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, sessionId))
-                .user(prompt.getPrompt())
-                .call()
-                .content();
 
     }
 }
