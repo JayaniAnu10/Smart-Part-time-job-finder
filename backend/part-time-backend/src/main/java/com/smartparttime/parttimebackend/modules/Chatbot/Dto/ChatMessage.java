@@ -8,4 +8,6 @@ public class ChatMessage {
 
     @NotBlank(message = "Ask something")
     private String prompt;
+
+    private String conversationId;
 }

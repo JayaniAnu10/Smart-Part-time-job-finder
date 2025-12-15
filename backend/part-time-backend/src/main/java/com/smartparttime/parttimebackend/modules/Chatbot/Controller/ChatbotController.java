@@ -14,12 +14,11 @@ public class ChatbotController {
     private final ChatbotService chatService;
 
 
-    @PostMapping("/{sessionId}")
+    @PostMapping
     public ResponseEntity<String> generateResponse(
-            @PathVariable String sessionId,
             @Valid @RequestBody ChatMessage prompt
     ){
-        String responseText = chatService.generateResponse(sessionId,prompt);
+        String responseText = chatService.generateResponse(prompt.getConversationId(),prompt);
         return ResponseEntity.ok(responseText);
     }
 
