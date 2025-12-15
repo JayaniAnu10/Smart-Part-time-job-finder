@@ -86,4 +86,7 @@ public class Job {
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<JobSchedule> jobSchedules = new HashSet<>();
 
+    @Lob
+    private String embedding;
+
 }
