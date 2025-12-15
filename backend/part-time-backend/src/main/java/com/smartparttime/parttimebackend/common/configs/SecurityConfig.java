@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/applications/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/applications/**").permitAll()
                         .requestMatchers(HttpMethod.PATCH,"/applications/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/chat/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }
