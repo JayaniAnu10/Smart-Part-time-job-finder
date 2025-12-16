@@ -22,7 +22,6 @@ public class ChatbotController {
             @Valid @RequestBody ChatMessage prompt
     ){
         String responseText = chatService.generateResponse(prompt.getConversationId(),prompt);
-        System.out.println("success");
         return ResponseEntity.ok(Map.of("message", responseText));
     }
 
