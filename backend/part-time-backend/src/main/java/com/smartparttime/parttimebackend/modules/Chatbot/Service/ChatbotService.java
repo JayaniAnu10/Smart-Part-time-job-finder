@@ -57,17 +57,19 @@ public class ChatbotService {
 
         if (bestJob != null) {
             context = String.format("""
+            Job Id: %s
             Job Title: %s
             Company: %s
             Location: %s
             Job Type: %s
             Salary: %s
             Description: %s
-            Working hours: %s
-            Deadline: %s
+            Working hours(How many,much): %s
+            Deadline(When): %s
             Skills: %s
             Available vacancies: %s
             """,
+                    bestJob.getId(),
                     bestJob.getTitle(),
                     bestJob.getCategory(),
                     bestJob.getLocation(),
@@ -95,6 +97,7 @@ public class ChatbotService {
                             MessageChatMemoryAdvisor.builder(memory).build()
                     )
                     .build();
+
 
             return chatClient.prompt()
                     .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, sessionId))

@@ -202,6 +202,7 @@ public class JobServiceImpl implements JobService {
 
     public void saveJobEmbedding(Job job) throws JsonProcessingException {
         String fullJobText = String.format("""
+            Job Id: %s
             Job Title: %s
             Company: %s
             Location: %s

@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("*")
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/chat")
@@ -19,6 +19,7 @@ public class ChatbotController {
     public ResponseEntity<String> generateResponse(
             @Valid @RequestBody ChatMessage prompt
     ){
+        System.out.println(prompt.getConversationId());
         String responseText = chatService.generateResponse(prompt.getConversationId(),prompt);
         return ResponseEntity.ok(responseText);
     }
