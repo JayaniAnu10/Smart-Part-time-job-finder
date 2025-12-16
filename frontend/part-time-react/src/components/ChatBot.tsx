@@ -12,14 +12,19 @@ type ChatResponse = {
   message: string;
 };
 
+type Message = {
+  content: string;
+  role: "user" | "bot";
+};
+
 const ChatBot = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const conversationId = useRef(crypto.randomUUID());
   const { register, handleSubmit, reset, formState } = useForm<FormData>();
 
   const onSubmit = async ({ prompt }: FormData) => {
     reset();
-    setMessages((prev) => [...prev, prompt]);
+    setMessages((prev) => [...prev, { content: prompt, role: "user" }]);
     const { data } = await axios.post<ChatResponse>(
       "http://localhost:8080/api/chat",
       {
@@ -27,7 +32,7 @@ const ChatBot = () => {
         conversationId: conversationId.current,
       }
     );
-    setMessages((prev) => [...prev, data.message]);
+    setMessages((prev) => [...prev, { content: data.message, role: "bot" }]);
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
@@ -38,16 +43,25 @@ const ChatBot = () => {
   };
 
   return (
-    <div>
-      <div>
+    <div className="m-8">
+      <div className="flex flex-col gap-3 mb-5">
         {messages.map((message, index) => (
-          <p key={index}>{message}</p>
+          <p
+            key={index}
+            className={`px-3 py-1 rounded-xl ${
+              message.role === "user"
+                ? "bg-yellow-400 text-[#0f1f3d] self-end"
+                : "bg-blue-100 text-[#0f1f3d] dark:text-white dark:bg-blue-900 self-start"
+            }`}
+          >
+            {message.content}
+          </p>
         ))}
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         onKeyDown={onKeyDown}
-        className="flex flex-col gap-2 items-end border-2 border-border p-4 rounded-3xl m-8"
+        className="flex flex-col gap-1 items-end border-2 border-border p-4 rounded-3xl mt-10"
       >
         <textarea
           {...register("prompt", {
@@ -55,11 +69,11 @@ const ChatBot = () => {
             validate: (data) => data.trim().length > 0,
           })}
           className="w-full border-0 focus:outline-0 resize-none"
-          placeholder="Ask anything..."
+          placeholder="Ask me anything about jobs..."
         />
         <Button
           disabled={!formState.isValid}
-          className="w-11 h-11 rounded-full bg-[#0f1f3d] cursor-pointer hover:bg-[#0f1f3d]"
+          className="w-11 h-11 rounded-full text-[#0f1f3d] cursor-pointer"
         >
           <FaArrowUp />
         </Button>
