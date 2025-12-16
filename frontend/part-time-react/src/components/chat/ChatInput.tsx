@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
-import { FaArrowUp } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import type { KeyboardEvent } from "react";
+import { FiSend } from "react-icons/fi";
 
 export type ChatFormData = {
   prompt: string;
@@ -43,9 +43,9 @@ const ChatInput = ({ onSubmit }: Props) => {
       />
       <Button
         disabled={!formState.isValid}
-        className="w-11 h-11 rounded-full text-[#0f1f3d] cursor-pointer"
+        className="w-11 h-11 rounded-full bg-yellow-400 text-[#0f1f3d] cursor-pointer"
       >
-        <FaArrowUp />
+        <FiSend />
       </Button>
     </form>
   );
