@@ -100,14 +100,7 @@ public class ChatbotService {
             return chatClient.prompt()
                     .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, sessionId))
                     .user(prompt.getPrompt())
-                    .system("""
-                                You are a part-time job portal assistant.
-                                Answer ONLY using the following job data.
-                                If the answer is not found, say "Please contact support service".
-                                
-                                JOB DATA:
-                                %s
-                            """.formatted(context))
+                    .system(ChatbotPrompts.SYSTEM_PROMPT.formatted(context))
                     .call()
                     .content();
         }catch (BadRequestException e){

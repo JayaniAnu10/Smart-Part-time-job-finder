@@ -36,7 +36,7 @@ const ChatMessages = ({ messages }: Props) => {
             key={index}
             onCopy={onCopyMessage}
             ref={index === messages.length - 1 ? lastMessageRef : null}
-            className={`flex items-start gap-3 px-2 max-w-md ${
+            className={`flex items-start gap-3 max-w-md ${
               isBot ? "self-start" : "self-end flex-row-reverse"
             }`}
           >

@@ -43,7 +43,7 @@ const ChatInput = ({ onSubmit }: Props) => {
       />
       <Button
         disabled={!formState.isValid}
-        className="w-11 h-11 rounded-full bg-yellow-400 text-[#0f1f3d] cursor-pointer"
+        className="w-11 h-11 rounded-full bg-yellow-400 hover:bg-yellow-400 text-[#0f1f3d] cursor-pointer"
       >
         <FiSend />
       </Button>

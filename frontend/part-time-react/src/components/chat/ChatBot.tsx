@@ -47,7 +47,7 @@ const ChatBot = () => {
           Get instant help finding the perfect day job for you
         </div>
       </div>
-      <div className="flex flex-col flex-1 gap-3 overflow-y-auto">
+      <div className="flex flex-col flex-1 gap-3 overflow-y-auto px-2">
         <ChatMessages messages={messages} />
         {isLoading && <TypingIndicator />}
         {error && <p className="text-red-500">{error}</p>}
