@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
-import { FaArrowUp } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import type { KeyboardEvent } from "react";
+import { FiSend } from "react-icons/fi";
 
 export type ChatFormData = {
   prompt: string;
@@ -30,7 +30,7 @@ const ChatInput = ({ onSubmit }: Props) => {
     <form
       onSubmit={submit}
       onKeyDown={handleKeyDown}
-      className="flex flex-col gap-1 items-end border-2 border-border p-4 rounded-3xl mt-10"
+      className="flex flex-col gap-1 items-end border-2 border-border p-4 rounded-3xl mt-4"
     >
       <textarea
         {...register("prompt", {
@@ -43,9 +43,9 @@ const ChatInput = ({ onSubmit }: Props) => {
       />
       <Button
         disabled={!formState.isValid}
-        className="w-11 h-11 rounded-full text-[#0f1f3d] cursor-pointer"
+        className="w-11 h-11 rounded-full bg-yellow-400 hover:bg-yellow-400 text-[#0f1f3d] cursor-pointer"
       >
-        <FaArrowUp />
+        <FiSend />
       </Button>
     </form>
   );

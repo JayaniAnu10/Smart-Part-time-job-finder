@@ -13,12 +13,16 @@ import EmployerStep2 from "./pages/employer-registration/EmployerStep2";
 import EmployerStep3 from "./pages/employer-registration/EmployerStep3";
 import HomePage from "./pages/HomePage";
 import ChatBot from "./components/chat/ChatBot";
+import Layout from "./Layouts/Layout";
 
 const App: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/chatbot" element={<ChatBot />} />
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="chatbot" element={<ChatBot />} />
+      </Route>
+
       <Route path="/getstarted" element={<GetStarted />} />
 
       <Route path="/auth" element={<Auth />} />

@@ -51,13 +51,13 @@ const NavBar = () => {
           <div className="tab:flex md:flex hidden gap-3 pr-6">
             <Button
               variant="ghost"
-              className="hover:bg-yellow-400 text-md cursor-pointer dark:hover:text-secondary "
+              className="hover:bg-yellow-400 text-md cursor-pointer dark:hover:text-[#0f1f3d] "
             >
               Login
             </Button>
             <Button
               variant="default"
-              className="bg-yellow-400 cursor-pointer text-secondary hover:scale-105 dark:hover:bg-yellow-400 text-md transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25"
+              className="bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25"
             >
               Get Started
             </Button>
