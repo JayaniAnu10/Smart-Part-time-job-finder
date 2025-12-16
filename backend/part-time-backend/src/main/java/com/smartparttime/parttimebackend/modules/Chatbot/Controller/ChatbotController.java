@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 @AllArgsConstructor
 @RestController
@@ -16,12 +18,12 @@ public class ChatbotController {
 
 
     @PostMapping
-    public ResponseEntity<String> generateResponse(
+    public ResponseEntity<Map<String,String>> generateResponse(
             @Valid @RequestBody ChatMessage prompt
     ){
-        System.out.println(prompt.getConversationId());
         String responseText = chatService.generateResponse(prompt.getConversationId(),prompt);
-        return ResponseEntity.ok(responseText);
+        System.out.println("success");
+        return ResponseEntity.ok(Map.of("message", responseText));
     }
 
     @PostMapping("/{sessionId}/clear")
