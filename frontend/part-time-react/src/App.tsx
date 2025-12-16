@@ -12,7 +12,7 @@ import EmployerStep1 from "./pages/employer-registration/EmployerStep1";
 import EmployerStep2 from "./pages/employer-registration/EmployerStep2";
 import EmployerStep3 from "./pages/employer-registration/EmployerStep3";
 import HomePage from "./pages/HomePage";
-import ChatBot from "./components/Chatbot";
+import ChatBot from "./components/chat/ChatBot";
 
 const App: React.FC = () => {
   return (

@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("*")
+import java.util.Map;
+
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/chat")
@@ -16,11 +18,11 @@ public class ChatbotController {
 
 
     @PostMapping
-    public ResponseEntity<String> generateResponse(
+    public ResponseEntity<Map<String,String>> generateResponse(
             @Valid @RequestBody ChatMessage prompt
     ){
         String responseText = chatService.generateResponse(prompt.getConversationId(),prompt);
-        return ResponseEntity.ok(responseText);
+        return ResponseEntity.ok(Map.of("message", responseText));
     }
 
     @PostMapping("/{sessionId}/clear")
