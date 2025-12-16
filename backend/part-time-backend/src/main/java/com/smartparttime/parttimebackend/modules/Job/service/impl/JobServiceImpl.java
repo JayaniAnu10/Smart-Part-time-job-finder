@@ -214,8 +214,8 @@ public class JobServiceImpl implements JobService {
             Skills: %s
             Available vacancies: %s
             """,
+                job.getId(),
                 job.getTitle(),
-                job.getCategory(),
                 job.getLocation(),
                 job.getJobType(),
                 job.getSalary(),
