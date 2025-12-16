@@ -30,7 +30,7 @@ const ChatInput = ({ onSubmit }: Props) => {
     <form
       onSubmit={submit}
       onKeyDown={handleKeyDown}
-      className="flex flex-col gap-1 items-end border-2 border-border p-4 rounded-3xl mt-10"
+      className="flex flex-col gap-1 items-end border-2 border-border p-4 rounded-3xl mt-4"
     >
       <textarea
         {...register("prompt", {

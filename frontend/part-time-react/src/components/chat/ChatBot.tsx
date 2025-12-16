@@ -37,13 +37,26 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="m-8 flex flex-col h-screen">
-      <div className="flex flex-col flex-1 gap-3 mb-5 overflow-y-auto">
-        <ChatMessages messages={messages} />
-        {isLoading && <TypingIndicator />}
-        {error && <p className="text-red-500">{error}</p>}
+    <div className="h-screen pt-22 mx-8 md:mx-30 flex flex-col">
+      <div className="flex flex-col items-center gap-2">
+        <div className="text-5xl font-bold ">
+          <span className=" text-secondary">AI Job </span>
+          <span className="text-yellow-400">Assistant</span>
+        </div>
+        <div className="text-muted-foreground text-lg text-center mb-6">
+          Get instant help finding the perfect day job for you
+        </div>
       </div>
-      <ChatInput onSubmit={onSubmit} />
+      <div className=" p-8 flex flex-col border grow">
+        <div className="flex flex-col flex-1 gap-3 overflow-y-auto grow">
+          <ChatMessages messages={messages} />
+          {isLoading && <TypingIndicator />}
+          {error && <p className="text-red-500">{error}</p>}
+        </div>
+        <div className="">
+          <ChatInput onSubmit={onSubmit} />
+        </div>
+      </div>
     </div>
   );
 };

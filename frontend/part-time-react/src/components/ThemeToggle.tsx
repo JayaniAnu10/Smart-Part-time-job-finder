@@ -23,7 +23,7 @@ const ThemeToggle = () => {
     <div>
       <Button
         variant="ghost"
-        className="rounded-full border-0 hover:bg-yellow-400 dark:text-white dark:hover:text-secondary  "
+        className="rounded-full border-0 hover:bg-yellow-400 dark:text-white dark:hover:text-[#0f1f3d]  "
         onClick={() => setDarkMode(!isDarkMode)}
       >
         {isDarkMode ? <Sun /> : <Moon />}
