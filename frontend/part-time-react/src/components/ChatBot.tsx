@@ -22,6 +22,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
+  const [error, setError] = useState("");
   const conversationId = useRef(crypto.randomUUID());
   const { register, handleSubmit, reset, formState } = useForm<FormData>();
 
@@ -30,18 +31,25 @@ const ChatBot = () => {
   }, [messages]);
 
   const onSubmit = async ({ prompt }: FormData) => {
-    setMessages((prev) => [...prev, { content: prompt, role: "user" }]);
-    setIsLoading(true);
-    reset({ prompt: "" });
-    const { data } = await axios.post<ChatResponse>(
-      "http://localhost:8080/api/chat",
-      {
-        prompt,
-        conversationId: conversationId.current,
-      }
-    );
-    setMessages((prev) => [...prev, { content: data.message, role: "bot" }]);
-    setIsLoading(false);
+    try {
+      setMessages((prev) => [...prev, { content: prompt, role: "user" }]);
+      setIsLoading(true);
+      setError("");
+      reset({ prompt: "" });
+      const { data } = await axios.post<ChatResponse>(
+        "http://localhost:8080/api/chat",
+        {
+          prompt,
+          conversationId: conversationId.current,
+        }
+      );
+      setMessages((prev) => [...prev, { content: data.message, role: "bot" }]);
+    } catch (error) {
+      console.error(error);
+      setError("Something went wrong .Try again!");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
@@ -63,7 +71,7 @@ const ChatBot = () => {
     <div className="m-8 flex flex-col h-screen">
       <div className="flex flex-col flex-1 gap-3 mb-5 overflow-y-auto">
         {messages.map((message, index) => (
-          <p
+          <div
             key={index}
             onCopy={onCopyMessage}
             ref={index === messages.length - 1 ? lastMessageRef : null}
@@ -74,7 +82,7 @@ const ChatBot = () => {
             }`}
           >
             <ReactMarkdown>{message.content}</ReactMarkdown>
-          </p>
+          </div>
         ))}
         {isLoading && (
           <div className="flex self-start gap-1 px-3 py-3 bg-gray-200 rounded-xl">
@@ -83,6 +91,7 @@ const ChatBot = () => {
             <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.4s]"></div>
           </div>
         )}
+        {error && <p className="text-red-500">{error}</p>}
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
