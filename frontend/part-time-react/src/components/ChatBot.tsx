@@ -1,5 +1,6 @@
 import { FaArrowUp } from "react-icons/fa";
 import { Button } from "./ui/button";
+import ReactMarkdown from "react-markdown";
 import { useForm } from "react-hook-form";
 import { useRef, useState, type KeyboardEvent } from "react";
 import axios from "axios";
@@ -19,12 +20,14 @@ type Message = {
 
 const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const conversationId = useRef(crypto.randomUUID());
   const { register, handleSubmit, reset, formState } = useForm<FormData>();
 
   const onSubmit = async ({ prompt }: FormData) => {
-    reset();
     setMessages((prev) => [...prev, { content: prompt, role: "user" }]);
+    setIsLoading(true);
+    reset();
     const { data } = await axios.post<ChatResponse>(
       "http://localhost:8080/api/chat",
       {
@@ -33,6 +36,7 @@ const ChatBot = () => {
       }
     );
     setMessages((prev) => [...prev, { content: data.message, role: "bot" }]);
+    setIsLoading(false);
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
@@ -51,12 +55,19 @@ const ChatBot = () => {
             className={`px-3 py-1 rounded-xl ${
               message.role === "user"
                 ? "bg-yellow-400 text-[#0f1f3d] self-end"
-                : "bg-blue-100 text-[#0f1f3d] dark:text-white dark:bg-blue-900 self-start"
+                : "bg-gray-200 text-[#0f1f3d] dark:text-white dark:bg-blue-900 self-start"
             }`}
           >
-            {message.content}
+            <ReactMarkdown>{message.content}</ReactMarkdown>
           </p>
         ))}
+        {isLoading && (
+          <div className="flex self-start gap-1 px-3 py-3 bg-gray-200 rounded-xl">
+            <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse"></div>
+            <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.2s]"></div>
+            <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.4s]"></div>
+          </div>
+        )}
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
