@@ -23,9 +23,7 @@ public class NotificationService {
     private final UserRepository userRepo;
     private final EmailService emailService;
 
-    /**
-     * Generic notification sender (used internally)
-     */
+
     public void sendNotification(UUID userId, String messageText, String emailSubject) {
 
         User user = userRepo.findById(userId)
