@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Job.entity;
 
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
 import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;

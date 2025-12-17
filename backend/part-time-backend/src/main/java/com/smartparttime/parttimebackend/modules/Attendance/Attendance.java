@@ -1,5 +1,6 @@
-package com.smartparttime.parttimebackend.modules.Job.entity;
+package com.smartparttime.parttimebackend.modules.Attendance;
 
+import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import jakarta.persistence.*;
 import lombok.Getter;
