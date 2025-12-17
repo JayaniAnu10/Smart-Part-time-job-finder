@@ -1,5 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Application.service.impl;
 
+
+import com.smartparttime.parttimebackend.common.Services.EmailService;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
@@ -10,12 +12,14 @@ import com.smartparttime.parttimebackend.modules.Application.repo.JobApplication
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
 import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceService;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobScheduleRepository;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,9 +28,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+
+@AllArgsConstructor
 @Service
 public class JobApplicationServiceImpl implements JobApplicationService {
-
+    private final EmailService emailService;
     private final JobApplicationMapper jobApplicationMapper;
     private final JobApplicationRepository jobApplicationRepository;
     private final JobSeekerRepository jobSeekerRepository;
@@ -34,16 +40,9 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final UserRepository userRepository;
     private final JobScheduleRepository jobScheduleRepository;
     private final AttendanceRepository attendanceRepository;
+    private final AttendanceService attendanceService;
 
-    public JobApplicationServiceImpl(JobApplicationMapper jobApplicationMapper, JobApplicationRepository jobApplicationRepository, JobSeekerRepository jobSeekerRepository, JobRepo jobRepo, UserRepository userRepository, JobScheduleRepository jobScheduleRepository, AttendanceRepository attendanceRepository) {
-        this.jobApplicationMapper = jobApplicationMapper;
-        this.jobApplicationRepository = jobApplicationRepository;
-        this.jobSeekerRepository = jobSeekerRepository;
-        this.jobRepo = jobRepo;
-        this.userRepository = userRepository;
-        this.jobScheduleRepository = jobScheduleRepository;
-        this.attendanceRepository = attendanceRepository;
-    }
+
 
     @Override
     public JobApplicationResponse createApplication(JobApplicationRequest request) {
@@ -162,19 +161,38 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     }
 
-    private void approveApplication(JobApplication application) {
-        var job= application.getJob();
-        job.setAvailableVacancies(job.getAvailableVacancies()-1);
-        jobRepo.save(job);
+    private void approveApplication(JobApplication application){
+        try{
+            var job= application.getJob();
+            job.setAvailableVacancies(job.getAvailableVacancies()-1);
+            jobRepo.save(job);
 
-        Attendance attendance = new Attendance();
-        attendance.setJob(job);
-        attendance.setUser(application.getJobseeker());
-        attendance.setSchedule(application.getSchedule());
-        attendance.setQrCode(UUID.randomUUID().toString());
-        attendance.setStatus(AttendanceStatus.PENDING);
+            String qrToken=UUID.randomUUID() + "-" + System.currentTimeMillis();
 
-        attendanceRepository.save(attendance);
+            Attendance attendance = new Attendance();
+            attendance.setJob(job);
+            attendance.setUser(application.getJobseeker());
+            attendance.setSchedule(application.getSchedule());
+            attendance.setQrCode(qrToken);
+            attendance.setStatus(AttendanceStatus.PENDING);
+
+            attendanceRepository.save(attendance);
+
+            byte[] qrCode =attendanceService.generateQr(qrToken);
+
+
+            String email = application.getJobseeker().getEmail();
+            String jobTitle = job.getTitle();
+            LocalDateTime scheduleStartDate = application.getSchedule().getStartDatetime();
+            LocalDateTime scheduleEndDate = application.getSchedule().getEndDatetime();
+
+            emailService.sendQrCodeEmail(email,  jobTitle, scheduleStartDate,scheduleEndDate, qrCode);
+
+
+        }catch(Exception e){
+            throw new RuntimeException("Failed  to process application approval", e);
+        }
+
 
     }
 }
