@@ -22,7 +22,7 @@ public class JobApplication {
     @Column(name = "id")
     private UUID id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "job_id")
     private Job job;
 

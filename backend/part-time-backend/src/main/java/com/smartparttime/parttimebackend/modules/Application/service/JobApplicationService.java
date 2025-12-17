@@ -20,4 +20,6 @@ public interface JobApplicationService {
     List<JobApplicationResponse> getApplicationsByJob(UUID jobId, int page, int size);
 
     JobApplicationResponse updateApplicationStatus(UUID id,ApplicationStatus status);
+
+    void deleteApplication(UUID id);
 }
