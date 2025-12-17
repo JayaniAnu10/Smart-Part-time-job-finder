@@ -9,10 +9,13 @@ import com.smartparttime.parttimebackend.modules.Application.mapper.JobApplicati
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
 import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobScheduleRepository;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,14 +33,16 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final JobRepo jobRepo;
     private final UserRepository userRepository;
     private final JobScheduleRepository jobScheduleRepository;
+    private final AttendanceRepository attendanceRepository;
 
-    public JobApplicationServiceImpl(JobApplicationMapper jobApplicationMapper, JobApplicationRepository jobApplicationRepository, JobSeekerRepository jobSeekerRepository, JobRepo jobRepo, UserRepository userRepository, JobScheduleRepository jobScheduleRepository) {
+    public JobApplicationServiceImpl(JobApplicationMapper jobApplicationMapper, JobApplicationRepository jobApplicationRepository, JobSeekerRepository jobSeekerRepository, JobRepo jobRepo, UserRepository userRepository, JobScheduleRepository jobScheduleRepository, AttendanceRepository attendanceRepository) {
         this.jobApplicationMapper = jobApplicationMapper;
         this.jobApplicationRepository = jobApplicationRepository;
         this.jobSeekerRepository = jobSeekerRepository;
         this.jobRepo = jobRepo;
         this.userRepository = userRepository;
         this.jobScheduleRepository = jobScheduleRepository;
+        this.attendanceRepository = attendanceRepository;
     }
 
     @Override
@@ -137,6 +142,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     }
 
+    @Transactional
     @Override
     public JobApplicationResponse updateApplicationStatus(UUID id, ApplicationStatus status) {
         var application = jobApplicationRepository.findById(id).orElse(null);
@@ -161,12 +167,14 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         job.setAvailableVacancies(job.getAvailableVacancies()-1);
         jobRepo.save(job);
 
-        /*Attendance attendance = new Attendance();
+        Attendance attendance = new Attendance();
         attendance.setJob(job);
-        attendance.setUser();
+        attendance.setUser(application.getJobseeker());
         attendance.setSchedule(application.getSchedule());
-        attendance.setQrCode();
-        attendance.setStatus();*/
+        attendance.setQrCode(UUID.randomUUID().toString());
+        attendance.setStatus(AttendanceStatus.PENDING);
+
+        attendanceRepository.save(attendance);
 
     }
 }
