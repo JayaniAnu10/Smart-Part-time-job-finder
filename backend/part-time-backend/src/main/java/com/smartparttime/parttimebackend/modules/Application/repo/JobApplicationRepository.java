@@ -19,4 +19,8 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     boolean existsByJob_IdAndJobseeker_IdAndStatus(UUID jobId, UUID jobseekerId, ApplicationStatus status);
 
     boolean existsByJob_Id(UUID jobId);
+
+    List<JobApplication> findByJobseeker_IdAndSchedule_Id(UUID jobseekerId, UUID scheduleId);
+
+    boolean existsByJobseeker_IdAndSchedule_Id(UUID jobseekerId, UUID scheduleId);
 }

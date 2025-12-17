@@ -2,6 +2,7 @@ package com.smartparttime.parttimebackend.modules.Application.service.impl;
 
 
 import com.smartparttime.parttimebackend.common.Services.EmailService;
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
@@ -56,6 +57,10 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         if (job == null) {
             throw new NotFoundException("Job not found");
         }
+
+       if( jobApplicationRepository.existsByJobseeker_IdAndSchedule_Id(seeker.getId(), request.getScheduleId())){
+           throw new BadRequestException("Application already exists");
+       }
 
         var user = userRepository.findById(request.getJobseeker()).orElseThrow();
         var schedule = jobScheduleRepository.findById(request.getScheduleId()).orElseThrow();
@@ -159,6 +164,15 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
         return jobApplicationMapper.toDto(application);
 
+    }
+
+    @Override
+    public void  deleteApplication(UUID id) {
+        var application = jobApplicationRepository.findById(id).orElse(null);
+        if (application == null) {
+            throw new NotFoundException("Application not found");
+        }
+        jobApplicationRepository.delete(application);
     }
 
     private void approveApplication(JobApplication application){

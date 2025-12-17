@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Service
 public class EmailService {
-
     private final JavaMailSender mailSender;
 
     public void sendQrCodeEmail(String email, String jobTitle, LocalDateTime startDate,LocalDateTime endDate, byte[] qrCode) {
@@ -45,11 +44,11 @@ public class EmailService {
                 <style>
                     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+                    .header { background-color: #19183B; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
                     .content { background-color: #f9f9f9; padding: 30px; border: 1px solid #ddd; }
-                    .footer { background-color: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 5px 5px; font-size: 12px; }
-                    .highlight { color: #4CAF50; font-weight: bold; }
-                    .info-box { background-color: white; padding: 15px; margin: 15px 0; border-left: 4px solid #4CAF50; }
+                    .footer { background-color: #17313E; color: white; padding: 15px; text-align: center; border-radius: 0 0 5px 5px; font-size: 12px; }
+                    .highlight { color: #19183B; font-weight: bold; }
+                    .info-box { background-color: white; padding: 15px; margin: 15px 0; border-left: 4px solid #19183B; }
                 </style>
             </head>
             <body>
@@ -58,7 +57,7 @@ public class EmailService {
                         <h1>🎉 Congratulations!</h1>
                     </div>
                     <div class="content">
-                        <h2>Dear sir/madam,</h2>
+                        <h2>Dear Sir/Madam,</h2>
                         <p>Great news! Your application has been <span class="highlight">APPROVED</span>!</p>
                         
                         <div class="info-box">
