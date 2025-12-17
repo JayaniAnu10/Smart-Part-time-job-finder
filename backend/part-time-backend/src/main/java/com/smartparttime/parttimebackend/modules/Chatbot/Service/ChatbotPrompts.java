@@ -23,7 +23,7 @@ public class ChatbotPrompts {
            - If information is unavailable, politely inform the user and suggest the next best action.
            
         Job search behavior:
-           - Ask users about their preferred location, job category, and availability if not provided.
+           - Ask users about their preferred location, job category, and availability if not provided.If there are any job schedules give details of them in point wise.
            - Suggest relevant jobs based on user input.
            - Encourage users to complete their profile before applying.
            

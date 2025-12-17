@@ -3,6 +3,8 @@ import axios from "axios";
 import TypingIndicator from "./TypingIndicator";
 import ChatMessages, { type Message } from "./ChatMessages";
 import ChatInput, { type ChatFormData } from "./ChatInput";
+import { HandCoins } from "lucide-react";
+import { PiHandWavingBold } from "react-icons/pi";
 
 type ChatResponse = {
   message: string;
@@ -47,7 +49,16 @@ const ChatBot = () => {
           Get instant help finding the perfect day job for you
         </div>
       </div>
+
       <div className="flex flex-col flex-1 gap-3 overflow-y-auto px-2">
+        {messages.length === 0 && (
+          <div className="flex flex-col items-center mt-35  md:text-4xl font-bold md:gap-3 text-3xl text-center text-secondary">
+            <span>Welcome! </span>
+            <span className="md:text-3xl text-2xl ">
+              Ready to start your job search?
+            </span>
+          </div>
+        )}
         <ChatMessages messages={messages} />
         {isLoading && <TypingIndicator />}
         {error && <p className="text-red-500">{error}</p>}

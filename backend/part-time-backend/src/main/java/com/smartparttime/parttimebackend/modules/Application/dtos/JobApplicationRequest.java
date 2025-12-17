@@ -12,4 +12,7 @@ public class JobApplicationRequest {
 
     @NotNull(message = "Field required")
     private UUID jobseeker;
+
+    @NotNull(message = "Field required")
+    private UUID scheduleId;
 }
