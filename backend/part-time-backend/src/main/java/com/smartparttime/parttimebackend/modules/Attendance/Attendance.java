@@ -1,10 +1,13 @@
 package com.smartparttime.parttimebackend.modules.Attendance;
 
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
+import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -37,5 +40,9 @@ public class Attendance {
 
     @Column(name = "status")
     private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id")
+    private JobSchedule schedule;
 
 }

@@ -59,6 +59,7 @@ public class ChatbotService {
             context = String.format("""
             Job Id: %s
             Job Title: %s
+            Job schedules: %s
             Location: %s
             Job Type: %s
             Salary: %s
@@ -70,6 +71,7 @@ public class ChatbotService {
             """,
                     bestJob.getId(),
                     bestJob.getTitle(),
+                    bestJob.getJobSchedules(),
                     bestJob.getLocation(),
                     bestJob.getJobType(),
                     bestJob.getSalary(),

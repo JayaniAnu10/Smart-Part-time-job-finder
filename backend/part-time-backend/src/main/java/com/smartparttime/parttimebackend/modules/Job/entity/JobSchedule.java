@@ -1,5 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Job.entity;
 
+import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,6 +13,9 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -32,5 +37,17 @@ public class JobSchedule {
 
     @Column(name = "end_datetime")
     private LocalDateTime endDatetime;
+
+    @NotNull
+    @Column(name = "required_workers")
+    private Integer requiredWorkers;
+
+    @OneToMany
+    @JoinColumn(name = "schedule_id")
+    private Set<Attendance> attendances = new HashSet<>();
+
+    @OneToMany
+    @JoinColumn(name = "schedule_id")
+    private Set<JobApplication> jobApplications = new HashSet<>();
 
 }

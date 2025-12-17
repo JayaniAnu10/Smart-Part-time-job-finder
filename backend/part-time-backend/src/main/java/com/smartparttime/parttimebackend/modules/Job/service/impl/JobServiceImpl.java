@@ -72,14 +72,15 @@ public class JobServiceImpl implements JobService {
                     schedule.setStartDatetime(dto.getStartDatetime());
                     schedule.setEndDatetime(dto.getEndDatetime());
                     schedule.setJob(job);
+                    schedule.setRequiredWorkers(dto.getRequiredWorkers());
                     return schedule;
                 }).collect(Collectors.toSet());
 
         job.setJobSchedules(schedules);
         try{
-            saveJobEmbedding(job);
+            saveJobEmbedding(job, job.getJobSchedules());
         }catch (Exception e){
-            throw new BadRequestException("Json embedding conflict.");
+            throw new BadRequestException(e.getMessage());
         }
 
         var savedJob = jobRepo.save(job);
@@ -169,7 +170,7 @@ public class JobServiceImpl implements JobService {
         }
 
         try{
-            saveJobEmbedding(job);
+            saveJobEmbedding(job,job.getJobSchedules());
         }catch (Exception e){
             throw new BadRequestException("Json embedding conflict.");
         }
@@ -200,11 +201,11 @@ public class JobServiceImpl implements JobService {
     }
 
 
-    public void saveJobEmbedding(Job job) throws JsonProcessingException {
+    public void saveJobEmbedding(Job job, Set<JobSchedule> jobSchedules) throws JsonProcessingException {
         String fullJobText = String.format("""
             Job Id: %s
             Job Title: %s
-            Company: %s
+            Job schedules: %s
             Location: %s
             Job Type: %s
             Salary: %s
@@ -216,6 +217,7 @@ public class JobServiceImpl implements JobService {
             """,
                 job.getId(),
                 job.getTitle(),
+                jobSchedules,
                 job.getLocation(),
                 job.getJobType(),
                 job.getSalary(),

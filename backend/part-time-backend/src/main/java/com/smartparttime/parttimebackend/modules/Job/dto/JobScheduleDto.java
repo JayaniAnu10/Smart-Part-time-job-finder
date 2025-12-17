@@ -12,4 +12,8 @@ public class JobScheduleDto {
 
     @NotNull(message = "End date/time is required")
     private LocalDateTime endDatetime;
+
+    @NotNull(message = "No.of workers is needed")
+    private Integer requiredWorkers;
+
 }
