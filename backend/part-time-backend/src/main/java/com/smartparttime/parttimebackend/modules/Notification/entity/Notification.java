@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.Notification;
+package com.smartparttime.parttimebackend.modules.Notification.entity;
 
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import jakarta.persistence.*;
@@ -28,5 +28,8 @@ public class Notification {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "is_read")
+    private boolean isRead = false;
 
 }

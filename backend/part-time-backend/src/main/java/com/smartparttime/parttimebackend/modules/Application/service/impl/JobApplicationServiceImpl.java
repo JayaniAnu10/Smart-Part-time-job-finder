@@ -18,6 +18,7 @@ import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobScheduleRepository;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
+import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final JobScheduleRepository jobScheduleRepository;
     private final AttendanceRepository attendanceRepository;
     private final AttendanceService attendanceService;
+    private final NotificationService notificationService;
 
 
 
@@ -73,6 +75,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         application.setSchedule(schedule);
 
         jobApplicationRepository.save(application);
+
+        notificationService.notifyJobApplied(
+                job.getEmployer().getUser().getId(),
+                job.getTitle()
+        );
+
 
         return jobApplicationMapper.toDto(application);
     }
@@ -161,6 +169,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             approveApplication(application);
 
         }
+
+        notificationService.notifyStatusChanged(
+                application.getJobseeker().getId(),
+                application.getJob().getTitle(),
+                status.name()
+        );
+
 
         return jobApplicationMapper.toDto(application);
 

@@ -4,7 +4,7 @@ import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
 import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
-import com.smartparttime.parttimebackend.modules.Notification.Notification;
+import com.smartparttime.parttimebackend.modules.Notification.entity.Notification;
 import com.smartparttime.parttimebackend.modules.Payment.Payment;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import jakarta.persistence.*;
