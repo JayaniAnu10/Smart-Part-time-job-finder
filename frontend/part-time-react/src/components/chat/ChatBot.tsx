@@ -3,8 +3,6 @@ import axios from "axios";
 import TypingIndicator from "./TypingIndicator";
 import ChatMessages, { type Message } from "./ChatMessages";
 import ChatInput, { type ChatFormData } from "./ChatInput";
-import { HandCoins } from "lucide-react";
-import { PiHandWavingBold } from "react-icons/pi";
 
 type ChatResponse = {
   message: string;
