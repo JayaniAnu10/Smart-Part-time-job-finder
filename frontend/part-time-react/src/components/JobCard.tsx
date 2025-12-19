@@ -1,5 +1,5 @@
 import React from 'react';
-
+// Icons වලට lucide-react පාවිච්චි කරමු (npm install lucide-react)
 import { MapPin, DollarSign, Clock } from 'lucide-react';
 
 interface JobProps {

@@ -1,27 +1,23 @@
-// frontend/part-time-react/src/App.tsx
-
-import React from 'react';
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import FindJobs from './pages/FindJobs';
+import PostJob from './pages/PostJob';
 
 
-import PostJobPage from './pages/PostJob'; 
-
-
-
-const App: React.FC = () => {
-    return (
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* '/' කියන්නේ main path එක. Site එකට ආපු ගමන් FindJobs පේන්න මෙහෙම දාමු */}
+        <Route path="/" element={<FindJobs />} />
         
-        <Router>
-            
-            <Routes>
-                
-                <Route path="/" element={<PostJobPage />} />
-
-                
-            </Routes>
-        </Router>
-    );
-};
+        {/* localhost:5173/find-jobs ගියත් මේකම පේනවා */}
+        <Route path="/find-jobs" element={<FindJobs />} />
+        
+        {/* localhost:5173/post-job ගියාම පරණ page එක බලාගන්න පුළුවන් */}
+        <Route path="/post-job" element={<PostJob />} />
+      </Routes>
+    </Router>
+  );
+}
 
 export default App;
