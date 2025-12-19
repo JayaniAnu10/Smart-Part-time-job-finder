@@ -26,7 +26,7 @@ const stats: StatItem[] = [
 const HeroSection = () => {
   return (
     <section
-      className="relative min-h-screen bg-cover bg-center pt-24"
+      className="relative min-h-[90vh] md:min-h-screen bg-cover bg-center pt-24"
       style={{ backgroundImage: `url(${heroBackground})` }}
     >
    
@@ -35,15 +35,22 @@ const HeroSection = () => {
       <div className="relative z-30 flex items-center justify-center px-6 text-center">
         <div className="max-w-5xl">
           <h1 className="text-6xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
-            <span className="text-secondary dark:text-primary">
-              Find Your Perfect{" "}
+            <span className="whitespace-nowrap">
+
+              <span className="text-secondary dark:text-primary">
+                Find Your Perfect{" "}
+              </span>
+
+              <span className="text-primary dark:text-yellow-400 whitespace-nowrap">
+                Part-Time Job
+              </span>
+
             </span>
-            <span className="text-primary dark:text-yellow-400">
-              Part-Time Job
-            </span>
-            <span className="text-secondary dark:text-primary">
-              {" "}in Sri Lanka
-            </span>
+            
+              <span className="text-secondary dark:text-primary">
+                {" "}in Sri Lanka
+              </span>
+            
           </h1>
 
           <p className="mt-6 text-base md:text-lg text-secondary/80 dark:text-primary/70 max-w-3xl mx-auto">
@@ -54,7 +61,7 @@ const HeroSection = () => {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
               size="lg"
-              className="bg-primary dark:bg-yellow-400 text-secondary px-8 transition-all duration-300 hover:scale-105 active:scale-95"
+              className="bg-primary dark:bg-yellow-400 text-secondary px-8 transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-primary dark:hover:bg-yellow-400 hover:text-secondary dark:hover:text-secondary"
             >
               <img src={SearchIcon} alt="Search jobs" className="mr-2 h-5 w-5" />
               Find Jobs Now
@@ -63,7 +70,7 @@ const HeroSection = () => {
             <Button
               size="lg"
               className="border border-secondary bg-primary-foreground/40 dark:bg-secondary/50
-                         backdrop-blur-sm text-secondary dark:text-secondary-foreground px-8 transition-all duration-300"
+                         backdrop-blur-sm text-secondary dark:text-secondary-foreground px-8 transition-all duration-300 active:scale-95 hover:bg-primary-foreground/40 dark:hover:bg-secondary/50 hover:text-secondary dark:hover:text-secondary-foreground"
             >
               <img
                 src={PostJobButtonIcon}

@@ -1,6 +1,7 @@
 import NavBar from "../components/NavBar";
 import HeroSection from "@/components/home/HeroSection";
 import WhyChooseSection from "@/components/home/WhyChooseSection";
+import BrowseByCategorySection from "@/components/home/BrowseByCategorySection";
 
 
 
@@ -11,6 +12,7 @@ const HomePage = () => {
       <NavBar />
       <HeroSection />
       <WhyChooseSection />
+      <BrowseByCategorySection />
         
     </div>
   );
