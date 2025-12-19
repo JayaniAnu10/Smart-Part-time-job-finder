@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Logo from "./Logo";
-import ThemeToggle from "./ThemeToggle";
-import { Button } from "./ui/button";
+import Logo from "../common/Logo";
+import ThemeToggle from "../navBar/ThemeToggle";
+import { Button } from "../ui/button";
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
