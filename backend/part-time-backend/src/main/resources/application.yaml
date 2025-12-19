@@ -28,16 +28,16 @@ spring:
         account-key: ${AZURE_STORAGE_ACCOUNT_KEY:YOUR_ACCOUNT_KEY}
 
   ai:
-    model:
-      chat: ollama
-    ollama:
-      base-url: http://localhost:11434
+    openai:
+      api-key: ${OPENAI_API_KEY}
       chat:
-        model: llama3.1:8b
-      embedding:
-        enabled: true
         options:
-          model: llama3.1:8b
+          model: gpt-4o-mini
+          temperature: 0.4
+          max-tokens: 150
+      embedding:
+        options:
+          model: text-embedding-3-small
 
 server:
   port: 8080

@@ -101,8 +101,8 @@ public class ChatbotService {
 
             return chatClient.prompt()
                     .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, sessionId))
-                    .user(prompt.getPrompt())
                     .system(ChatbotPrompts.SYSTEM_PROMPT.formatted(context))
+                    .user(prompt.getPrompt())
                     .call()
                     .content();
         }catch (BadRequestException e){
