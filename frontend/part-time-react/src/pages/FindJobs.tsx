@@ -106,6 +106,11 @@ const FindJobs: React.FC = () => {
         </div>
       </section>
 
+      <section className="max-w-7xl mx-auto px-4 mt-10 w-full">
+       <RecommendedJobs />
+    </section>
+
+
       {/* 2. Main Page Content */}
       <main className="max-w-7xl mx-auto px-4 py-10 w-full">
         <div className="flex flex-col lg:flex-row gap-8">
@@ -118,9 +123,7 @@ const FindJobs: React.FC = () => {
           {/* Job Results Area */}
           <div className="flex-1">
             
-            {/* AI Recommendations */}
-            <RecommendedJobs />
-
+            
             {/* Sorting Header */}
             <div className="flex justify-between items-center mb-6 px-1">
               <p className="text-gray-500 text-sm">

@@ -20,6 +20,7 @@ const Navbar: React.FC = () => {
           <a href="#" className="hover:text-yellow-500 transition-colors">AI Chatbot</a>
           <a href="#" className="hover:text-yellow-500 transition-colors">Nearby Map</a>
           <a href="#" className="hover:text-yellow-500 transition-colors">About</a>
+          <a href="#" className="hover:text-yellow-500 transition-colors">Contact</a>
         </div>
 
         {/* Action Buttons */}
