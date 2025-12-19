@@ -16,7 +16,7 @@ const NavBar = () => {
         <div className="tab:flex hidden lg:flex items-center  xl:gap-3 flex-1 justify-center">
           <Button
             variant="ghost"
-            className="font-medium  text-sm xl:text-md hover:bg-secondary/6 
+            className="font-medium  text-md  hover:bg-secondary/6 
             dark:hover:text-yellow-400
             cursor-pointer  xl:px-4"
           >
@@ -24,25 +24,25 @@ const NavBar = () => {
           </Button>
           <Button
             variant="ghost"
-            className="font-medium text-sm xl:text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer  xl:px-4"
+            className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer  xl:px-4"
           >
             {t("postJobs")}
           </Button>
           <Button
             variant="ghost"
-            className="font-medium text-sm xl:text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer whitespace-nowrap  xl:px-4"
+            className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer whitespace-nowrap  xl:px-4"
           >
             {t("nearbyMap")}
           </Button>
           <Button
             variant="ghost"
-            className="font-medium text-sm xl:text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer whitespace-nowrap px-2 xl:px-4"
+            className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer whitespace-nowrap px-2 xl:px-4"
           >
             {t("about")}
           </Button>
           <Button
             variant="ghost"
-            className="font-medium text-sm xl:text-md hover:bg-secondary/6 dark:hover:text-yellow-300 cursor-pointer whitespace-nowrap px-2 xl:px-4"
+            className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-300 cursor-pointer whitespace-nowrap px-2 xl:px-4"
           >
             {t("contact")}
           </Button>
@@ -56,13 +56,13 @@ const NavBar = () => {
           <div className="tab:flex lg:flex hidden gap-2 xl:gap-3">
             <Button
               variant="ghost"
-              className="hover:bg-yellow-400 text-sm xl:text-md cursor-pointer dark:hover:text-[#0f1f3d] whitespace-nowrap px-3 xl:px-4"
+              className="hover:bg-yellow-400 text-md  cursor-pointer dark:hover:text-[#0f1f3d] whitespace-nowrap px-3 xl:px-4"
             >
               {t("login")}
             </Button>
             <Button
               variant="default"
-              className="bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-sm xl:text-md transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25 whitespace-nowrap px-3 xl:px-4"
+              className="bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md  transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25 whitespace-nowrap px-3 xl:px-4"
             >
               {t("getStarted")}
             </Button>

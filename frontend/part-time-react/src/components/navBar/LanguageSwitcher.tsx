@@ -29,7 +29,10 @@ const LanguageSwitcher = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          className="hover:bg-yellow-400 border-0 hover:text-[#0f1f3d]"
+        >
           <Globe />
           <span className="hidden sm:inline text-sm font-medium">
             {currentLanguage.nativeName}
@@ -49,9 +52,7 @@ const LanguageSwitcher = () => {
                 className={lng.code === i18n.language ? "selected" : ""}
               >
                 <span className="font-medium">{lng.nativeName}</span>
-                <span className="ml-2 text-muted-foreground text-xs">
-                  {lng.name}
-                </span>
+                <span className="ml-2  text-xs">{lng.name}</span>
               </DropdownMenuRadioItem>
             );
           })}
