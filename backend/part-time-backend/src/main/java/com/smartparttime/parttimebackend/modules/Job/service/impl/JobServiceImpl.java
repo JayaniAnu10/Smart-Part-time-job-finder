@@ -58,6 +58,7 @@ public class JobServiceImpl implements JobService {
     public JobResponseDto createJob(JobRequestDto request, UUID employerId){
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
+        System.out.println(request.getLatitude());
 
         var category = categoryRepo.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -84,7 +85,6 @@ public class JobServiceImpl implements JobService {
         }
 
         var savedJob = jobRepo.save(job);
-
         return jobMapper.toDto(savedJob);
     }
 
