@@ -1,4 +1,3 @@
-import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +17,6 @@ const languages = [
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
-  const [position, setPosition] = React.useState("bottom");
 
   const currentLanguage =
     languages.find((lang) => lang.code === i18n.language) || languages[0];
@@ -31,7 +29,10 @@ const LanguageSwitcher = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          className="hover:bg-yellow-400 border-0 hover:text-[#0f1f3d]"
+        >
           <Globe />
           <span className="hidden sm:inline text-sm font-medium">
             {currentLanguage.nativeName}
@@ -39,18 +40,19 @@ const LanguageSwitcher = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+        <DropdownMenuRadioGroup
+          value={currentLanguage.code}
+          onValueChange={handleLanguage}
+        >
           {languages.map((lng) => {
             return (
               <DropdownMenuRadioItem
+                key={lng.code}
                 value={lng.code}
-                onClick={() => handleLanguage(lng.code)}
-                className="cursor-pointer"
+                className={lng.code === i18n.language ? "selected" : ""}
               >
                 <span className="font-medium">{lng.nativeName}</span>
-                <span className="ml-2 text-muted-foreground text-xs">
-                  {lng.name}
-                </span>
+                <span className="ml-2  text-xs">{lng.name}</span>
               </DropdownMenuRadioItem>
             );
           })}

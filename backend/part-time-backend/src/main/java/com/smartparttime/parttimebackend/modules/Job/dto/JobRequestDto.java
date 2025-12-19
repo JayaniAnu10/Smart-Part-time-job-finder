@@ -48,4 +48,11 @@ public class JobRequestDto {
     @NotNull(message = "Job schedules are required")
     private List<JobScheduleDto> schedules;
 
+    @NotNull(message = "Required")
+    private Double latitude;
+
+    @NotNull(message = "Required")
+    private Double longitude;
+
+
 }
