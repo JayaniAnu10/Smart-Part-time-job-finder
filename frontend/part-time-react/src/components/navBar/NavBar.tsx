@@ -2,9 +2,12 @@ import { useState } from "react";
 import Logo from "../common/Logo";
 import ThemeToggle from "../navBar/ThemeToggle";
 import { Button } from "../ui/button";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const { t } = useTranslation("navBar");
   return (
     <nav className="fixed flex px-6 top-0 right-0 left-0 bg-background/50 backdrop-blur-lg h-20 z-50  w-full ">
       <div className="flex justify-between w-full items-center gap-2">
@@ -17,34 +20,35 @@ const NavBar = () => {
             dark:hover:text-yellow-400
             cursor-pointer"
           >
-            Explore Jobs
+            {t("findJobs")}
           </Button>
           <Button
             variant="ghost"
             className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer"
           >
-            Post Jobs
+            {t("postJobs")}
           </Button>
           <Button
             variant="ghost"
             className="font-medium text-md hover:bg-secondary/6  dark:hover:text-yellow-400 cursor-pointer"
           >
-            Nearby Map
+            {t("nearbyMap")}
           </Button>
           <Button
             variant="ghost"
             className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer"
           >
-            About
+            {t("about")}
           </Button>
           <Button
             variant="ghost"
             className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-300 cursor-pointer"
           >
-            Contact
+            {t("contact")}
           </Button>
         </div>
         <div className="flex gap-3">
+          <LanguageSwitcher />
           <div>
             <ThemeToggle />
           </div>
@@ -53,13 +57,13 @@ const NavBar = () => {
               variant="ghost"
               className="hover:bg-yellow-400 text-md cursor-pointer dark:hover:text-[#0f1f3d] "
             >
-              Login
+              {t("login")}
             </Button>
             <Button
               variant="default"
               className="bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25"
             >
-              Get Started
+              {t("getStarted")}
             </Button>
           </div>
           {/*Mobile design of nav bar */}
@@ -86,25 +90,25 @@ const NavBar = () => {
         </div>
 
         <div
-          className={`tab:hidden absolute top-20 bg-white  dark:bg-background/90 dark:text-primary flex flex-col w-full font-semibold text-lg text-secondary transform transition-transform ${
+          className={`tab:hidden absolute top-20 bg-white/95  dark:bg-background/95 dark:text-primary flex flex-col w-full font-semibold text-lg text-secondary transform transition-transform left-0 ${
             isMenuOpen ? "opacity-100" : "opacity-0"
           }`}
         >
           <ul className="text-left w-full p-4">
             <li className="  hover:text-yellow-400 transition-all cursor-pointer py-2">
-              Find Jobs
+              {t("findJobs")}
             </li>
             <li className="hover:text-yellow-400 transition-all cursor-pointer py-2">
-              Post Job
+              {t("postJobs")}
             </li>
             <li className=" hover:text-yellow-400 transition-all cursor-pointer py-2">
-              NearBy
+              {t("nearbyMap")}
             </li>
             <li className=" hover:text-yellow-400 transition-all cursor-pointer py-2">
-              Contact
+              {t("contact")}
             </li>
             <li className="hover:text-yellow-400 transition-all cursor-pointer py-2">
-              About
+              {t("about")}
             </li>
           </ul>
         </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +17,6 @@ const languages = [
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
-  const [position, setPosition] = React.useState("bottom");
 
   const currentLanguage =
     languages.find((lang) => lang.code === i18n.language) || languages[0];
@@ -39,13 +37,16 @@ const LanguageSwitcher = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+        <DropdownMenuRadioGroup
+          value={currentLanguage.code}
+          onValueChange={handleLanguage}
+        >
           {languages.map((lng) => {
             return (
               <DropdownMenuRadioItem
+                key={lng.code}
                 value={lng.code}
-                onClick={() => handleLanguage(lng.code)}
-                className="cursor-pointer"
+                className={lng.code === i18n.language ? "selected" : ""}
               >
                 <span className="font-medium">{lng.nativeName}</span>
                 <span className="ml-2 text-muted-foreground text-xs">
