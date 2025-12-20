@@ -20,8 +20,7 @@ const BrowseByCategorySection = () => {
   return (
     <section className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-6">
-        
-        {/* Heading */}
+
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-extrabold text-secondary dark:text-primary">
             Browse by{" "}
@@ -32,7 +31,6 @@ const BrowseByCategorySection = () => {
           </p>
         </div>
 
-        {/* Cards */}
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Card
@@ -48,7 +46,7 @@ const BrowseByCategorySection = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-secondary dark:text-primary">
+                <h3 className="text-lg font-semibold text-secondary dark:text-primary hover:text-yellow-400">
                   {category.title}
                 </h3>
                 <p className="text-sm text-secondary/70 dark:text-primary/70">
