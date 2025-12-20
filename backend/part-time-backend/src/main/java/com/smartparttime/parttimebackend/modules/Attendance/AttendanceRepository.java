@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     Optional<Attendance> findById(UUID id);
+
+    Attendance findByQrCode(String qrCode);
 }

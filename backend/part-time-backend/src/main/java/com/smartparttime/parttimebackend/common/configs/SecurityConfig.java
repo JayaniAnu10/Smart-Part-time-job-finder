@@ -61,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE,"/jobs/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/applications").permitAll()
                         .requestMatchers(HttpMethod.GET,"/applications/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/attendance/scan").permitAll()
                         .requestMatchers(HttpMethod.GET,"/applications/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/applications/*").permitAll()
                         .requestMatchers(HttpMethod.PATCH,"/applications/**").permitAll()

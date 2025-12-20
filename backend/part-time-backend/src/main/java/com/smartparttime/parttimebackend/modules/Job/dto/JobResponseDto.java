@@ -46,4 +46,8 @@ public class JobResponseDto {
     private Long totalVacancies;
 
     private UUID employer;
+
+    private Double latitude;
+
+    private Double longitude;
 }
