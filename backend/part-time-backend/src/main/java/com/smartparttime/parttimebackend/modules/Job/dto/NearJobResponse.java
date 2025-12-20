@@ -15,4 +15,8 @@ public class NearJobResponse {
     private JobStatus status;
 
     private BigDecimal salary;
+
+    private Double latitude;
+
+    private Double longitude;
 }

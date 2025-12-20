@@ -29,7 +29,7 @@ public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExec
                 sin(radians(latitude))
             )
         ) AS distance
-        FROM jobs
+        FROM job
         HAVING distance <= :radius
         ORDER BY distance
         """, nativeQuery = true)
