@@ -11,6 +11,7 @@ import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
@@ -198,6 +199,12 @@ public class JobServiceImpl implements JobService {
         Pageable pageable = PageRequest.of(page, size);
         var jobs = jobRepo.findByLocationContainingIgnoreCase(location,pageable);
         return jobs.map(jobMapper::toDto);
+    }
+
+    @Override
+    public List<NearJobResponse> getNearByJobs(double userLat, double userLng, double radius) {
+        var jobs =jobRepo.findNearbyJobs(userLat, userLng, radius);
+        return jobMapper.toNearMap(jobs);
     }
 
 
