@@ -4,37 +4,23 @@ import RoleCard from "../components/RoleCard";
 import Jobseeker from "../assets/jobseeker.svg";
 import Employer from "../assets/employer.svg";
 import logoIcon from "../assets/logo-icon.svg";
+import Logo from "@/components/common/Logo";
 
 const GetStarted = () => {
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center pt-10 pb-20 font-sans">
-      
-      
       <div className="flex items-center gap-2 mt-4 mb-2">
-        
-        <div className="w-[40px] h-[40px] bg-[#F7C01D] flex items-center justify-center rounded-[15px]">
-          <img src={logoIcon} alt="logo icon" className="w-[24px] h-[24px]" />
-        </div>
-
-        
-        <h1 className="text-[24px] font-bold">
-           <span className="text-[#0F1F3D]">Day</span>
-           <span className="text-[#F7C01D]">Bee</span>
-           <span className="text-[#0F1F3D]">.lk</span>
-        </h1>
+        <Logo />
       </div>
 
-      
       <h1 className="text-[30px] font-bold text-[#0F1F3D] mt-4 mb-2">
         Join DayBee.lk
       </h1>
-      
-      
+
       <p className="text-[#515980] text-[18px] mb-10 text-center px-4 md:px-0">
         Select how you want to use our platform
       </p>
 
-      
       <div className="w-full max-w-[1200px] flex flex-col md:flex-row justify-center items-start gap-8 px-4">
         <RoleCard
           image={Jobseeker}
@@ -63,7 +49,6 @@ const GetStarted = () => {
         />
       </div>
 
-      
       <div className="text-center mt-10">
         <p className="text-[16px] text-[#365186]">
           Already have an account?{" "}
