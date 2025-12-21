@@ -3,44 +3,27 @@ import AuthTabs from "../components/AuthTabs";
 import InputField from "../components/InputField";
 import Logo from "@/components/common/Logo";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import toast from "react-hot-toast";
+import useAddUser from "@/hooks/useAddUser";
+import useUserLogin from "@/hooks/useUserLogin";
 
-type SignupFormData = {
+export type AuthFormData = {
   email: string;
   password: string;
-  confirmPassword: string;
-  contact: string;
+  confirmPassword?: string;
+  contact?: string;
 };
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
 
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
+  const handleLogin = useUserLogin(() => {
+    reset();
+  });
 
-  const handleSignup = useMutation<any, Error, SignupFormData>({
-    mutationFn: (data: SignupFormData) => {
-      return axios
-        .post("http://localhost:8080/user", data)
-        .then((res) => res.data);
-    },
-    onSuccess: () => {
-      alert("Signup successful!");
-      reset();
-      setActiveTab("login");
-    },
-    onError: (error) => {
-      //Axios error handle
-      if (axios.isAxiosError(error)) {
-        //Get error from server
-        const msg =
-          error.response?.data.error || "Signup failed. Please try again.";
-        alert(msg);
-      } else {
-        alert("Signup failed. Please try again.");
-      }
-    },
+  const handleSignup = useAddUser(() => {
+    reset();
+    setActiveTab("login");
   });
 
   const {
@@ -48,18 +31,18 @@ const Auth = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<SignupFormData>();
+  } = useForm<AuthFormData>();
 
-  const onSubmit = (data: SignupFormData) => {
+  const onSubmit = (data: AuthFormData) => {
     if (data.password !== data.confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
     handleSignup.mutate(data);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onLogin = (data: AuthFormData) => {
+    handleLogin.mutate(data);
   };
 
   return (
@@ -81,22 +64,31 @@ const Auth = () => {
         <AuthTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {activeTab === "login" ? (
-          <form className="flex flex-col gap-4 mt-4" onSubmit={handleLogin}>
+          <form
+            className="flex flex-col gap-4 mt-4"
+            onSubmit={handleSubmit(onLogin)}
+          >
             <InputField
               label="Email"
               type="email"
               placeholder="you@example.com"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
+              {...register("email", { required: "Email is required" })}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
 
             <InputField
               label="Password"
               type="password"
               placeholder="••••••••"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
+              {...register("password", {
+                required: "Password is required",
+              })}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
 
             <button
               className="w-full h-10 bg-[#FACC15] text-[#0f1f3d]
