@@ -1,5 +1,8 @@
 package com.smartparttime.parttimebackend.modules.Application.service.impl;
 
+
+import com.smartparttime.parttimebackend.common.Services.EmailService;
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
@@ -8,9 +11,16 @@ import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplication
 import com.smartparttime.parttimebackend.modules.Application.mapper.JobApplicationMapper;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
+import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceService;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
+import com.smartparttime.parttimebackend.modules.Job.repo.JobScheduleRepository;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,22 +29,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+
+@AllArgsConstructor
 @Service
 public class JobApplicationServiceImpl implements JobApplicationService {
-
+    private final EmailService emailService;
     private final JobApplicationMapper jobApplicationMapper;
     private final JobApplicationRepository jobApplicationRepository;
     private final JobSeekerRepository jobSeekerRepository;
     private final JobRepo jobRepo;
     private final UserRepository userRepository;
+    private final JobScheduleRepository jobScheduleRepository;
+    private final AttendanceRepository attendanceRepository;
+    private final AttendanceService attendanceService;
 
-    public JobApplicationServiceImpl(JobApplicationMapper jobApplicationMapper, JobApplicationRepository jobApplicationRepository, JobSeekerRepository jobSeekerRepository, JobRepo jobRepo, UserRepository userRepository) {
-        this.jobApplicationMapper = jobApplicationMapper;
-        this.jobApplicationRepository = jobApplicationRepository;
-        this.jobSeekerRepository = jobSeekerRepository;
-        this.jobRepo = jobRepo;
-        this.userRepository = userRepository;
-    }
+
 
     @Override
     public JobApplicationResponse createApplication(JobApplicationRequest request) {
@@ -49,13 +58,19 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             throw new NotFoundException("Job not found");
         }
 
+       if( jobApplicationRepository.existsByJobseeker_IdAndSchedule_Id(seeker.getId(), request.getScheduleId())){
+           throw new BadRequestException("Application already exists");
+       }
+
         var user = userRepository.findById(request.getJobseeker()).orElseThrow();
+        var schedule = jobScheduleRepository.findById(request.getScheduleId()).orElseThrow();
 
         var application = new JobApplication();
         application.setJob(job);
         application.setJobseeker(user);
         application.setAppliedDate(LocalDateTime.now());
         application.setStatus(ApplicationStatus.PENDING);
+        application.setSchedule(schedule);
 
         jobApplicationRepository.save(application);
 
@@ -131,6 +146,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     }
 
+    @Transactional
     @Override
     public JobApplicationResponse updateApplicationStatus(UUID id, ApplicationStatus status) {
         var application = jobApplicationRepository.findById(id).orElse(null);
@@ -141,7 +157,56 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         application.setStatus(status);
         jobApplicationRepository.save(application);
 
+        if(status == ApplicationStatus.APPROVED) {
+            approveApplication(application);
+
+        }
+
         return jobApplicationMapper.toDto(application);
+
+    }
+
+    @Override
+    public void  deleteApplication(UUID id) {
+        var application = jobApplicationRepository.findById(id).orElse(null);
+        if (application == null) {
+            throw new NotFoundException("Application not found");
+        }
+        jobApplicationRepository.delete(application);
+    }
+
+    private void approveApplication(JobApplication application){
+        try{
+            var job= application.getJob();
+            job.setAvailableVacancies(job.getAvailableVacancies()-1);
+            jobRepo.save(job);
+
+            String qrToken=UUID.randomUUID() + "-" + System.currentTimeMillis();
+
+            Attendance attendance = new Attendance();
+            attendance.setJob(job);
+            attendance.setUser(application.getJobseeker());
+            attendance.setSchedule(application.getSchedule());
+            attendance.setQrCode(qrToken);
+            attendance.setStatus(AttendanceStatus.PENDING);
+
+            attendanceRepository.save(attendance);
+
+            byte[] qrCode =attendanceService.generateQr(qrToken);
+
+
+            String email = application.getJobseeker().getEmail();
+            String jobTitle = job.getTitle();
+            LocalDateTime scheduleStartDate = application.getSchedule().getStartDatetime();
+            LocalDateTime scheduleEndDate = application.getSchedule().getEndDatetime();
+
+            emailService.sendQrCodeEmail(email,  jobTitle, scheduleStartDate,scheduleEndDate, qrCode);
+
+
+        }catch(Exception e){
+            throw new RuntimeException("Failed  to process application approval", e);
+        }
+
 
     }
 }

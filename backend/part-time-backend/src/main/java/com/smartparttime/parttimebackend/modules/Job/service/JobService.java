@@ -2,6 +2,8 @@ package com.smartparttime.parttimebackend.modules.Job.service;
 
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
+import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
@@ -28,5 +30,7 @@ public interface JobService {
     void deleteJob(UUID jobId);
 
     Page<JobResponseDto> getByLocation(int page, int size, String location);
+
+    List<NearJobResponse> getNearByJobs(double userLat, double userLng, double radius);
 
 }

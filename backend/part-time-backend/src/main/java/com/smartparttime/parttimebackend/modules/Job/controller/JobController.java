@@ -2,6 +2,8 @@ package com.smartparttime.parttimebackend.modules.Job.controller;
 
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
+import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
@@ -118,5 +120,16 @@ public class JobController {
     public ResponseEntity<String> deleteJob(@PathVariable UUID jobId) {
         jobService.deleteJob(jobId);
         return ResponseEntity.ok("Job deleted successfully");
+    }
+
+
+    @GetMapping("/nearby")
+    public ResponseEntity<List<NearJobResponse>> getNearbyJobs(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(defaultValue = "10") double radius // in km
+    ) {
+        List<NearJobResponse> jobs = jobService.getNearByJobs(latitude, longitude, radius);
+        return ResponseEntity.ok(jobs);
     }
 }

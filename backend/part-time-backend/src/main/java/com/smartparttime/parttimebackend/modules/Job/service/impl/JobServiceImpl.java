@@ -1,13 +1,17 @@
 package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
+import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
@@ -16,6 +20,7 @@ import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,9 +35,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class JobServiceImpl implements JobService {
 
+    private final EmbeddingService  embeddingService;
     @Autowired
     private JobRepo jobRepo;
 
@@ -49,9 +56,10 @@ public class JobServiceImpl implements JobService {
 
     @Transactional
     @Override
-    public JobResponseDto createJob(JobRequestDto request, UUID employerId) {
+    public JobResponseDto createJob(JobRequestDto request, UUID employerId){
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
+        System.out.println(request.getLatitude());
 
         var category = categoryRepo.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -66,13 +74,18 @@ public class JobServiceImpl implements JobService {
                     schedule.setStartDatetime(dto.getStartDatetime());
                     schedule.setEndDatetime(dto.getEndDatetime());
                     schedule.setJob(job);
+                    schedule.setRequiredWorkers(dto.getRequiredWorkers());
                     return schedule;
                 }).collect(Collectors.toSet());
 
         job.setJobSchedules(schedules);
+        try{
+            saveJobEmbedding(job, job.getJobSchedules());
+        }catch (Exception e){
+            throw new BadRequestException(e.getMessage());
+        }
 
         var savedJob = jobRepo.save(job);
-
         return jobMapper.toDto(savedJob);
     }
 
@@ -157,6 +170,12 @@ public class JobServiceImpl implements JobService {
             job.setCategory(category);
         }
 
+        try{
+            saveJobEmbedding(job,job.getJobSchedules());
+        }catch (Exception e){
+            throw new BadRequestException("Json embedding conflict.");
+        }
+
         var updated = jobRepo.save(job);
 
         return jobMapper.toDto(updated);
@@ -182,4 +201,43 @@ public class JobServiceImpl implements JobService {
         return jobs.map(jobMapper::toDto);
     }
 
+    @Override
+    public List<NearJobResponse> getNearByJobs(double userLat, double userLng, double radius) {
+        var jobs =jobRepo.findNearbyJobs(userLat, userLng, radius);
+        return jobMapper.toNearMap(jobs);
+    }
+
+
+    public void saveJobEmbedding(Job job, Set<JobSchedule> jobSchedules) throws JsonProcessingException {
+        String fullJobText = String.format("""
+            Job Id: %s
+            Job Title: %s
+            Job schedules: %s
+            Location: %s
+            Job Type: %s
+            Salary: %s
+            Description: %s
+            Working hours: %s
+            Deadline: %s
+            Skills: %s
+            Available vacancies: %s
+            """,
+                job.getId(),
+                job.getTitle(),
+                jobSchedules,
+                job.getLocation(),
+                job.getJobType(),
+                job.getSalary(),
+                job.getDescription(),
+                job.getWorkingHours(),
+                job.getDeadline(),
+                job.getSkills(),
+                job.getAvailableVacancies()
+        );
+
+        List<Float> embedding = embeddingService.getEmbedding(fullJobText);
+
+        String embeddingJson = new ObjectMapper().writeValueAsString(embedding);
+        job.setEmbedding(embeddingJson);
+    }
 }

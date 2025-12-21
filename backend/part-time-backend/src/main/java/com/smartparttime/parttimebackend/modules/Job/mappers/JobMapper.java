@@ -2,8 +2,11 @@ package com.smartparttime.parttimebackend.modules.Job.mappers;
 
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import org.mapstruct.*;
+
+import java.util.List;
 
 
 @Mapper(componentModel = "spring")
@@ -17,4 +20,7 @@ public interface JobMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void update(JobRequestDto request, @MappingTarget Job job);
+
+    List<NearJobResponse> toNearMap(List<Job> jobs);
+
 }

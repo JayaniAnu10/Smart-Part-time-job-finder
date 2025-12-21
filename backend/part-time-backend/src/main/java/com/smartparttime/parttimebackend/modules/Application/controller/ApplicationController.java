@@ -60,5 +60,12 @@ public class ApplicationController {
         return jobApplicationService.updateApplicationStatus(id, status);
     }
 
+    @DeleteMapping("/{id}")
+    public void  deleteJobApplication(
+            @PathVariable UUID id
+    ) {
+        jobApplicationService.deleteApplication(id);
+    }
+
 
 }

@@ -1,10 +1,12 @@
 package com.smartparttime.parttimebackend.modules.Job.entity;
 
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
 import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -85,5 +87,14 @@ public class Job {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<JobSchedule> jobSchedules = new HashSet<>();
+
+    @Lob
+    private String embedding;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
 
 }

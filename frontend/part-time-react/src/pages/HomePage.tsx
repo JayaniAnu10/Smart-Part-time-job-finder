@@ -1,4 +1,5 @@
-import NavBar from "../components/NavBar";
+
+import NavBar from "../components/navBar/NavBar";
 import HeroSection from "@/components/home/HeroSection";
 import WhyChooseSection from "@/components/home/WhyChooseSection";
 import BrowseByCategorySection from "@/components/home/BrowseByCategorySection";

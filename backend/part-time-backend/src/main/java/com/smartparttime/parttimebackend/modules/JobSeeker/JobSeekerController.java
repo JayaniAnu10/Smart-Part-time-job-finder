@@ -26,7 +26,6 @@ public class JobSeekerController {
     private final JobSeekerService jobSeekerService;
     private final JobSeekerRepository jobSeekerRepository;
     private final JobSeekerMapper jobSeekerMapper;
-    private final AzureImageStorageClient imageStorageClient;
 
     @PostMapping(path = "/register",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerSeeker(

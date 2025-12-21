@@ -1,6 +1,17 @@
 spring:
   application:
     name: part-time-backend
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: jayanianuththara10@gmail.com
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   datasource:
     url: jdbc:mysql://localhost:3306/store?createDatabaseIfNotExist=true
@@ -17,11 +28,16 @@ spring:
         account-key: ${AZURE_STORAGE_ACCOUNT_KEY:YOUR_ACCOUNT_KEY}
 
   ai:
-    model:
-      chat: google-genai
-    google:
-      genai:
-        api-key: ${GOOGLE_GENAI_KEY}
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.4
+          max-tokens: 150
+      embedding:
+        options:
+          model: text-embedding-3-small
 
 server:
   port: 8080
