@@ -1,11 +1,11 @@
-import React from "react"; 
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface RoleCardProps {
   title: string;
   description?: string;
   bullets?: string[];
-  image?: string; 
+  image?: string;
   navigateTo?: string;
 }
 
@@ -22,17 +22,16 @@ const RoleCard: React.FC<RoleCardProps> = ({
     <div
       className="
         w-full max-w-[324px] bg-[#ffffff]
-        rounded-[12px] shadow-md
+        rounded-[12px] shadow-md border
         px-6 py-8
         flex flex-col items-center
         transition-all duration-300
         hover:shadow-[0_8px_20px_rgba(251,189,35,0.4)]
       "
     >
-      
       <div className="w-[80px] h-[80px] rounded-full bg-[#fef8e9] flex items-center justify-center mb-6">
         <img
-          src={image || "https://via.placeholder.com/40"} 
+          src={image || "https://via.placeholder.com/40"}
           className="w-[40px] h-[40px] object-contain"
         />
       </div>
@@ -61,7 +60,7 @@ const RoleCard: React.FC<RoleCardProps> = ({
       <button
         onClick={() => navigate(navigateTo)}
         className="
-          text-[16px] font-semibold text-[#FBBd23]
+          text-lg font-semibold text-yellow-400
           flex items-center gap-2
           hover:underline
         "
