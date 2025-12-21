@@ -1,105 +1,166 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import RegistrationCard from "../../components/RegistrationCard";
 import StepIndicator from "../../components/StepIndicator";
 import InputField from "../../components/InputField";
+import UploadButton from "../../components/UploadButton";
+import Checkbox from "../../components/Checkbox";
 
 import logoIcon from "../../assets/logo-icon.svg";
-import buildingIcon from "../../assets/briefcase.svg";
-import idIcon from "../../assets/nic.svg";
-import userIcon from "../../assets/person.svg";
-import phoneIcon from "../../assets/phone.svg";
-import locationIcon from "../../assets/location.svg";
+import Logo from "../../assets/briefcase.svg";
+import webSite from "../../assets/link.svg";
 import arrowBack from "../../assets/arrow-back.svg";
-import arrowForward from "../../assets/arrow-forward.svg";
+import downArrow from "../../assets/arrow-down.svg";
 
-export default function EmployerStep2() {
+export default function EmployerStep3() {
   const navigate = useNavigate();
 
-  return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center py-10">
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [companyDesc, setCompanyDesc] = useState("");
+  const [companyLogo, setCompanyLogo] = useState<File | null>(null);
 
-      <div className="flex items-center gap-2 mt-4 mb-2">
-        <div className="w-[40px] h-[40px] bg-[#F7C01D] flex items-center justify-center rounded-[15px]">
+  return (
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center py-10 px-4">
+      <div className="flex items-center gap-2 mt-2 mb-4">
+        <div className="w-[40px] h-[40px] bg-[#FACC15] flex items-center justify-center rounded-[15px]">
           <img src={logoIcon} alt="logo icon" className="w-[24px] h-[24px]" />
         </div>
 
         <h1 className="text-[24px] font-bold">
           <span className="text-[#0F1F3D]">Day</span>
-          <span className="text-[#F7C01D]">Bee</span>
+          <span className="text-[#FACC15]">Bee</span>
           <span className="text-[#0F1F3D]">.lk</span>
         </h1>
       </div>
 
-      <h2 className="text-[30px] font-extrabold mt-2 text-[#0F1F3D]">
+      <h2 className="text-[30px] font-extrabold text-[#0F1F3D] mt-2">
         Employer Registration
       </h2>
 
-      <p className="text-[#364D7D] text-[16px] mt-1">
-        Register your company to find qualified workers
+      <p className="text-[16px] text-[#364D7D] mt-1">
+        Create your company profile
       </p>
 
       <StepIndicator currentStep={2} />
 
-      <RegistrationCard title="Company Information">
-        <div className="flex flex-col gap-5">
+      <RegistrationCard title="Additional Details">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
+            <p className="text-[14px] text-[#0F1F3D] mb-1">Company Logo</p>
+            <div className="flex items-center gap-6">
+              <div className="w-[80px] h-[80px] bg-[#E0E7F5] rounded-[15px] flex items-center justify-center overflow-hidden">
+                {companyLogo ? (
+                  <img
+                    src={URL.createObjectURL(companyLogo)}
+                    alt="Company Logo"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={Logo}
+                    alt="Default Logo"
+                    className="w-8 h-12 opacity-80"
+                  />
+                )}
+              </div>
+
+              <UploadButton
+                label="Upload Logo"
+                onChange={(file) => setCompanyLogo(file)}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <p className="text-[14px] text-[#0F1F3D] mb-2">Industry *</p>
+            <div className="relative w-full">
+              <select className="w-full border border-[#A5A8AD] rounded-[12px] px-4 py-3 bg-[#FAFAFA] text-[#0F1F3D] appearance-none">
+                <option disabled selected>
+                  Select industry
+                </option>
+                <option>Retail</option>
+                <option>Hospitality</option>
+                <option>Food & Beverage</option>
+                <option>Healthcare</option>
+                <option>Education</option>
+                <option>IT & Software</option>
+                <option>Construction</option>
+                <option>Manufacturing</option>
+                <option>Logistic</option>
+                <option>Finance</option>
+                <option>Entertainment</option>
+                <option>Real Estate</option>
+                <option>Agriculture</option>
+                <option>Other</option>
+              </select>
+
+              <img
+                src={downArrow}
+                className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              />
+            </div>
+          </div>
 
           <InputField
-            label="Company Name *"
-            placeholder="Your Company Ltd."
-            icon={buildingIcon}
+            label="Website"
+            placeholder="https://www.example.com"
+            icon={webSite}
           />
 
-          <InputField
-            label="Business Registration ID *"
-            placeholder="e.g., PV12345678"
-            icon={idIcon}
-          />
+          <div className="flex flex-col gap-3">
+            <p className="text-[14px] text-[#0F1F3D] mb-2">
+              Company Description
+            </p>
+            <textarea
+              value={companyDesc}
+              onChange={(e) => setCompanyDesc(e.target.value)}
+              placeholder="Tell job seekers about your company..."
+              className="w-full h-[90px] border border-[#A5A8AD] rounded-[12px] p-3 text-[#364D7D] bg-[#FAFAFA] placeholder:text-[#364D7D] focus:outline-none"
+            />
+          </div>
 
-          <InputField
-            label="Contact Person Name *"
-            placeholder="John Doe"
-            icon={userIcon}
-          />
+          <div className="flex flex-col gap-3">
+            <Checkbox
+              checked={agreeTerms}
+              onChange={() => setAgreeTerms(!agreeTerms)}
+              label={
+                <span className="text-[#0F1F3D] text-[14px]">
+                  I agree to the{" "}
+                  <Link to="/terms" className="text-[#FACC15]">
+                    Terms & Conditions
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy" className="text-[#FACC15]">
+                    Privacy Policy
+                  </Link>
+                </span>
+              }
+            />
+          </div>
+        </div>
 
-          <InputField
-            label="Contact Phone"
-            placeholder="+94 77 123 4567"
-            icon={phoneIcon}
-          />
-
-          <InputField 
-            label="Company Address *" 
-            placeholder="Company address" 
-            icon={locationIcon} 
-          />
-
-         <div className="flex justify-between mt-6">
+        <div className="flex justify-between mt-6">
           <button
             onClick={() => navigate("/employer/register/step1")}
-            className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200"
+            className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] text-[14px] flex items-center gap-2 hover:bg-[#FACC15] transition"
           >
-             <img src={arrowBack} alt="back arrow" className="w-4 h-4" />
+            <img src={arrowBack} alt="back arrow" className="w-4 h-4" />
             Back
           </button>
 
-          <button
-            onClick={() => navigate("/employer/register/step3")}
-            className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold flex items-center gap-2"
-          >
-            Next
-            <img src={arrowForward} alt="forward arrow" className="w-4 h-4" />
+          <button className="px-6 h-[40px] rounded-[12px] bg-[#FACC15] text-[#0F1F3D] text-[14px] font-semibold transition-transform duration-150 active:scale-105">
+            Create Account
           </button>
-         </div>
         </div>
       </RegistrationCard>
 
-      <p className="mt-6 text-[#364D7D] text-[14px]">
+      <p className="mt-8 text-[14px] text-[#364D7D] mb-6">
         Already have an account?{" "}
-        <Link to="/auth" className="text-[#F7C01D] text-[14px]">
+        <Link to="/auth" className="text-[#FACC15] font-medium">
           Sign in
         </Link>
       </p>
-
     </div>
   );
 }
