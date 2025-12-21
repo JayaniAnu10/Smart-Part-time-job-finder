@@ -3,6 +3,8 @@ import AuthTabs from "../components/AuthTabs";
 import InputField from "../components/InputField";
 import Logo from "@/components/common/Logo";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 type SignupFormData = {
   email: string;
@@ -11,31 +13,59 @@ type SignupFormData = {
   contact: string;
 };
 
-type Props = {};
-
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  const [signupEmail, setSignupEmail] = useState("");
-  const [signupContact, setSignupContact] = useState("");
-  const [signupPassword, setSignupPassword] = useState("");
-  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+  const handleSignup = useMutation<any, Error, SignupFormData>({
+    mutationFn: (data: SignupFormData) => {
+      return axios
+        .post("http://localhost:8080/user", data)
+        .then((res) => res.data);
+    },
+    onSuccess: () => {
+      alert("Signup successful!");
+      reset();
+      setActiveTab("login");
+    },
+    onError: (error) => {
+      //Axios error handle
+      if (axios.isAxiosError(error)) {
+        //Get error from server
+        const msg =
+          error.response?.data.error || "Signup failed. Please try again.";
+        alert(msg);
+      } else {
+        alert("Signup failed. Please try again.");
+      }
+    },
+  });
 
-  const { register, handleSubmit } = useForm<SignupFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<SignupFormData>();
 
-  const handleLogin = handleSubmit((data) => {});
+  const onSubmit = (data: SignupFormData) => {
+    if (data.password !== data.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    handleSignup.mutate(data);
+  };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
   };
 
   return (
     <div
       className="min-h-screen w-full flex flex-col items-center justify-center 
-      bg-gradient-to-br from-[#FFFFFF] via-[#FAF5E8] to-[#FCF5DE] p-6"
+      bg-linear-to-br from-[#FFFFFF] via-[#FAF5E8] to-[#FCF5DE] p-6"
     >
       <div className="flex items-center gap-2 mt-4 mb-2">
         <Logo />
@@ -69,51 +99,79 @@ const Auth = () => {
             />
 
             <button
-              className="w-full h-[40px] bg-[#FACC15] text-[#0f1f3d]
+              className="w-full h-10 bg-[#FACC15] text-[#0f1f3d]
               rounded-lg font-medium font-roboto hover:bg-[#E5B80C] transition"
             >
               Login
             </button>
           </form>
         ) : (
-          <form className="flex flex-col gap-4 mt-4" onSubmit={handleSignup}>
+          <form
+            className="flex flex-col gap-4 mt-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <InputField
               label="Email"
               type="email"
               placeholder="you@example.com"
-              value={signupEmail}
-              onChange={(e) => setSignupEmail(e.target.value)}
+              {...register("email", { required: "Email is required" })}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
 
             <InputField
               label="Contact Number"
               type="tel"
               placeholder="+94 77 234 5678"
-              value={signupContact}
-              onChange={(e) => setSignupContact(e.target.value)}
+              {...register("contact", {
+                required: "Contact is required",
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message: "Contact must be exactly 10 digits",
+                },
+              })}
             />
+            {errors.contact && (
+              <p className="text-red-500 text-sm">{errors.contact.message}</p>
+            )}
 
             <InputField
               label="Password"
               type="password"
               placeholder="••••••••"
-              value={signupPassword}
-              onChange={(e) => setSignupPassword(e.target.value)}
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
 
             <InputField
               label="Confirm Password"
               type="password"
               placeholder="••••••••"
-              value={signupConfirmPassword}
-              onChange={(e) => setSignupConfirmPassword(e.target.value)}
+              {...register("confirmPassword", {
+                required: "Confirm the password",
+              })}
             />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm">
+                {errors.confirmPassword.message}
+              </p>
+            )}
 
             <button
-              className="w-full h-[40px] bg-[#FACC15] text-[#0f1f3d]
-              rounded-lg font-medium font-roboto hover:bg-[#E5B80C] transition"
+              disabled={handleSignup.isPending}
+              className="w-full h-10 bg-[#FACC15] text-[#0f1f3d]
+              rounded-lg font-medium font-roboto hover:bg-[#E5B80C] transition cursor-pointer"
             >
-              Sign Up
+              {handleSignup.isPending ? "Signing up..." : "Sign Up"}
             </button>
           </form>
         )}

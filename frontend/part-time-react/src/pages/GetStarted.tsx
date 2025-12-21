@@ -3,7 +3,6 @@ import RoleCard from "../components/RoleCard";
 
 import Jobseeker from "../assets/jobseeker.svg";
 import Employer from "../assets/employer.svg";
-import logoIcon from "../assets/logo-icon.svg";
 import Logo from "@/components/common/Logo";
 
 const GetStarted = () => {
