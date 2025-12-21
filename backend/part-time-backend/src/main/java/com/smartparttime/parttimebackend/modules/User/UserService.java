@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.User;
 
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.ChangePasswordRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
@@ -27,6 +28,10 @@ public class UserService{
     private final UserMapper userMapper;
 
     public UserRegisterResponse registerUser(UserRegisterRequest request) {
+        if(userRepository.existsByEmail(request.getEmail())){
+            throw new BadRequestException("Email already exists");
+        };
+
         if(!request.getPassword().equals(request.getConfirmPassword())){
             throw new PasswordMismatchException("Passwords do not match");
         }
