@@ -1,9 +1,17 @@
 import { useState } from "react";
 import AuthTabs from "../components/AuthTabs";
 import InputField from "../components/InputField";
-
-import logoIcon from "../assets/logo-icon.svg";
 import Logo from "@/components/common/Logo";
+import { useForm } from "react-hook-form";
+
+type SignupFormData = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  contact: string;
+};
+
+type Props = {};
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
@@ -16,9 +24,9 @@ const Auth = () => {
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
+  const { register, handleSubmit } = useForm<SignupFormData>();
+
+  const handleLogin = handleSubmit((data) => {});
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
