@@ -1,15 +1,14 @@
 import type { AuthFormData } from "@/pages/Auth";
+import APIClient from "@/services/apiClient";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+const apiClient = new APIClient<AuthFormData>("/user/login");
+
 const useUserLogin = (onLog: () => void) => {
   return useMutation<any, Error, AuthFormData>({
-    mutationFn: (data: AuthFormData) => {
-      return axios
-        .post("http://localhost:8080/user/login", data)
-        .then((res) => res.data);
-    },
+    mutationFn: apiClient.post,
     onSuccess: () => {
       toast.success("Login successful!");
       onLog();
