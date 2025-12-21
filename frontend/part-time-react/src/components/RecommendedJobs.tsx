@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 
 const RecommendedJobs: React.FC = () => {
+  const navigate = useNavigate();
+
   const recommendations = [
     {
       id: 'r1',
@@ -45,7 +48,12 @@ const RecommendedJobs: React.FC = () => {
         {recommendations.map((job) => (
           <div key={job.id} className="bg-white border border-yellow-100 p-4 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-l-yellow-500">
             <div className="flex gap-2 mb-3">
-              <span className="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Match</span>
+              <button 
+  onClick={() => navigate('/job-details')} 
+  className="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase hover:bg-yellow-200 transition-colors"
+>
+  Match
+</button>
               {job.isUrgent && (
                 <span className="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase flex items-center gap-1">
                   Urgent

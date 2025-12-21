@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import FindJobs from './pages/FindJobs';
 import PostJob from './pages/PostJob';
-
+import JobDetails from './pages/JobDetails'; 
 
 function App() {
   return (
@@ -15,6 +15,10 @@ function App() {
         
         {/* localhost:5173/post-job ගියාම පරණ page එක බලාගන්න පුළුවන් */}
         <Route path="/post-job" element={<PostJob />} />
+
+        
+        <Route path="/job-details" element={<JobDetails />} />
+
       </Routes>
     </Router>
   );
