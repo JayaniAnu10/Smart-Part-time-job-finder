@@ -18,6 +18,16 @@ class APIClient<T> {
   post = (data: T) => {
     return axiosInstance.post<T>(this.endpoint, data).then((res) => res.data);
   };
+
+  postForm = (formData: FormData) => {
+    return axiosInstance
+      .post(this.endpoint, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => res.data);
+  };
 }
 
 export default APIClient;

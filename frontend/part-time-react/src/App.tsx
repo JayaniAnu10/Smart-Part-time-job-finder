@@ -7,7 +7,7 @@ import ChatBot from "./components/chat/ChatBot";
 import Layout from "./Layouts/Layout";
 import NearByJobPage from "./pages/NearByJobPage";
 import EmployerStep1 from "./pages/employer-registration/EmployerStep1";
-import EmployerStep2 from "./pages/employer-registration/EmployerStep1";
+import EmployerStep2 from "./pages/employer-registration/EmployerStep2";
 import JobSeekerStep1 from "./pages/jobseeker-registration/JobSeekerStep1";
 import JobSeekerStep2 from "./pages/jobseeker-registration/JobSeekerStep2";
 
