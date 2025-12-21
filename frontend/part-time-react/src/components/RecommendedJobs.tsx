@@ -7,7 +7,7 @@ const RecommendedJobs: React.FC = () => {
 
   const recommendations = [
     {
-      id: 'r1',
+      id: '1',
       title: 'Delivery Driver',
       company: 'QuickFood Delivery',
       location: 'Colombo 7',
@@ -15,7 +15,7 @@ const RecommendedJobs: React.FC = () => {
       isUrgent: true,
     },
     {
-      id: 'r2',
+      id: '2',
       title: 'Tech Support Assistant',
       company: 'Digital Solutions',
       location: 'Colombo 3',
@@ -23,7 +23,7 @@ const RecommendedJobs: React.FC = () => {
       isUrgent: true,
     },
     {
-      id: 'r3',
+      id: '3',
       title: 'Math Tutor',
       company: 'Learn Zone',
       location: 'Nugegoda',
@@ -49,7 +49,7 @@ const RecommendedJobs: React.FC = () => {
           <div key={job.id} className="bg-white border border-yellow-100 p-4 rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 border-l-yellow-500">
             <div className="flex gap-2 mb-3">
               <button 
-  onClick={() => navigate('/job-details')} 
+  onClick={() => navigate(`/job/${job.id}`)} // '/job-details' වෙනුවට මෙහෙම දාන්න
   className="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase hover:bg-yellow-200 transition-colors"
 >
   Match
