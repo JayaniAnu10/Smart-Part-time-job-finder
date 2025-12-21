@@ -19,6 +19,7 @@ export default function EmployerStep2() {
 
   const handleNext = () => {
     //  validation
+    const phoneRegex = /^[0-9]{10}$/;
     if (
       !data.companyName ||
       !data.registrationID ||
@@ -27,6 +28,10 @@ export default function EmployerStep2() {
       !data.address
     ) {
       toast.error("Please fill all required fields.");
+      return;
+    }
+    if (!phoneRegex.test(data.phone)) {
+      toast.error("Invalid phone number. Should contain 10 digits");
       return;
     }
     navigate("/employer/register/step2");
