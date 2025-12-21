@@ -176,6 +176,7 @@ export default function EmployerStep3() {
           </button>
 
           <button
+            disabled={addEmployerMutation.isPending}
             className="px-6 h-10 rounded-[12px] bg-[#FACC15] text-[#0F1F3D] text-[14px] font-semibold transition-transform duration-150 active:scale-105"
             onClick={handleSubmit}
           >

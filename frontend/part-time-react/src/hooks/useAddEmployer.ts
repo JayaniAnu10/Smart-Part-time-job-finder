@@ -26,6 +26,7 @@ const useAddEmployer = () => {
       formData.append(
         "request",
         new Blob([JSON.stringify(requestPayload)], {
+          //Binary Large OBject. create a file-like object in memory.converts your JavaScript object into a JSON string, which can be sent like a file
           type: "application/json",
         })
       );
