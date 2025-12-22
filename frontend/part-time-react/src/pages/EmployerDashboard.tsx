@@ -1,9 +1,19 @@
+import EmpJobPost from "@/components/EmpDashboard/EmpJobPost";
+import EmpStat from "@/components/EmpDashboard/EmpStat";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Plus } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
+import useEmpStats from "@/hooks/useEmpStats";
+import { Plus } from "lucide-react";
 
 const EmployerDashboard = () => {
+  const employerId = "94993140-62f6-4068-af08-d78365f17470";
+  const { data, isLoading, isError } = useEmpStats(employerId);
+
+  if (isLoading) return <Spinner />;
+  if (isError) return <div>Error loading stats</div>;
+
   return (
-    <div className="mx-8 my-12">
+    <div className="mx-8 my-12 md:mx-20 flex flex-col gap-13">
       <div className="flex justify-between">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl text-[#0f1f3d] font-bold dark:text-white ">
@@ -14,22 +24,13 @@ const EmployerDashboard = () => {
           </span>
         </div>
         <div className="mt-6">
-          <Button className="gap-2 p-5 ">
+          <Button className="gap-2 p-5 cursor-pointer">
             <Plus /> <span className="">Post New Job</span>
           </Button>
         </div>
       </div>
-      <div className="grid md:grid-cols-4 mt-10 ">
-        <div className="rounded-xl  bg-card border justify-items-start backdrop-blur-md hover:shadow-lg hover:scale-103 transition-transform duration-300 p-6 text-center">
-          <Briefcase className="text-yellow-400 w-10 h-10 mb-3" />
-          <h3 className="text-2xl font-extrabold text-secondary dark:text-primary">
-            10
-          </h3>
-          <p className="text-secondary/70 dark:text-primary/70 mt-1">
-            Active Jobs
-          </p>
-        </div>
-      </div>
+      <EmpStat data={data} />
+      <EmpJobPost jobs={data?.jobStats} />
     </div>
   );
 };
