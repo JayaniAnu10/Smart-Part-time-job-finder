@@ -24,7 +24,7 @@ public class NotificationService {
     private final EmailService emailService;
 
 
-    public void sendNotification(UUID userId, String messageText, String emailSubject) {
+    private void saveNotification(UUID userId, String messageText) {
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -39,35 +39,34 @@ public class NotificationService {
         notification.setCreatedAt(LocalDateTime.now());
 
         notificationRepo.save(notification);
-
-        emailService.sendSimpleEmail(
-                user.getEmail(),
-                emailSubject,
-                messageText
-        );
     }
 
 
     public void notifyJobApplied(UUID employerUserId, String jobTitle) {
-        String subject = "New Job Application";
         String message = "A new candidate has applied for your job: " + jobTitle;
-
-        sendNotification(employerUserId, message, subject);
+        saveNotification(employerUserId, message);
     }
 
 
     public void notifyStatusChanged(UUID jobSeekerUserId, String jobTitle, String status) {
-        String subject = "Application Status Update";
         String message = "Your application for \"" + jobTitle + "\" is now " + status;
+        String subject = "Application Status Update";
 
-        sendNotification(jobSeekerUserId, message, subject);
+        saveNotification(jobSeekerUserId, message);
+
+        emailService.sendSimpleEmail(
+                userRepo.findById(jobSeekerUserId)
+                        .orElseThrow()
+                        .getEmail(),
+                subject,
+                message
+        );
     }
 
 
     public List<Notification> getUserNotifications(UUID userId) {
         return notificationRepo.findByUserId(userId);
     }
-
 
 
     public void markAsRead(UUID notificationId) {
