@@ -2,8 +2,11 @@ package com.smartparttime.parttimebackend.modules.Application.repo;
 
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,4 +26,12 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     List<JobApplication> findByJobseeker_IdAndSchedule_Id(UUID jobseekerId, UUID scheduleId);
 
     boolean existsByJobseeker_IdAndSchedule_Id(UUID jobseekerId, UUID scheduleId);
+
+    Long countByJob_Employer_Id(UUID jobEmployerId);
+
+    Long countByJob_Employer_IdAndStatus(UUID jobEmployerId, ApplicationStatus status);
+
+
+
+
 }

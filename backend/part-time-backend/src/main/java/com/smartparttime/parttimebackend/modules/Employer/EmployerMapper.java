@@ -1,10 +1,10 @@
 package com.smartparttime.parttimebackend.modules.Employer;
 
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerAllDto;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerDto;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
+import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.*;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto;
 import org.mapstruct.*;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface EmployerMapper {
@@ -25,5 +25,6 @@ public interface EmployerMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void  update(UpdateEmployerRequest request, @MappingTarget Employer employer);
 
+    EmployerStats toEmpStat(Long jobCount, Long applicantCount, Long pendingReviewCount, List<JobStatDto> jobStats);
 }
 
