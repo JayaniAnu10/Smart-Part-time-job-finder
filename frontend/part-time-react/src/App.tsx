@@ -12,7 +12,7 @@ import JobSeekerStep1 from "./pages/jobseeker-registration/JobSeekerStep1";
 import JobSeekerStep2 from "./pages/jobseeker-registration/JobSeekerStep2";
 
 import JobForm from "./pages/PostJob/JobForm";
-import FindJobs from './pages/FindJobs';
+import FindJobs from './pages/FindJob/FindJobs';
 
 import JobDetails from './pages/JobDetails'; 
 
