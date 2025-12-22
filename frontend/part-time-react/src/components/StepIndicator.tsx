@@ -5,13 +5,12 @@ interface StepIndicatorProps {
 }
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
-  const steps = [1, 2, 3];
+  const steps = [1, 2];
 
   return (
     <div className="flex items-center justify-center gap-0 my-6 w-full max-w-md mx-auto">
       {steps.map((step, index) => (
         <React.Fragment key={step}>
-          
           <div
             className={
               "w-[40px] h-[40px] flex items-center justify-center rounded-full border-2 text-[16px] z-10 " +
@@ -23,17 +22,13 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
             {step}
           </div>
 
-          
           {index !== steps.length - 1 && (
             <div
               className={
                 "w-12 h-[4px]  " +
-                (currentStep > step 
-                    ? "bg-[#F7C01D]" 
-                    : "bg-[#E0E7F5]")
-              }>
-
-            </div>
+                (currentStep > step ? "bg-[#F7C01D]" : "bg-[#E0E7F5]")
+              }
+            ></div>
           )}
         </React.Fragment>
       ))}
