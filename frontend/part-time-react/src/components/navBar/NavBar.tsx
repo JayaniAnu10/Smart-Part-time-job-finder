@@ -4,6 +4,7 @@ import ThemeToggle from "../navBar/ThemeToggle";
 import { Button } from "../ui/button";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -54,18 +55,22 @@ const NavBar = () => {
             <ThemeToggle />
           </div>
           <div className="tab:flex lg:flex hidden gap-2 xl:gap-3">
-            <Button
-              variant="ghost"
-              className="hover:bg-yellow-400 text-md  cursor-pointer dark:hover:text-[#0f1f3d] whitespace-nowrap px-3 xl:px-4"
-            >
-              {t("login")}
-            </Button>
-            <Button
-              variant="default"
-              className="bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md  transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25 whitespace-nowrap px-3 xl:px-4"
-            >
-              {t("getStarted")}
-            </Button>
+            <Link to="/auth">
+              <Button
+                variant="ghost"
+                className="hover:bg-yellow-400 text-md  cursor-pointer dark:hover:text-[#0f1f3d] whitespace-nowrap px-3 xl:px-4"
+              >
+                {t("login")}
+              </Button>
+            </Link>
+            <Link to="/getstarted">
+              <Button
+                variant="default"
+                className="bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md  transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25 whitespace-nowrap px-3 xl:px-4"
+              >
+                {t("getStarted")}
+              </Button>
+            </Link>
           </div>
 
           {/*Mobile design of nav bar */}

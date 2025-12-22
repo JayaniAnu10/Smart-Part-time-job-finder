@@ -86,13 +86,13 @@ body {
 .dark {
   --background: #020419;
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+  --card: #0f192e;
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(13.018% 0.04533 274.905);
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(95.628% 0.00543 286.004);
+  --secondary: #0f1f3d;
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);

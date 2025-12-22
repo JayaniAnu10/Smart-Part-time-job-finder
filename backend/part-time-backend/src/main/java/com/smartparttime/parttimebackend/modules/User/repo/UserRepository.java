@@ -25,4 +25,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             @Param("averageRating") Double averageRating
     );
 
+    boolean existsByEmail(String email);
+
+    User findByEmail(String email);
 }
