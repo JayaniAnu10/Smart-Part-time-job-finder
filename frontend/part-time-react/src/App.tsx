@@ -16,6 +16,8 @@ import ChatBot from "./components/chat/ChatBot";
 import Layout from "./Layouts/Layout";
 import NearByJobPage from "./pages/NearByJobPage";
 
+import JobForm from "./pages/PostJob/JobForm";
+
 const App: React.FC = () => {
   return (
     <Routes>
@@ -38,6 +40,9 @@ const App: React.FC = () => {
       <Route path="/employer/register/step3" element={<EmployerStep3 />} />
 
       <Route path="*" element={<Navigate to="/" />} />
+
+      <Route path="/post-job" element={<JobForm />} />
+
     </Routes>
   );
 };
