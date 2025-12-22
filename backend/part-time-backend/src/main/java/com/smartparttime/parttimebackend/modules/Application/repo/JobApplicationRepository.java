@@ -32,6 +32,15 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     Long countByJob_Employer_IdAndStatus(UUID jobEmployerId, ApplicationStatus status);
 
 
-
+    @Query("""
+        SELECT 
+            SUM(CASE WHEN MONTH(ja.appliedDate) = MONTH(CURRENT_DATE) 
+                     AND YEAR(ja.appliedDate) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END) as thisMonthCount,
+            SUM(CASE WHEN MONTH(ja.appliedDate) = MONTH(CURRENT_DATE) - 1
+                     AND YEAR(ja.appliedDate) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END) as lastMonthCount
+        FROM JobApplication ja
+        WHERE ja.job.employer.id = :employerId
+    """)
+    Object countThisAndLastMonthApplications(@Param("employerId") UUID employerId);
 
 }

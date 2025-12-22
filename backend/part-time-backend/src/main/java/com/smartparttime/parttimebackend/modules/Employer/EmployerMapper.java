@@ -25,6 +25,6 @@ public interface EmployerMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void  update(UpdateEmployerRequest request, @MappingTarget Employer employer);
 
-    EmployerStats toEmpStat(Long jobCount, Long applicantCount, Long pendingReviewCount, List<JobStatDto> jobStats);
+    EmployerStats toEmpStat(Long jobCount, Long applicantCount, Long pendingReviewCount, List<JobStatDto> jobStats, Double monthRate);
 }
 

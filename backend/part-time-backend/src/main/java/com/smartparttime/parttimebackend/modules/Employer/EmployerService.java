@@ -162,8 +162,23 @@ public class EmployerService {
         var applicantCount = jobApplicationRepository.countByJob_Employer_Id(id);
         var pendingReviewCount =jobApplicationRepository.countByJob_Employer_IdAndStatus(id, ApplicationStatus.PENDING);
         var jobs = jobRepo.getJobStatsByEmployer(id);
+        var monthRate =calculateMonthlyGrowth(id);
 
 
-        return employerMapper.toEmpStat(jobCount,applicantCount,pendingReviewCount,jobs);
+        return employerMapper.toEmpStat(jobCount,applicantCount,pendingReviewCount,jobs,monthRate);
+    }
+
+    private Double calculateMonthlyGrowth(UUID id) {
+        Object result = jobApplicationRepository.countThisAndLastMonthApplications(id);
+        Object[] counts = (Object[]) result;
+
+        long thisMonthCount = ((Number) counts[0]).longValue();
+        long lastMonthCount = ((Number) counts[1]).longValue();
+
+        if (lastMonthCount == 0) {
+            return thisMonthCount > 0 ? 100.0 : 0.0;
+        }
+
+        return ((thisMonthCount - lastMonthCount) * 100.0) / lastMonthCount;
     }
 }

@@ -11,4 +11,5 @@ public class EmployerStats {
     private Long applicantCount;
     private Long pendingReviewCount;
     private List<JobStatDto> jobStats;
+    private Double monthRate;
 }
