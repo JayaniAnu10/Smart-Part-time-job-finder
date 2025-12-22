@@ -1,5 +1,8 @@
 package com.smartparttime.parttimebackend.modules.Job.repo;
 
+import com.smartparttime.parttimebackend.modules.Employer.Employer;
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
 import org.springframework.data.domain.Page;
@@ -38,4 +41,22 @@ public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExec
                              @Param("radius") double radius);
 
 
+    long countByEmployer_IdAndStatus(UUID employerId, JobStatus status);
+
+    Employer findByEmployer_Id(UUID employerId);
+
+    @Query(value="""
+        SELECT new com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto(
+            COUNT(ja),
+            j.postedDate,
+            j.status,
+            j.title,
+            j.deadline
+        )
+        FROM Job j
+        LEFT JOIN JobApplication ja ON ja.job.id = j.id
+        WHERE j.employer.id = :employerId
+        GROUP BY j.id, j.postedDate, j.status, j.title, j.deadline
+    """)
+    List<JobStatDto> getJobStatsByEmployer(@Param("employerId") UUID employerId);
 }

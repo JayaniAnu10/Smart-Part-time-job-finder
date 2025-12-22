@@ -3,14 +3,21 @@ package com.smartparttime.parttimebackend.modules.Employer;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
+import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
+import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerDto;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
+import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerStats;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
+import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +33,8 @@ public class EmployerService {
     private final EmployerMapper employerMapper;
     private final UserRepository userRepository;
     private final AzureImageStorageClient imageStorageClient;
+    private final JobRepo jobRepo;
+    private final JobApplicationRepository jobApplicationRepository;
 
     @Transactional
     public EmployerDto addEmployee(@Valid EmployerRegisterRequest request, MultipartFile logo) throws IOException {
@@ -141,5 +150,35 @@ public class EmployerService {
         if (employerRepository.existsByRegistrationId(registrationId)) {
             throw new BadRequestException("Registration id already exists");
         }
+    }
+
+    public EmployerStats employerStats(UUID id) {
+        var employer = employerRepository.findById(id).orElse(null);
+        if (employer == null) {
+            throw new NotFoundException("Employer not found");
+        }
+
+        var jobCount = jobRepo.countByEmployer_IdAndStatus(id, JobStatus.ACTIVE);
+        var applicantCount = jobApplicationRepository.countByJob_Employer_Id(id);
+        var pendingReviewCount =jobApplicationRepository.countByJob_Employer_IdAndStatus(id, ApplicationStatus.PENDING);
+        var jobs = jobRepo.getJobStatsByEmployer(id);
+        var monthRate =calculateMonthlyGrowth(id);
+
+
+        return employerMapper.toEmpStat(jobCount,applicantCount,pendingReviewCount,jobs,monthRate);
+    }
+
+    private Double calculateMonthlyGrowth(UUID id) {
+        Object result = jobApplicationRepository.countThisAndLastMonthApplications(id);
+        Object[] counts = (Object[]) result;
+
+        long thisMonthCount = ((Number) counts[0]).longValue();
+        long lastMonthCount = ((Number) counts[1]).longValue();
+
+        if (lastMonthCount == 0) {
+            return thisMonthCount > 0 ? 100.0 : 0.0;
+        }
+
+        return ((thisMonthCount - lastMonthCount) * 100.0) / lastMonthCount;
     }
 }

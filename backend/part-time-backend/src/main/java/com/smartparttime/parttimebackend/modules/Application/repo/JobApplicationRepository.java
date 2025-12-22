@@ -2,8 +2,11 @@ package com.smartparttime.parttimebackend.modules.Application.repo;
 
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,4 +26,21 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     List<JobApplication> findByJobseeker_IdAndSchedule_Id(UUID jobseekerId, UUID scheduleId);
 
     boolean existsByJobseeker_IdAndSchedule_Id(UUID jobseekerId, UUID scheduleId);
+
+    Long countByJob_Employer_Id(UUID jobEmployerId);
+
+    Long countByJob_Employer_IdAndStatus(UUID jobEmployerId, ApplicationStatus status);
+
+
+    @Query("""
+        SELECT 
+            SUM(CASE WHEN MONTH(ja.appliedDate) = MONTH(CURRENT_DATE) 
+                     AND YEAR(ja.appliedDate) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END) as thisMonthCount,
+            SUM(CASE WHEN MONTH(ja.appliedDate) = MONTH(CURRENT_DATE) - 1
+                     AND YEAR(ja.appliedDate) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END) as lastMonthCount
+        FROM JobApplication ja
+        WHERE ja.job.employer.id = :employerId
+    """)
+    Object countThisAndLastMonthApplications(@Param("employerId") UUID employerId);
+
 }
