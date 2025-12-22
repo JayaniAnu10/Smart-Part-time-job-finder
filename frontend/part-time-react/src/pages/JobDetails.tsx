@@ -1,19 +1,19 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // useParams ඕනේ URL එකේ ID එක ගන්න
-import { jobsData } from '../data/jobsData'; // හදපු data ටික import කරන්න
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import { useParams, useNavigate } from 'react-router-dom'; // useParams want to get the ID of the URL  
+import { jobsData } from '../data/jobsData'; // import the created data
+import Navbar from "../components/navBar/NavBar";
+import Footer from '../components/FooterSection';
 import { MapPin, Clock, DollarSign, Calendar, Users, ArrowLeft } from 'lucide-react';
 
 
 const JobDetails: React.FC = () => {
-  const { id } = useParams(); // URL එකෙන් ID එක ගන්නවා (උදා: /job/1)
+  const { id } = useParams(); // get the ID from the URL (ex: /job/1)
   const navigate = useNavigate();
 
-  // ID එකට අදාළ Job එක හොයාගන්නවා
+  // find the job according to the ID
   const job = jobsData.find(j => String(j.id) === String(id));
 
-  // සොයාගත නොහැකි නම් error එකක් පෙන්වනවා
+  // display an error
   if (!job) {
     return <div className="p-10 text-center">Job Not Found!</div>;
   }
