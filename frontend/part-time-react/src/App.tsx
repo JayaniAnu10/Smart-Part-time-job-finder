@@ -17,6 +17,9 @@ import Layout from "./Layouts/Layout";
 import NearByJobPage from "./pages/NearByJobPage";
 
 import JobForm from "./pages/PostJob/JobForm";
+import FindJobs from './pages/FindJobs';
+
+import JobDetails from './pages/JobDetails'; 
 
 const App: React.FC = () => {
   return (
@@ -28,21 +31,27 @@ const App: React.FC = () => {
       </Route>
 
       <Route path="/getstarted" element={<GetStarted />} />
-
       <Route path="/auth" element={<Auth />} />
 
+      {/* Job Seeker Routes */}
       <Route path="/jobseeker/register/step1" element={<JobSeekerStep1 />} />
       <Route path="/jobseeker/register/step2" element={<JobSeekerStep2 />} />
       <Route path="/jobseeker/register/step3" element={<JobSeekerStep3 />} />
 
+      {/* Employer Routes */}
       <Route path="/employer/register/step1" element={<EmployerStep1 />} />
       <Route path="/employer/register/step2" element={<EmployerStep2 />} />
       <Route path="/employer/register/step3" element={<EmployerStep3 />} />
 
-      <Route path="*" element={<Navigate to="/" />} />
-
+      {/* New Routes from GitHub */}
+      <Route path="/find-jobs" element={<FindJobs />} />
+      <Route path="/job/:id" element={<JobDetails />} />
+      
+      {/* Post Job Routes */}
       <Route path="/post-job" element={<JobForm />} />
+      
 
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };
