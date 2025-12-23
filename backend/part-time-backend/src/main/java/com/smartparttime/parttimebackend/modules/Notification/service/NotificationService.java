@@ -76,4 +76,24 @@ public class NotificationService {
         notification.setRead(true);
         notificationRepo.save(notification);
     }
+
+    public void notifyUrgentJobToSeekers(
+            List<UUID> jobSeekerUserIds,
+            String jobTitle,
+            String location
+    ) {
+        String message = "🚨 Urgent Job Alert!\n\n"
+                + "Job: " + jobTitle + "\n"
+                + "Location: " + location;
+
+        for (UUID userId : jobSeekerUserIds) {
+            saveNotification(userId, message);
+        }
+    }
+
+
+
+
+
+
 }
