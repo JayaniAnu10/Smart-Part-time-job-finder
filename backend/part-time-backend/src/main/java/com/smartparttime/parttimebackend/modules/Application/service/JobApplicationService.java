@@ -1,7 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Application.service;
 
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
-import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
+import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicantsResponse;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationRequest;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,7 @@ public interface JobApplicationService {
 
     List<JobApplicationResponse> getApplicationsByStatus(UUID id, ApplicationStatus status, int page ,int size);
 
-    Page<ApplicantsResponse> getApplicationsByJob(UUID jobId, int page, int size);
+    JobApplicantsResponse getApplicationsByJob(UUID jobId, int page, int size);
 
     JobApplicationResponse updateApplicationStatus(UUID id,ApplicationStatus status);
 
