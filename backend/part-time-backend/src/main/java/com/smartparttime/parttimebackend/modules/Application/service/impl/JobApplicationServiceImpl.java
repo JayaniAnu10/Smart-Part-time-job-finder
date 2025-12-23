@@ -141,8 +141,6 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         }
 
         return applicants;
-
-
     }
 
     @Transactional
