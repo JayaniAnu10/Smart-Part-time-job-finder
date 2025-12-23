@@ -257,7 +257,7 @@ public class JobServiceImpl implements JobService {
         job.setIsUrgent(urgent);
         jobRepo.save(job);
 
-        // ONLY WHEN MARKED AS URGENT
+
         if (urgent) {
             List<JobSeeker> seekers =
                     jobSeekerRepository.findMatchingJobSeekers(
