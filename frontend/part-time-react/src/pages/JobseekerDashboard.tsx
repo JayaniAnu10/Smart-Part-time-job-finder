@@ -21,6 +21,7 @@ const JobseekerDashboard = () => {
   return (
     <div className="relative pt-24 min-h-screen bg-background">
 
+      <NavBar />
       
       <section className="bg-gradient-to-br from-yellow-400/20 via-background to-yellow-400/20 dark:from-blue-300/20 dark:via-background dark:to-blue-300/20 border-b">
         <div className="max-w-[88rem] mx-auto px-4 h-[140px] flex items-center justify-between">
@@ -224,14 +225,14 @@ const JobseekerDashboard = () => {
 
               <Card className="w-full mx-auto rounded-2xl">
                 <CardContent className="p-8 text-center space-y-5">
-                  {/* Header */}
+                  
                   <div className="flex items-center gap-2">
                     <img src={AnalyticsIcon} alt="analytics" className="w-6 h-6" />
                     <h3 className="text-lg font-semibold text-secondary dark:text-primary">
                       This Month
                     </h3>
                   </div>
-                  {/* Stats */}
+                  
                   <div className="space-y-4 text-sm">
 
                     <div className="flex justify-between items-center">
@@ -256,7 +257,9 @@ const JobseekerDashboard = () => {
         </div>
       </section>
 
-            
+      <section className="pt-12">
+        <FooterSection />
+      </section>      
       
     </div>
  );
