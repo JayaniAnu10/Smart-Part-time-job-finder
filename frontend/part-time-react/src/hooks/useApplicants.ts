@@ -4,7 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 interface Query {
   page: number;
-  pageSize: number;
+  pageSize?: number;
 }
 
 export interface Applicants {
@@ -19,17 +19,20 @@ export interface Applicants {
   appliedDate: string;
 }
 
-const useApplicants = (id: string, query: Query) => {
-  const apiClient = new APIClient<PageResponse<Applicants>>(
-    `/applications/job/${id}`
-  );
+export interface JobApplicants {
+  title: string;
+  applicants: PageResponse<Applicants>;
+}
 
-  return useQuery<PageResponse<Applicants>, Error>({
+const useApplicants = (id: string, query: Query) => {
+  const apiClient = new APIClient<JobApplicants>(`/applications/job/${id}`);
+
+  return useQuery<JobApplicants, Error>({
     queryKey: ["applicants", id, query],
     queryFn: () =>
       apiClient.getAll({
-        _start: (query.page - 1) * query.pageSize,
-        _limit: query.pageSize,
+        page: query.page - 1,
+        size: query.pageSize,
       }),
     placeholderData: keepPreviousData,
   });
