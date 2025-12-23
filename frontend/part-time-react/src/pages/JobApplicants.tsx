@@ -4,6 +4,8 @@ import { Spinner } from "@/components/ui/spinner";
 import useApplicants from "@/hooks/useApplicants";
 import { useState } from "react";
 
+export const lowerCase = (s: string) => s.toLowerCase();
+
 const JobApplicants = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const jobId = "0f8cde51-063a-40b1-89e0-d73942e3ea6e";
@@ -11,7 +13,6 @@ const JobApplicants = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useApplicants(jobId, { page, pageSize });
   const applicants = data?.content ?? [];
-  const lowerCase = (s: string) => s.toLowerCase();
 
   if (isError) return <div>Error loading stats</div>;
   if (isLoading) return <Spinner />;

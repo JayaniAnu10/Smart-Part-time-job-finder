@@ -7,6 +7,7 @@ import { getDaysAgo } from "./EmpJobPost";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import { StarRating } from "../common/StarRating";
+import { lowerCase } from "@/pages/JobApplicants";
 
 interface Props {
   applicants: Applicants[];
@@ -24,12 +25,15 @@ const ApplicantCard = ({ applicants }: Props) => {
       ) : (
         <div className="space-y-4">
           {applicants.map((applicant) => (
-            <Card key={applicant.applicationId} className="p-6 card-premium">
+            <Card
+              key={applicant.applicationId}
+              className="p-6 border hover:shadow-md hover:scale-102 transition-transform duration-300"
+            >
               <div className="flex items-start justify-between">
                 <div className="flex gap-4 flex-1">
                   <Avatar className="w-16 h-16">
                     <AvatarImage src={applicant.profilePicture} />
-                    <AvatarFallback className="bg-primary/10 text-primary text-xl">
+                    <AvatarFallback className="bg-primary/10 text-yellow-400 text-xl">
                       {applicant.fullName
                         .split(" ")
                         .map((n) => n[0])
@@ -37,14 +41,14 @@ const ApplicantCard = ({ applicants }: Props) => {
                     </AvatarFallback>
                   </Avatar>
 
-                  <div className="flex-1">
+                  <div className="flex-1 ">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold text-foreground">
+                      <h3 className="text-xl font-semibold text-[#0f1f3d] dark:text-white">
                         {applicant.fullName}
                       </h3>
                       <Badge
                         variant={
-                          applicant.status === "Approved"
+                          lowerCase(applicant.status) === "approved"
                             ? "default"
                             : "secondary"
                         }
@@ -84,22 +88,25 @@ const ApplicantCard = ({ applicants }: Props) => {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-4">
                   <Link to="/applicant-details">
-                    <Button variant="outline" size="sm" className="w-full">
+                    <Button
+                      variant="outline"
+                      className="w-full cursor-pointer p-5 border"
+                    >
                       View Profile
                     </Button>
                   </Link>
-                  {applicant.status === "Pending" && (
+                  {lowerCase(applicant.status) === "pending" && (
                     <>
-                      <Button
-                        size="sm"
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                      >
+                      <Button className="bg-primary hover:bg-primary/80 text-[#0f1f3d] cursor-pointer p-5">
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Approve
                       </Button>
-                      <Button size="sm" variant="destructive">
+                      <Button
+                        variant="destructive"
+                        className="cursor-pointer text-white p-5"
+                      >
                         <X className="w-4 h-4 mr-2" />
                         Reject
                       </Button>
