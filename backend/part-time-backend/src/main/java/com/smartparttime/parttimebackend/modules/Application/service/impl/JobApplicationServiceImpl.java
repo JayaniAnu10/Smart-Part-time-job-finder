@@ -7,6 +7,7 @@ import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
 import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
+import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicantsResponse;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationRequest;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
 import com.smartparttime.parttimebackend.modules.Application.mapper.JobApplicationMapper;
@@ -128,7 +129,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
     @Override
-    public Page<ApplicantsResponse> getApplicationsByJob(UUID jobId, int page, int size) {
+    public JobApplicantsResponse getApplicationsByJob(UUID jobId, int page, int size) {
         Pageable  pageable = PageRequest.of(page,size);
         var job = jobRepo.findById(jobId).orElse(null);
         if (job == null) {
@@ -139,10 +140,11 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         if (applicants.isEmpty()) {
             throw new NotFoundException("Application not found");
         }
+        JobApplicantsResponse response = new JobApplicantsResponse();
+        response.setTitle(job.getTitle());
+        response.setApplicants(applicants);
 
-        return applicants;
-
-
+        return response;
     }
 
     @Transactional

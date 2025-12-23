@@ -8,19 +8,19 @@ interface Props {
   jobs?: JobStats[];
 }
 
+export const getDaysAgo = (date: string) => {
+  const postedDate = new Date(date);
+  const today = new Date();
+
+  const diffTime = today.getTime() - postedDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "1 day ago";
+  return `${diffDays} days ago`;
+};
+
 const EmpJobPost = ({ jobs }: Props) => {
-  const getDaysAgo = (date: string) => {
-    const postedDate = new Date(date);
-    const today = new Date();
-
-    const diffTime = today.getTime() - postedDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "1 day ago";
-    return `${diffDays} days ago`;
-  };
-
   return (
     <div>
       <div className="border shadow-md rounded-xl p-7  ">

@@ -61,6 +61,13 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     JOIN ja.jobseeker u
     JOIN u.jobSeeker js
     WHERE j.id = :jobId
+     ORDER BY
+          CASE
+            WHEN ja.status = 'PENDING' THEN 0
+            WHEN ja.status = 'APPROVED' THEN 1
+            WHEN ja.status = 'REJECTED' THEN 2
+            ELSE 3
+          END
 """)
     Page<ApplicantsResponse> findApplicationsByJobId(@Param("jobId") UUID jobId, Pageable pageable);
 

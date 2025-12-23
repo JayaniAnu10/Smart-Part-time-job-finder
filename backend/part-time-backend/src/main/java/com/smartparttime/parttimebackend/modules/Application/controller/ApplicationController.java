@@ -2,6 +2,7 @@ package com.smartparttime.parttimebackend.modules.Application.controller;
 
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
+import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicantsResponse;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationRequest;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
@@ -47,7 +48,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/job/{id}")
-    public Page<ApplicantsResponse> getApplicationsByJobId(
+    public JobApplicantsResponse getApplicationsByJobId(
             @PathVariable UUID id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
