@@ -1,10 +1,12 @@
 package com.smartparttime.parttimebackend.modules.Application.controller;
 
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
+import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationRequest;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +47,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/job/{id}")
-    public List<JobApplicationResponse> getApplicationsByJobId(
+    public Page<ApplicantsResponse> getApplicationsByJobId(
             @PathVariable UUID id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

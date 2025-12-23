@@ -2,7 +2,8 @@ package com.smartparttime.parttimebackend.modules.Application.repo;
 
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto;
+import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +18,7 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
     List<JobApplication> findByStatus(ApplicationStatus status, Pageable pageable);
 
-    List<JobApplication> findByJob_Id(UUID jobId, Pageable pageable);
+    Page<JobApplication> findByJob_Id(UUID jobId, Pageable pageable);
 
     boolean existsByJob_IdAndJobseeker_IdAndStatus(UUID jobId, UUID jobseekerId, ApplicationStatus status);
 
@@ -42,5 +43,28 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
         WHERE ja.job.employer.id = :employerId
     """)
     Object countThisAndLastMonthApplications(@Param("employerId") UUID employerId);
+
+    @Query("""
+    SELECT new com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse(
+        ja.id,
+        u.id,
+        CONCAT(js.firstName, ' ', js.lastName),
+        ja.status,
+        u.averageRate,
+        js.address,
+        js.profilePicture,
+        CAST((SELECT COUNT(a.id) FROM Attendance a WHERE a.user = u AND a.status = 'CHECKED_OUT') AS int),
+        ja.appliedDate
+    )
+    FROM JobApplication ja
+    JOIN ja.job j
+    JOIN ja.jobseeker u
+    JOIN u.jobSeeker js
+    WHERE j.id = :jobId
+""")
+    Page<ApplicantsResponse> findApplicationsByJobId(@Param("jobId") UUID jobId, Pageable pageable);
+
+
+
 
 }
