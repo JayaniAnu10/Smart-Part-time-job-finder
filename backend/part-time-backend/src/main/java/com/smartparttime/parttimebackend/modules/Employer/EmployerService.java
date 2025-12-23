@@ -152,6 +152,7 @@ public class EmployerService {
         }
     }
 
+
     public EmployerStats employerStats(UUID id) {
         var employer = employerRepository.findById(id).orElse(null);
         if (employer == null) {

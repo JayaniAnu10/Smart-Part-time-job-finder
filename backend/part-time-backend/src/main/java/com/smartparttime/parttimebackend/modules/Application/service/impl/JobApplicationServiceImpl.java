@@ -6,6 +6,7 @@ import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationRequest;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
 import com.smartparttime.parttimebackend.modules.Application.mapper.JobApplicationMapper;
@@ -21,6 +22,7 @@ import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -126,22 +128,19 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
     @Override
-    public List<JobApplicationResponse> getApplicationsByJob(UUID jobId, int page, int size) {
+    public Page<ApplicantsResponse> getApplicationsByJob(UUID jobId, int page, int size) {
         Pageable  pageable = PageRequest.of(page,size);
         var job = jobRepo.findById(jobId).orElse(null);
         if (job == null) {
             throw new NotFoundException("Job not found");
         }
 
-        var applications = jobApplicationRepository.findByJob_Id(jobId,pageable);
-        if (applications.isEmpty()) {
+        var applicants = jobApplicationRepository.findApplicationsByJobId(jobId,pageable);
+        if (applicants.isEmpty()) {
             throw new NotFoundException("Application not found");
         }
 
-        return applications
-                .stream()
-                .map(jobApplicationMapper::toDto)
-                .toList();
+        return applicants;
 
 
     }

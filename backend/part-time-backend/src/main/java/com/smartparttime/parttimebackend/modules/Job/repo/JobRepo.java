@@ -48,6 +48,7 @@ public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExec
     @Query(value="""
         SELECT new com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto(
             COUNT(ja),
+            j.id,
             j.postedDate,
             j.status,
             j.title,

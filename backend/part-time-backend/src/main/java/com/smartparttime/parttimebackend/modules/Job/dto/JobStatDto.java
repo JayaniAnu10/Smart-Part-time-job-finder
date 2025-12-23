@@ -6,11 +6,13 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 public class JobStatDto {
     private Long applicants;
+    private UUID id;
     private LocalDate postedDate;
     private JobStatus status;
     private String title;
