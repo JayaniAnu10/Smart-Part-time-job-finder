@@ -19,6 +19,9 @@ import com.smartparttime.parttimebackend.modules.Job.mappers.JobMapper;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
+import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +55,10 @@ public class JobServiceImpl implements JobService {
     private JobMapper jobMapper;
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
+
+    private final JobSeekerRepository jobSeekerRepository;
+    private final NotificationService notificationService;
+
 
 
     @Transactional
@@ -240,4 +247,35 @@ public class JobServiceImpl implements JobService {
         String embeddingJson = new ObjectMapper().writeValueAsString(embedding);
         job.setEmbedding(embeddingJson);
     }
+
+
+    public void markUrgent(UUID jobId, boolean urgent) {
+
+        Job job = jobRepo.findById(jobId)
+                .orElseThrow(() -> new NotFoundException("Job not found"));
+
+        job.setIsUrgent(urgent);
+        jobRepo.save(job);
+
+
+        if (urgent) {
+            List<JobSeeker> seekers =
+                    jobSeekerRepository.findMatchingJobSeekers(
+                            job.getSkills(),
+                            job.getLocation()
+                    );
+
+            List<UUID> seekerUserIds = seekers.stream()
+                    .map(js -> js.getUser().getId())
+                    .toList();
+
+            notificationService.notifyUrgentJobToSeekers(
+                    seekerUserIds,
+                    job.getTitle(),
+                    job.getLocation()
+            );
+        }
+    }
+
+
 }
