@@ -11,24 +11,31 @@ import java.util.UUID;
 public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
     boolean existsByNic(String nic);
 
-    @Query("""
-    SELECT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerProfileDetails(
-        js.id ,
-        CONCAT(js.firstName,' ',js.lastName),
-        u.email,
-        u.averageRate,
-        u.contact,
-        js.address ,
-        js.bio ,
-        js.skills ,
-        u.isVerified,
-        js.gender,
-        js.profilePicture
- )
-    FROM User u
-    JOIN u.jobSeeker js
-    WHERE u.id = :jobSeekerId
-""")
+    @Query( """
+                SELECT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerProfileDetails(
+                    js.id,
+                    CONCAT(js.firstName,' ',js.lastName),
+                    u.email,
+                    js.dateOfBirth,
+                    u.averageRate,
+                    u.contact,
+                    js.address,
+                    js.bio,
+                    js.skills,
+                    u.isVerified,
+                    js.gender,
+                    js.profilePicture,
+                    COUNT(a)
+                )
+                FROM User u
+                JOIN u.jobSeeker js
+                LEFT JOIN Attendance a
+                    ON a.user.id = u.id AND a.status = 'CHECKED_OUT'
+                WHERE u.id = :jobSeekerId
+                GROUP BY js.id, js.firstName, js.lastName, u.email, u.averageRate,
+                         u.contact, js.address, js.bio, js.skills, u.isVerified,
+                         js.gender, js.profilePicture
+            """)
     JobSeekerProfileDetails getJobSeekerProfile(UUID jobSeekerId);
 
 

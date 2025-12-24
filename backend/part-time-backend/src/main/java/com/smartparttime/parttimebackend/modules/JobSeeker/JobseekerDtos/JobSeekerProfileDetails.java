@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -13,6 +13,7 @@ public class JobSeekerProfileDetails {
     private UUID jobSeekerId;
     private String fullName;
     private String email;
+    private LocalDate dateOfBirth;
     private BigDecimal rate;
     private String contact;
     private String address;
@@ -21,6 +22,5 @@ public class JobSeekerProfileDetails {
     private Boolean isVerified;
     private String gender;
     private String profilePicture;
-
-
+    private Long completedJobs;
 }
