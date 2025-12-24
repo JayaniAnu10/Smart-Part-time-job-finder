@@ -19,50 +19,56 @@ const RecentJobs = ({ jobs = [] }: Props) => {
         </Card>
       ) : (
         <div className="space-y-3">
-          {jobs.map((job, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center p-3 border border-border rounded-lg"
-            >
-              <div>
-                <p className="font-medium text-foreground">{job.title}</p>
-                <div className=" text-muted-foreground flex flex-row  gap-4">
-                  <p>{job.companyName}</p>
-                  <span className="inline-flex items-center ">
-                    <Dot />
-                    {new Date(job.completedDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "2-digit",
-                      year: "numeric",
-                    })}
-                  </span>
-                  <Badge
-                    variant={
-                      job.status.toLowerCase() === "checked_out"
-                        ? "default"
-                        : "destructive"
-                    }
-                  >
-                    {job.status.toLowerCase() == "checked_out"
-                      ? "Completed"
-                      : "Not Completed"}
-                  </Badge>
+          {jobs.map((job, index) => {
+            const status = job.status?.toLowerCase();
+            return (
+              <div
+                key={index}
+                className="flex justify-between items-center p-3 border border-border rounded-lg"
+              >
+                <div>
+                  <p className="font-medium text-foreground">{job.title}</p>
+                  <div className=" text-muted-foreground flex flex-row  gap-4">
+                    <p>{job.companyName}</p>
+                    {job.completedDate ? (
+                      <span className="inline-flex items-center ">
+                        <Dot />
+                        {new Date(job.completedDate).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                    <Badge
+                      variant={
+                        status === "checked_out" ? "default" : "destructive"
+                      }
+                    >
+                      {status == "checked_out" ? "Completed" : "Not Completed"}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-4 h-4 ${
+                        i < job.jobRating
+                          ? "fill-primary text-primary"
+                          : "text-muted-foreground"
+                      }`}
+                    />
+                  ))}
                 </div>
               </div>
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${
-                      i < job.jobRating
-                        ? "fill-primary text-primary"
-                        : "text-muted-foreground"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

@@ -7,17 +7,19 @@ import useSeekerDetails from "@/hooks/useSeekerDetails";
 import {
   Award,
   Briefcase,
+  CalendarDaysIcon,
   CheckCircle,
   Mail,
   MapPin,
   Phone,
   Star,
+  User,
   X,
 } from "lucide-react";
 import RecentJobs from "./RecentJObs";
 
 const SeekerProfile = () => {
-  const id = "7e131240-c539-4379-9f05-1ae34f4b35af";
+  const id = "931bf23d-f9a1-48ec-a817-1fca4d7d4c24";
   const { data, isLoading, isError } = useSeekerDetails(id);
 
   if (isLoading) <Spinner />;
@@ -57,6 +59,14 @@ const SeekerProfile = () => {
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Phone className="w-4 h-4 text-primary" />
                   <span>{data?.profileDetails.contact}</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <CalendarDaysIcon className="w-4 h-4 text-primary" />
+                  <span>Date of Birth: {data?.profileDetails.dateOfBirth}</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <User className="w-4 h-4 text-primary" />
+                  <span>{data?.profileDetails.gender}</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Mail className="w-4 h-4 text-[#fbbd23]" />

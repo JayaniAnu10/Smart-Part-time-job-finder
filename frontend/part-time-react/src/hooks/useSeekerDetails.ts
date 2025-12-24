@@ -13,6 +13,7 @@ interface SeekerDetails {
   jobSeekerId: string;
   fullName: string;
   email: string;
+  dateOfBirth: string;
   rate: number;
   contact: string;
   address: string;
