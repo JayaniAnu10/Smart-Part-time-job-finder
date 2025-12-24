@@ -33,4 +33,7 @@ public interface JobService {
 
     List<NearJobResponse> getNearByJobs(double userLat, double userLng, double radius);
 
+    void markUrgent(UUID jobId, boolean urgent);
+
+
 }

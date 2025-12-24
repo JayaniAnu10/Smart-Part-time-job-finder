@@ -17,7 +17,7 @@ export default function CTASection() {
           
           <Button size="lg" asChild className="bg-primary-foreground dark:bg-primary text-secondary px-8 transition-all duration-300
                                                hover:scale-105 active:scale-95 hover:bg-primary-foreground hover:dark:bg-primary shadow-lg">
-            <Link to="/get-started">
+            <Link to="/getstarted">
               Get Started Free
             </Link>
           </Button>

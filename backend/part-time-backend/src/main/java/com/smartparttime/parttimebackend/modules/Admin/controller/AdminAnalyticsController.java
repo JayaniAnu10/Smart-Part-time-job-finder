@@ -11,7 +11,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/analytics")
-public class AdminAnalyticsController {
+public class
+AdminAnalyticsController {
 
     @Autowired
     private AdminAnalyticsService analyticsService;

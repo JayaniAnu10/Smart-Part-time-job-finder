@@ -97,4 +97,8 @@ public class Job {
     @Column(name = "longitude")
     private Double longitude;
 
+    @Column(name = "is_urgent")
+    private Boolean isUrgent = false;
+
+
 }
