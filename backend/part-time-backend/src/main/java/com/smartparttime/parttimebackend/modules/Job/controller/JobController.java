@@ -132,4 +132,14 @@ public class JobController {
         List<NearJobResponse> jobs = jobService.getNearByJobs(latitude, longitude, radius);
         return ResponseEntity.ok(jobs);
     }
+
+
+    @PatchMapping("/{jobId}/urgent")
+    public void markJobUrgent(
+            @PathVariable UUID jobId,
+            @RequestParam boolean urgent
+    ) {
+        jobService.markUrgent(jobId, urgent);
+    }
+
 }
