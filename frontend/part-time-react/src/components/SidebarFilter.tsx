@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 
-const SidebarFilter: React.FC = () => {
+// Props සඳහා Interface එකක් එක් කළා
+interface SidebarFilterProps {
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
+}
+
+const SidebarFilter: React.FC<SidebarFilterProps> = ({ selectedCategory, onCategoryChange }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
   const [isJobTypeOpen, setIsJobTypeOpen] = useState(true);
   const [isLocationOpen, setIsLocationOpen] = useState(true);
   const [isSalaryOpen, setIsSalaryOpen] = useState(true);
   const [isDateOpen, setIsDateOpen] = useState(true);
+
+  const categories = ["All Categories", "Delivery & Logistics", "Food Service", "Retail", "Events", "Tutoring", "Tech Support"];
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm sticky top-24">
@@ -24,8 +32,16 @@ const SidebarFilter: React.FC = () => {
         </div>
         {isCategoryOpen && (
           <div className="flex flex-wrap gap-2 transition-all duration-300 overflow-hidden">
-            {["All Categories", "Delivery & Logistics", "Food Service", "Retail", "Events", "Tutoring", "Tech Support"].map((cat) => (
-              <button key={cat} className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${cat === "All Categories" ? "bg-yellow-500 text-white" : "bg-blue-50 text-blue-600 hover:bg-blue-100"}`}>
+            {categories.map((cat) => (
+              <button 
+                key={cat} 
+                onClick={() => onCategoryChange(cat)} // Click කරද්දී state එක මාරු කරනවා
+                className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${
+                  selectedCategory === cat 
+                  ? "bg-yellow-500 text-white shadow-md shadow-yellow-200" 
+                  : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                }`}
+              >
                 {cat}
               </button>
             ))}
@@ -33,7 +49,7 @@ const SidebarFilter: React.FC = () => {
         )}
       </div>
 
-      {/* --- Job Type Section --- */}
+      {/* --- Job Type Section (දැනට UI එක පමණයි) --- */}
       <div className="mb-8">
         <div onClick={() => setIsJobTypeOpen(!isJobTypeOpen)} className="flex justify-between items-center mb-4 cursor-pointer group">
           <div className="flex items-center gap-2">
@@ -91,33 +107,13 @@ const SidebarFilter: React.FC = () => {
         )}
       </div>
 
-      {/* --- Date Posted Section --- */}
-      <div className="mb-8">
-        <div onClick={() => setIsDateOpen(!isDateOpen)} className="flex justify-between items-center mb-4 cursor-pointer group">
-          <div className="flex items-center gap-2">
-            <span className="bg-yellow-50 p-1 rounded-md text-yellow-500 text-xs">📅</span>
-            <p className="font-bold text-[11px] text-gray-500 uppercase tracking-wider group-hover:text-yellow-600 transition-colors">Date Posted</p>
-          </div>
-          <span className={`text-gray-400 text-[10px] transition-transform ${isDateOpen ? 'rotate-0' : 'rotate-180'}`}>▲</span>
-        </div>
-        {isDateOpen && (
-          <div className="flex flex-wrap gap-2">
-            {["Any time", "Last hour", "Last 24 hours", "Last 7 days", "Last 30 days"].map((time) => (
-              <button key={time} className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${time === "Any time" ? "bg-yellow-500 text-white" : "bg-blue-50 text-blue-600 hover:bg-blue-100"}`}>
-                {time}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
       {/* Footer info inside sidebar */}
       <div className="pt-4 border-t border-gray-100 text-center">
         <p className="text-gray-400 text-[11px] font-medium uppercase">
-          Showing <span className="text-slate-800 font-bold">6</span> of 6 jobs
+          DayBee.lk Filters
         </p>
       </div>
-    </div> // මෙතනින් තමයි මුළු Sidebar එකම ඉවර වෙන්නේ
+    </div>
   );
 };
 

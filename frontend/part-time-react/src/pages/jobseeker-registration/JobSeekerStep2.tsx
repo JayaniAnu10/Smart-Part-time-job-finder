@@ -4,17 +4,20 @@ import SkillTag from "../../components/SkillTag";
 import RegistrationCard from "../../components/RegistrationCard";
 import StepIndicator from "../../components/StepIndicator";
 import Checkbox from "../../components/Checkbox";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import profileIcon from "../../assets/person.svg";
-import logoIcon from "../../assets/logo-icon.svg";
 import arrowBack from "../../assets/arrow-back.svg";
+import Logo from "@/components/common/Logo";
+import { useJobSeekerStore } from "@/store/useJobSeekerStore";
+import toast from "react-hot-toast";
+import useAddJobSeeker from "@/hooks/useAddJobSeeker";
 
 export default function JobSeekerStep3() {
   const [photo, setPhoto] = useState<File | null>(null);
-  const [bio, setBio] = useState("");
-  const [skills, setSkills] = useState<string[]>([]);
+  const navigate = useNavigate();
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const { data, setData, reset } = useJobSeekerStore();
+  const addSeekerMutation = useAddJobSeeker();
 
   const skillOptions = [
     "Customer Service",
@@ -39,24 +42,34 @@ export default function JobSeekerStep3() {
     "Other",
   ];
 
-  const toggleSkill = (skill: string) => {
-    setSkills((prev) =>
-      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
-    );
+  const handleSubmit = () => {
+    if (!data.bio) {
+      toast.error("Bio is required");
+      return;
+    }
+
+    if (!data.skills) {
+      toast.error("At least one skill is required.");
+      return;
+    }
+
+    if (!agreeTerms) {
+      toast.error("Please agree to terms & conditions");
+      return;
+    }
+
+    addSeekerMutation.mutate(data, {
+      onSuccess: () => {
+        reset(); // clear zustand store
+        navigate("/"); // navigate after success
+      },
+    });
   };
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center py-10 px-4">
       <div className="flex items-center gap-2 mt-4 mb-2">
-        <div className="w-[40px] h-[40px] bg-[#F7C01D] flex items-center justify-center rounded-[15px]">
-          <img src={logoIcon} alt="logo icon" className="w-[24px] h-[24px]" />
-        </div>
-
-        <h1 className="text-[24px] font-bold">
-          <span className="text-[#0F1F3D]">Day</span>
-          <span className="text-[#F7C01D]">Bee</span>
-          <span className="text-[#0F1F3D]">.lk</span>
-        </h1>
+        <Logo />
       </div>
 
       <h2 className="text-[30px] font-extrabold text-[#0F1F3D] mt-2">
@@ -74,7 +87,7 @@ export default function JobSeekerStep3() {
           <p className="text-[14px] text-[#0F1F3D] mb-1">Profile Picture</p>
 
           <div className="flex items-center gap-6">
-            <div className="w-[80px] h-[80px] bg-[#E0E7F5] rounded-full flex items-center justify-center overflow-hidden">
+            <div className="w-20 h-20 bg-[#E0E7F5] rounded-full flex items-center justify-center overflow-hidden">
               {photo ? (
                 <img
                   src={URL.createObjectURL(photo)}
@@ -92,7 +105,9 @@ export default function JobSeekerStep3() {
 
             <UploadButton
               label="Upload Photo"
-              onChange={(file) => setPhoto(file)}
+              onChange={(file) => {
+                setPhoto(file), setData({ profilePicture: file });
+              }}
             />
           </div>
         </div>
@@ -102,9 +117,9 @@ export default function JobSeekerStep3() {
 
           <textarea
             placeholder="Tell employers about yourself..."
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            className="w-full h-[90px] border border-[#A5A8AD] rounded-lg p-3 text-[#364D7D] placeholder:text-[#364D7D] bg-[#FAFAFA] "
+            value={data.bio}
+            onChange={(e) => setData({ bio: e.target.value })}
+            className="w-full h-22.5 border border-[#A5A8AD] rounded-lg p-3 text-[#364D7D] placeholder:text-[#364D7D] bg-[#FAFAFA] "
           ></textarea>
         </div>
 
@@ -121,8 +136,16 @@ export default function JobSeekerStep3() {
               <SkillTag
                 key={skill}
                 label={skill}
-                selected={skills.includes(skill)}
-                toggle={() => toggleSkill(skill)}
+                selected={data.skills.includes(skill)}
+                toggle={() => {
+                  if (data.skills.includes(skill)) {
+                    // remove skill
+                    setData({ skills: data.skills.filter((s) => s !== skill) });
+                  } else {
+                    // add skill
+                    setData({ skills: [...data.skills, skill] });
+                  }
+                }}
               />
             ))}
           </div>
@@ -149,13 +172,17 @@ export default function JobSeekerStep3() {
 
         <div className="flex justify-between mt-6">
           <Link to="/jobseeker/register/step1">
-            <button className="px-6 h-[40px] rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] transition">
+            <button className="px-6 h-10 rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] transition cursor-pointer">
               <img src={arrowBack} alt="left arrow" className="w-4 h-4" />
               Back
             </button>
           </Link>
 
-          <button className="px-6 h-[40px] rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold transition-transform duration-150 active:scale-105">
+          <button
+            disabled={addSeekerMutation.isPending}
+            className="px-6 h-10 rounded-[12px] bg-[#F7C01D] text-[#0F1F3D] text-[14px] font-semibold transition-transform duration-150 active:scale-105 cursor-pointer"
+            onClick={handleSubmit}
+          >
             Create Account
           </button>
         </div>

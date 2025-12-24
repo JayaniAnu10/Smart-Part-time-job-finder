@@ -20,7 +20,7 @@ const GetStarted = () => {
         Select how you want to use our platform
       </p>
 
-      <div className="w-full max-w-[1200px] flex flex-col md:flex-row justify-center items-start gap-8 px-4">
+      <div className="w-full max-w-300 flex flex-col md:flex-row justify-center items-start gap-8 px-4">
         <RoleCard
           image={Jobseeker}
           title="I'm a Job Seeker"
