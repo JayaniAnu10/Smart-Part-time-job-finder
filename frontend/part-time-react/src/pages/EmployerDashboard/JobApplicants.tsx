@@ -1,5 +1,5 @@
 import { RatingFilter } from "@/components/common/RatingFilter";
-import ApplicantCard from "@/components/EmpDashboard/ApplicantCard";
+import ApplicantCard from "@/pages/EmployerDashboard/ApplicantCard";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

@@ -10,13 +10,14 @@ import EmployerStep1 from "./pages/employer-registration/EmployerStep1";
 import EmployerStep2 from "./pages/employer-registration/EmployerStep2";
 import JobSeekerStep1 from "./pages/jobseeker-registration/JobSeekerStep1";
 import JobSeekerStep2 from "./pages/jobseeker-registration/JobSeekerStep2";
-import EmployerDashboard from "./pages/EmployerDashboard";
-import JobApplicants from "./pages/JobApplicants";
+import EmployerDashboard from "./pages/EmployerDashboard/EmployerDashboard";
+import JobApplicants from "./pages/EmployerDashboard/JobApplicants";
 
 import JobForm from "./pages/PostJob/JobForm";
-import FindJobs from './pages/FindJob/FindJobs';
+import FindJobs from "./pages/FindJob/FindJobs";
 
-import JobDetails from './pages/JobDetails'; 
+import JobDetails from "./pages/JobDetails";
+import SeekerProfile from "./pages/EmployerDashboard/SeekerProfile";
 
 const App: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
 
       <Route path="/empDashboard" element={<EmployerDashboard />} />
       <Route path="/applicants" element={<JobApplicants />} />
+      <Route path="/seekerProfile" element={<SeekerProfile />} />
 
       {/* Job Seeker Routes */}
       <Route path="/jobseeker/register/step1" element={<JobSeekerStep1 />} />
@@ -44,10 +46,9 @@ const App: React.FC = () => {
       {/* New Routes from GitHub */}
       <Route path="/find-jobs" element={<FindJobs />} />
       <Route path="/job/:id" element={<JobDetails />} />
-      
+
       {/* Post Job Routes */}
       <Route path="/post-job" element={<JobForm />} />
-      
 
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

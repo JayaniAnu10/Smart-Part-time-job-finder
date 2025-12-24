@@ -10,7 +10,7 @@ const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
   return (
-    <nav className="fixed flex px-4 lg:px-6 top-0 right-0 left-0 bg-background/50 backdrop-blur-lg min-h-20 z-50 w-full">
+    <nav className="fixed flex px-4 lg:px-6 top-0 right-0 left-0 bg-background/50 backdrop-blur-lg min-h-18 z-50 w-full">
       <div className="flex justify-between w-full items-center gap-2 flex-wrap lg:flex-nowrap">
         <Logo />
 
