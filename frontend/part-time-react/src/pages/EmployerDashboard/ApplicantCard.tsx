@@ -1,13 +1,17 @@
 import type { Applicants } from "@/hooks/useApplicants";
-import { Card } from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Badge } from "../ui/badge";
+import { Card } from "../../components/ui/card";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../components/ui/avatar";
+import { Badge } from "../../components/ui/badge";
 import { CheckCircle, MapPin, X } from "lucide-react";
 import { getDaysAgo } from "./EmpJobPost";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import { Link } from "react-router-dom";
-import { StarRating } from "../common/StarRating";
-import { lowerCase } from "@/pages/JobApplicants";
+import { StarRating } from "../../components/common/StarRating";
+import { lowerCase } from "@/pages/EmployerDashboard/JobApplicants";
 
 interface Props {
   applicants: Applicants[];

@@ -1,5 +1,5 @@
-import EmpJobPost from "@/components/EmpDashboard/EmpJobPost";
-import EmpStat from "@/components/EmpDashboard/EmpStat";
+import EmpJobPost from "@/pages/EmployerDashboard/EmpJobPost";
+import EmpStat from "@/pages/EmployerDashboard/EmpStat";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import useEmpStats from "@/hooks/useEmpStats";

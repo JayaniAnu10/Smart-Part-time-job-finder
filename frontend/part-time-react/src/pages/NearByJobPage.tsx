@@ -86,13 +86,15 @@ const NearByJobPage = () => {
   return (
     <div className="p-4 mt-25 mx-9 flex flex-col gap-3">
       <div>
-        <span className="text-5xl font-bold   text-secondary">Find </span>
+        <span className="text-5xl font-bold  dark:text-white  text-secondary">
+          Find{" "}
+        </span>
         <span className="text-5xl font-bold  text-yellow-400">Nearby Jobs</span>
       </div>
       <p className="text-xl mb-2 text-muted-foreground/90">
         Discover day job opportunities near you on the map
       </p>
-      <p className="mb-4 text-secondary/90 font-semibold ">
+      <p className="mb-4 text-secondary/90 dark:text-white font-semibold ">
         Found {jobs.length} jobs near you
       </p>
       <NearbyMap userLat={lat} userLng={lng} jobs={jobs} />

@@ -40,7 +40,7 @@ const ChatBot = () => {
     <div className="mx-8 md:mx-40 p-8 flex flex-col h-screen pt-22">
       <div className="flex flex-col items-center gap-2">
         <div className="md:text-5xl text-4xl font-bold ">
-          <span className=" text-secondary">AI Job </span>
+          <span className=" text-secondary  dark:text-white">AI Job </span>
           <span className="text-yellow-400">Assistant</span>
         </div>
         <div className="text-muted-foreground md:text-lg text-md text-center mb-6">
@@ -50,7 +50,7 @@ const ChatBot = () => {
 
       <div className="flex flex-col flex-1 gap-3 overflow-y-auto px-2">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center mt-35  md:text-4xl font-bold md:gap-3 text-3xl text-center text-secondary">
+          <div className="flex flex-col items-center mt-35  md:text-4xl font-bold md:gap-3 text-3xl text-center text-secondary  dark:text-white">
             <span>Welcome! </span>
             <span className="md:text-3xl text-2xl ">
               Ready to start your job search?
