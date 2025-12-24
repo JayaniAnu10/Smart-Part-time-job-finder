@@ -19,6 +19,7 @@ import FindJobs from './pages/FindJob/FindJobs';
 import JobDetails from './pages/JobDetails'; 
 
 import JobSeekerDashboard from "./pages/JobseekerDashboard";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 const App: React.FC = () => {
   return (
@@ -51,6 +52,7 @@ const App: React.FC = () => {
       <Route path="/post-job" element={<JobForm />} />
 
       <Route path="/dashboard" element={<JobSeekerDashboard />} />
+      <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
       
 
       <Route path="*" element={<Navigate to="/" />} />
