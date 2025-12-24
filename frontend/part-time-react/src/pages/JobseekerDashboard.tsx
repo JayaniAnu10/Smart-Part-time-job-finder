@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -12,17 +14,23 @@ import MoneyIconDark from "@/assets/money-darkmode.svg";
 import StarIconYellow from "@/assets/star.svg";
 import BadgeIcon from "@/assets/badge.svg";
 import AnalyticsIcon from "@/assets/companies.svg";
+import FindJobsIcon from "@/assets/jobs-lightmode.svg";
+import FindJobsIconDarkMode from "@/assets/jobs-darkmode.svg";
+import ScheduleIcon from "@/assets/schedule-lightmode.svg";
+import ScheduleIconDarkMode from "@/assets/schedule-darkmode.svg";
+import MapIcon from "@/assets/map-icon.svg";
+import MapIconDarkMode from "@/assets/map-darkmode.svg";
 
 import NavBar from "@/components/navBar/NavBar";
 import FooterSection from "@/components/FooterSection";
 
 
 const JobseekerDashboard = () => {
+  const navigate = useNavigate();
   return (
     <div className="relative pt-24 min-h-screen bg-background">
 
       <NavBar />
-      
       <section className="bg-gradient-to-br from-yellow-400/20 via-background to-yellow-400/20 dark:from-blue-300/20 dark:via-background dark:to-blue-300/20 border-b">
         <div className="max-w-[88rem] mx-auto px-4 h-[140px] flex items-center justify-between">
           <div>
@@ -30,9 +38,7 @@ const JobseekerDashboard = () => {
               Wellcome back,{" "}
               <span className="text-primary dark:text-yellow-400">Kamal</span>! 👋
             </h1>
-            <p className="mt-2 text-secondary/70 dark:text-primary/70">
-              You have 3 upcoming jobs this week
-            </p>
+            <p className="mt-2 text-secondary/70 dark:text-primary/70">You have 3 upcoming jobs this week</p>
           </div>
 
           <Button className="gap-2 text-secondary dark:bg-yellow-400 transition-all duration-300
@@ -57,12 +63,8 @@ const JobseekerDashboard = () => {
                   <img src={item.icon} alt="" className="h-8 w-8" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-secondary dark:text-primary">
-                    {item.value}
-                  </p>
-                  <p className="text-sm text-secondary/70 dark:text-primary/70">
-                    {item.label}
-                  </p>
+                  <p className="text-2xl font-bold text-secondary dark:text-primary">{item.value}</p>
+                  <p className="text-sm text-secondary/70 dark:text-primary/70">{item.label}</p>
                 </div>
               </CardContent>
             </Card>
@@ -95,17 +97,11 @@ const JobseekerDashboard = () => {
                       <div className="flex gap-4">
                         
                         <div className="bg-yellow-400 h-12 w-12 rounded-lg flex items-center justify-center shrink-0">
-                          <img
-                            src={BriefcaseIcon}
-                            alt="job icon"
-                            className="h-6 w-6"
-                          />
+                          <img src={BriefcaseIcon} alt="job icon" className="h-6 w-6"/>
                         </div>
                         <div>
                           <h3 className="font-bold text-secondary dark:text-primary">{job.title}</h3>
-                          <p className="text-sm text-secondary/80 dark:text-primary/80">
-                            {job.company}
-                          </p>
+                          <p className="text-sm text-secondary/80 dark:text-primary/80">{job.company}</p>
                         
                           <div className="flex items-center gap-4 mt-2 text-sm text-secondary/80 dark:text-primary/80">
                             <div className="flex items-center gap-1">
@@ -128,8 +124,7 @@ const JobseekerDashboard = () => {
                             job.status === "Confirmed"
                               ? "bg-yellow-400/10 text-yellow-400"
                               : "bg-[#364d7d]/10 text-[#364d7d] dark:text-primary/70"
-                         }`}
-                        >
+                         }`}>
                           {job.status}
                         </span>
 
@@ -141,6 +136,43 @@ const JobseekerDashboard = () => {
                     </CardContent>
                   </Card>
                 ))}
+
+                <Card className="w-full rounded-2xl">
+                  <CardContent className="p-6 space-y-6">
+                    <h3 className="text-xl font-bold text-secondary dark:text-primary">Quick Actions</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <Button variant="outline"
+                              onClick={() => navigate('/find-jobs')}
+                              className="group h-20 flex flex-col gap-2 text-secondary dark:text-primary
+                                         hover:bg-yellow-400 hover:text-secondary transition-all duration-300 hover:scale-105">
+                        <img src={FindJobsIcon} alt="Find Jobs" className="h-6 w-6 dark:hidden" />
+                        <img src={FindJobsIconDarkMode} alt="find jobs" className="h-6 w-6 hidden dark:block dark:group-hover:hidden" />
+                        <img src={FindJobsIcon} alt="find jobs" className="h-6 w-6 hidden dark:group-hover:block" />
+                        <span className="text-sm font-medium">Find Jobs</span>
+                      </Button>
+
+                      <Button variant="outline"
+                              className="group h-20 flex flex-col gap-2 text-secondary dark:text-primary
+                                         hover:bg-yellow-400 hover:text-secondary transition-all duration-300 hover:scale-105">
+                        <img src={ScheduleIcon} alt="Schedule" className="h-6 w-6 dark:hidden" />
+                        <img src={ScheduleIconDarkMode} alt="Schedule" className="h-6 w-6 hidden dark:block dark:group-hover:hidden" />
+                        <img src={ScheduleIcon} alt="schedule" className="h-6 w-6 hidden dark:group-hover:block" />
+                        <span className="text-sm font-medium">My Schedule</span>
+                      </Button> 
+
+                      <Button variant="outline"
+                              onClick={() => navigate('/nearby')}
+                              className="group h-20 flex flex-col gap-2 text-secondary dark:text-primary
+                                         hover:bg-yellow-400 hover:text-secondary transition-all duration-300 hover:scale-105">
+                        <img src={MapIcon} alt="view map" className="h-6 w-6 dark:hidden" />
+                        <img src={MapIconDarkMode} alt="view map" className="h-6 w-6 hidden dark:block dark:group-hover:hidden" />
+                        <img src={MapIcon} alt="view map" className="h-6 w-6 hidden dark:group-hover:block" />
+                        <span className="text-sm font-medium">Map View</span>
+                      </Button> 
+                    </div>  
+                  </CardContent>
+                </Card>
+
                 </div>
               </div>
             </div>
@@ -155,9 +187,7 @@ const JobseekerDashboard = () => {
                     <h3 className="text-lg font-semibold text-secondary dark:text-primary">Trust Score</h3>
                   </div>
 
-                  <div className="text-5xl font-bold text-yellow-400">
-                    0.0
-                  </div>
+                  <div className="text-5xl font-bold text-yellow-400">0.0</div>
 
                   <div className="flex justify-center gap-1">
                     {[...Array(5)].map((_, index) => (
@@ -184,41 +214,30 @@ const JobseekerDashboard = () => {
 
                   <div className="flex items-center gap-2">
                     <img src={BadgeIcon} alt="badge" className="w-6 h-6" />
-                    <h3 className="text-lg font-semibold text-secondary dark:text-primary">
-                      Your Badges
-                    </h3>
+                    <h3 className="text-lg font-semibold text-secondary dark:text-primary">Your Badges</h3>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                    
                     <div className="rounded-xl bg-yellow-400 text-center py-6 space-y-2 shadow-lg">
                       <span className="text-2xl">⚡</span>
-                      <p className="font-sm text-secondary">
-                        Quick Responder
-                      </p>
+                      <p className="font-sm text-secondary">Quick Responder</p>
                     </div>
 
                     <div className="rounded-xl bg-yellow-400 text-center py-6 space-y-2 shadow-lg">
-                       <span className="text-2xl">✓</span>
-                      <p className="font-sm text-secondary ">
-                        Perfect Attendance
-                      </p>
+                      <span className="text-2xl">✓</span>
+                      <p className="font-sm text-secondary ">Perfect Attendance</p>
                     </div>
                     
                     <div className="rounded-xl bg-[#364d7d]/10 dark:bg-primary/60 text-center py-6 space-y-2 shadow-lg">
-                    <span className="text-2xl">⭐</span>
-                      <p className="text-sm text-secondary ">
-                        5-Star Performer
-                      </p>
+                      <span className="text-2xl">⭐</span>
+                      <p className="text-sm text-secondary ">5-Star Performer</p>
                     </div>
                     
                     <div className="rounded-xl bg-[#364d7d]/10 dark:bg-primary/60 text-center py-6 space-y-2 shadow-lg">
                       <span className="text-2xl">💰</span>
-                      <p className="text-sm text-secondary">
-                        Top Earner
-                      </p>
+                      <p className="text-sm text-secondary">Top Earner</p>
                     </div>
-
                   </div>
                 </CardContent>
               </Card>
@@ -228,9 +247,7 @@ const JobseekerDashboard = () => {
                   
                   <div className="flex items-center gap-2">
                     <img src={AnalyticsIcon} alt="analytics" className="w-6 h-6" />
-                    <h3 className="text-lg font-semibold text-secondary dark:text-primary">
-                      This Month
-                    </h3>
+                    <h3 className="text-lg font-semibold text-secondary dark:text-primary">This Month</h3>
                   </div>
                   
                   <div className="space-y-4 text-sm">
