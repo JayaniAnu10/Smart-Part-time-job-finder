@@ -16,8 +16,6 @@ import FindJobs from './pages/FindJob/FindJobs';
 
 import JobDetails from './pages/JobDetails'; 
 
-import AboutPage from "./pages/AboutUs/AboutPage";
-
 const App: React.FC = () => {
   return (
     <Routes>
@@ -44,14 +42,9 @@ const App: React.FC = () => {
       
       {/* Post Job Routes */}
       <Route path="/post-job" element={<JobForm />} />
-
-      <Route path="/about" element={<AboutPage />} />
       
 
       <Route path="*" element={<Navigate to="/" />} />
-
-      
-
     </Routes>
   );
 };
