@@ -37,7 +37,8 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
         j.title,
         e.companyName,
         a.checkOutTime,
-        r.rating
+        r.rating,
+        a.status
     )
     FROM JobApplication ja
     JOIN ja.job j
