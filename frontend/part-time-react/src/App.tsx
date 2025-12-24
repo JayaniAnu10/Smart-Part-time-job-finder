@@ -18,6 +18,7 @@ import FindJobs from './pages/FindJob/FindJobs';
 
 import JobDetails from './pages/JobDetails'; 
 
+import JobSeekerDashboard from "./pages/JobseekerDashboard";
 import AboutPage from "./pages/AboutUs/AboutPage";
 
 const App: React.FC = () => {
@@ -50,6 +51,7 @@ const App: React.FC = () => {
       {/* Post Job Routes */}
       <Route path="/post-job" element={<JobForm />} />
 
+      <Route path="/dashboard" element={<JobSeekerDashboard />} />
       <Route path="/about" element={<AboutPage />} />
       
 
