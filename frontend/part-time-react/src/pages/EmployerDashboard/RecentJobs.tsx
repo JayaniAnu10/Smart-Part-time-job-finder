@@ -24,12 +24,12 @@ const RecentJobs = ({ jobs = [] }: Props) => {
             return (
               <div
                 key={index}
-                className="flex justify-between items-center p-3 border border-border rounded-lg"
+                className="flex md:justify-between flex-col gap-3 md:flex-row md:items-center p-3 border border-border rounded-lg"
               >
                 <div>
                   <p className="font-medium text-foreground">{job.title}</p>
-                  <div className=" text-muted-foreground flex flex-row  gap-4">
-                    <p>{job.companyName}</p>
+                  <div className=" text-muted-foreground flex md:flex-row flex-col  md:gap-4 gap-2">
+                    <p className="mx-2">{job.companyName}</p>
                     {job.completedDate ? (
                       <span className="inline-flex items-center ">
                         <Dot />
@@ -45,13 +45,17 @@ const RecentJobs = ({ jobs = [] }: Props) => {
                     ) : (
                       ""
                     )}
-                    <Badge
-                      variant={
-                        status === "checked_out" ? "default" : "destructive"
-                      }
-                    >
-                      {status == "checked_out" ? "Completed" : "Not Completed"}
-                    </Badge>
+                    <div>
+                      <Badge
+                        variant={
+                          status === "checked_out" ? "default" : "destructive"
+                        }
+                      >
+                        {status == "checked_out"
+                          ? "Completed"
+                          : "Not Completed"}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-1">
