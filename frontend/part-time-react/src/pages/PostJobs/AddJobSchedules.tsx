@@ -6,18 +6,18 @@ import { Label } from "@/components/ui/label";
 type Schedule = {
   startDatetime: string;
   endDatetime: string;
-  requiredWorkers: string;
+  requiredWorkers: number;
 };
 
 export default function AddJobSchedules() {
   const [schedules, setSchedules] = useState([
-    { startDatetime: "", endDatetime: "", requiredWorkers: "" },
+    { startDatetime: "", endDatetime: "", requiredWorkers: 0 },
   ]);
 
   const addSchedule = () => {
     setSchedules([
       ...schedules,
-      { startDatetime: "", endDatetime: "", requiredWorkers: "" },
+      { startDatetime: "", endDatetime: "", requiredWorkers: 0 },
     ]);
   };
 
@@ -28,7 +28,7 @@ export default function AddJobSchedules() {
   const updateSchedule = (
     index: number,
     field: keyof Schedule,
-    value: string
+    value: string | number
   ) => {
     setSchedules((prev) =>
       prev.map((s, i) => (i === index ? { ...s, [field]: value } : s))
@@ -69,21 +69,23 @@ export default function AddJobSchedules() {
             <Input
               type="number"
               min={1}
-              value={schedule.requiredWorkers}
+              value={schedule.requiredWorkers.toString()}
               onChange={(e) =>
-                updateSchedule(index, "requiredWorkers", e.target.value)
+                updateSchedule(index, "requiredWorkers", Number(e.target.value))
               }
             />
           </div>
 
           {schedules.length > 1 && (
-            <Button
-              variant="destructive"
-              onClick={() => removeSchedule(index)}
-              className="mt-2 md:col-span-3"
-            >
-              Remove
-            </Button>
+            <div className="md:col-span-3 flex justify-end mt-2">
+              <Button
+                className="text-white"
+                variant="destructive"
+                onClick={() => removeSchedule(index)}
+              >
+                Remove
+              </Button>
+            </div>
           )}
         </div>
       ))}
