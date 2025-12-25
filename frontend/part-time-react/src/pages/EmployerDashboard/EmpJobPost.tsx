@@ -2,7 +2,7 @@ import type { JobStats } from "@/hooks/useEmpStats";
 
 import { Badge } from "@/components/ui/badge";
 import { Edit, Eye, Trash2, Users } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 
 interface Props {
   jobs?: JobStats[];
