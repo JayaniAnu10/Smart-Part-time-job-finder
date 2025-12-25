@@ -62,11 +62,12 @@ public class ChatbotService {
             Job schedules: %s
             Location: %s
             Job Type: %s
-            Salary: %s
+            Min Salary: %s
+            Max Salary: %s
             Description: %s
             Working hours(How many,much): %s
             Deadline(When): %s
-            Skills: %s
+            Requirements: %s
             Available vacancies: %s
             """,
                     bestJob.getId(),
@@ -74,11 +75,12 @@ public class ChatbotService {
                     bestJob.getJobSchedules(),
                     bestJob.getLocation(),
                     bestJob.getJobType(),
-                    bestJob.getSalary(),
+                    bestJob.getMinSalary(),
+                    bestJob.getMaxSalary(),
                     bestJob.getDescription(),
                     bestJob.getWorkingHours(),
                     bestJob.getDeadline(),
-                    bestJob.getSkills(),
+                    bestJob.getRequirements(),
                     bestJob.getAvailableVacancies()
             );
         }

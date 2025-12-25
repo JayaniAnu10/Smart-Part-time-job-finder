@@ -66,7 +66,6 @@ public class JobServiceImpl implements JobService {
     public JobResponseDto createJob(JobRequestDto request, UUID employerId){
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
-        System.out.println(request.getLatitude());
 
         var category = categoryRepo.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -126,7 +125,7 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String skills, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, int page,int size) {
+    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String requirements, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, int page,int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Specification<Job> spec = Specification.allOf();
@@ -140,8 +139,8 @@ public class JobServiceImpl implements JobService {
         if (title != null) {
             spec = spec.and(JobSpec.hasTitle(title));
         }
-        if (skills != null) {
-            spec = spec.and(JobSpec.hasSkills(skills));
+        if (requirements != null) {
+            spec = spec.and(JobSpec.hasRequirements(requirements));
         }
         if (category != null) {
             spec = spec.and(JobSpec.hasCategory(category));
@@ -153,10 +152,10 @@ public class JobServiceImpl implements JobService {
             spec = spec.and(JobSpec.hasDate(date));
         }
         if (minSalary != null) {
-            spec =spec.and(JobSpec.hasSalaryGreaterThanOrEqualTo(minSalary));
+            spec =spec.and(JobSpec.hasMinSalaryGreaterThanOrEqualTo(minSalary));
         }
         if (maxSalary != null) {
-            spec =spec.and(JobSpec.hasSalaryLessThanOrEqualTo(maxSalary));
+            spec =spec.and(JobSpec.hasMaxSalaryLessThanOrEqualTo(maxSalary));
         }
 
         Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
@@ -222,11 +221,12 @@ public class JobServiceImpl implements JobService {
             Job schedules: %s
             Location: %s
             Job Type: %s
-            Salary: %s
+            Min Salary: %s
+            Max Salary: %s
             Description: %s
             Working hours: %s
             Deadline: %s
-            Skills: %s
+            Requirements: %s
             Available vacancies: %s
             """,
                 job.getId(),
@@ -234,11 +234,12 @@ public class JobServiceImpl implements JobService {
                 jobSchedules,
                 job.getLocation(),
                 job.getJobType(),
-                job.getSalary(),
+                job.getMinSalary(),
+                job.getMaxSalary(),
                 job.getDescription(),
                 job.getWorkingHours(),
                 job.getDeadline(),
-                job.getSkills(),
+                job.getRequirements(),
                 job.getAvailableVacancies()
         );
 
@@ -261,7 +262,7 @@ public class JobServiceImpl implements JobService {
         if (urgent) {
             List<JobSeeker> seekers =
                     jobSeekerRepository.findMatchingJobSeekers(
-                            job.getSkills(),
+                            job.getRequirements(),
                             job.getLocation()
                     );
 

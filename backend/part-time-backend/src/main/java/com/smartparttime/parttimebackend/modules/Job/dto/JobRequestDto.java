@@ -31,13 +31,18 @@ public class JobRequestDto {
     private LocalDateTime deadline;
 
     @NotNull(message = "Required field")
-    private BigDecimal salary;
+    private BigDecimal minSalary;
+
+    @NotNull(message = "Required field")
+    private BigDecimal maxSalary;
+
+    @NotBlank(message = "Required field")
+    private String requirements;
+
+    private String accommodation;
 
     @NotNull(message = "Required field")
     private Integer workingHours;
-
-    @NotBlank(message = "Required field")
-    private String skills;
 
     @NotNull(message = "Required field")
     private Long totalVacancies;
