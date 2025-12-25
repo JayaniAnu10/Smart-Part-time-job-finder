@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import NearbyMap from "@/components/map/NearByMap";
+import { Spinner } from "@/components/ui/spinner";
 
 export interface NearJobResponse {
   id: string;
@@ -77,8 +78,8 @@ const NearByJobPage = () => {
 
   if (loading) {
     return (
-      <div className="p-4 text-[#0f1f3d] dark:text-white mt-25">
-        <p>Loading nearby jobs...</p>
+      <div className="flex justify-center">
+        <Spinner className=" mt-60" />
       </div>
     );
   }

@@ -20,7 +20,7 @@ const useAddEmployer = () => {
         industry: data.industry,
         website: data.website,
         description: data.description,
-        userId: "49fe9b1f-06d6-4c66-8acd-454a83982362",
+        userId: "c64b05a2-295a-455a-9fe6-ac5a5db4a889",
       };
 
       formData.append(
@@ -39,18 +39,6 @@ const useAddEmployer = () => {
     },
     onSuccess: () => {
       toast.success("Signup successful!");
-    },
-    onError: (error) => {
-      //Axios error handle
-      if (axios.isAxiosError(error)) {
-        //Get error from server
-        const msg =
-          error.response?.data.error ||
-          "Employer signup failed. Please try again.";
-        toast.error(msg);
-      } else {
-        toast.error("Employer signup failed. Please try again.");
-      }
     },
   });
 };
