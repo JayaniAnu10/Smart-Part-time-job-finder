@@ -11,7 +11,7 @@ const defaultIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-const redIcon = new L.Icon({
+export const redIcon = new L.Icon({
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
