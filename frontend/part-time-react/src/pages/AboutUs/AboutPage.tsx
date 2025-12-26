@@ -2,13 +2,16 @@ import React from 'react';
 import Hero_about from '../../components/AboutUs/Hero_about';
 import WhoWeAre from '../../components/AboutUs/WhoWeAre';
 import Values from '../../components/AboutUs/Values';
-import Stats from '../../components/AboutUs/Stats';
+import Stats from '../../components/AboutUs/Stats';  
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#f8fafc]">
       <Hero_about />
-      <div className="max-w-4xl mx-auto px-4 py-16 flex flex-col gap-16">
+      
+      {/* using gap-12 ,can change the gap between WhoWeAre & Values sections.
+      */}
+      <div className="max-w-7xl mx-auto px-8 py-16 flex flex-col gap-2">
         <WhoWeAre />
         <Values />
         <Stats />
