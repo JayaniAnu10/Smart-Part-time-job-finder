@@ -1,9 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Employer;
 
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerAllDto;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerDto;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerRegisterRequest;
-import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
+import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.*;
 import com.smartparttime.parttimebackend.modules.User.UserMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -83,6 +80,13 @@ public class EmployerController {
         employerService.updateProfile(logo,id);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/stats/{id}")
+    public ResponseEntity<EmployerStats> getEmployerStats(
+            @PathVariable UUID id
+    ){
+        return ResponseEntity.ok(employerService.employerStats(id));
     }
 
 }

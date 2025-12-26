@@ -11,12 +11,24 @@ class APIClient<T> {
     this.endpoint = endpoint;
   }
 
-  getAll = () => {
-    return axiosInstance.get<T>(this.endpoint).then((res) => res.data);
+  getAll = (params?: Record<string, any>) => {
+    return axiosInstance
+      .get<T>(this.endpoint, { params })
+      .then((res) => res.data);
   };
 
   post = (data: T) => {
     return axiosInstance.post<T>(this.endpoint, data).then((res) => res.data);
+  };
+
+  postForm = (formData: FormData) => {
+    return axiosInstance
+      .post(this.endpoint, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => res.data);
   };
 }
 

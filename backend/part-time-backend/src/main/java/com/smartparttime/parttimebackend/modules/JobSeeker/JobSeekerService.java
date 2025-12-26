@@ -3,9 +3,7 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.*;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -65,6 +64,19 @@ public class JobSeekerService {
             throw new NotFoundException("User not found");
         }
         return seeker;
+    }
+
+    public JobSeekerApplicantProfile getJobSeekerProfile(UUID id){
+        jobSeekerRepository.findById(id).orElseThrow();
+        var seeker= jobSeekerRepository.getJobSeekerProfile(id);
+        var jobs = jobSeekerRepository.getJobSeekerJobs(id);
+
+        JobSeekerApplicantProfile profile = new JobSeekerApplicantProfile();
+        profile.setProfileDetails(seeker);
+        profile.setJobDetails(jobs);
+
+        return profile;
+
     }
 
 

@@ -9,11 +9,11 @@ import LogoIconDarkmode from "@/assets/daybee-darkmode.png"
 const FooterSection = () => {
   return (
     <footer className="bg-card border-t border-border">
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="max-w-[88rem] mx-auto px-4 py-16">
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-14">
 
-          <div className="flex flex-col items-start text-left -ml-10">
+          <div className="flex flex-col items-start text-left ">
             <div className="flex items-center mb-4">
               <img src={LogoIconLightmode} alt="DayBee logo light" className="h-10 w-45 dark:hidden" />
               <img src={LogoIconDarkmode} alt="DayBee logo dark" className="h-10 w-45 hidden dark:inline "/>

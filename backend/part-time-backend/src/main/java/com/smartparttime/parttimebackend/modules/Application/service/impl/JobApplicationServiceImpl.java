@@ -6,6 +6,8 @@ import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
+import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicantsResponse;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationRequest;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
 import com.smartparttime.parttimebackend.modules.Application.mapper.JobApplicationMapper;
@@ -18,9 +20,11 @@ import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobScheduleRepository;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
+import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final JobScheduleRepository jobScheduleRepository;
     private final AttendanceRepository attendanceRepository;
     private final AttendanceService attendanceService;
+    private final NotificationService notificationService;
 
 
 
@@ -73,6 +78,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         application.setSchedule(schedule);
 
         jobApplicationRepository.save(application);
+
+        notificationService.notifyJobApplied(
+                job.getEmployer().getUser().getId(),
+                job.getTitle()
+        );
+
 
         return jobApplicationMapper.toDto(application);
     }
@@ -126,24 +137,22 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     }
 
     @Override
-    public List<JobApplicationResponse> getApplicationsByJob(UUID jobId, int page, int size) {
+    public JobApplicantsResponse getApplicationsByJob(UUID jobId, int page, int size) {
         Pageable  pageable = PageRequest.of(page,size);
         var job = jobRepo.findById(jobId).orElse(null);
         if (job == null) {
             throw new NotFoundException("Job not found");
         }
 
-        var applications = jobApplicationRepository.findByJob_Id(jobId,pageable);
-        if (applications.isEmpty()) {
+        var applicants = jobApplicationRepository.findApplicationsByJobId(jobId,pageable);
+        if (applicants.isEmpty()) {
             throw new NotFoundException("Application not found");
         }
+        JobApplicantsResponse response = new JobApplicantsResponse();
+        response.setTitle(job.getTitle());
+        response.setApplicants(applicants);
 
-        return applications
-                .stream()
-                .map(jobApplicationMapper::toDto)
-                .toList();
-
-
+        return response;
     }
 
     @Transactional
@@ -161,6 +170,13 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             approveApplication(application);
 
         }
+
+        notificationService.notifyStatusChanged(
+                application.getJobseeker().getId(),
+                application.getJob().getTitle(),
+                status.name()
+        );
+
 
         return jobApplicationMapper.toDto(application);
 

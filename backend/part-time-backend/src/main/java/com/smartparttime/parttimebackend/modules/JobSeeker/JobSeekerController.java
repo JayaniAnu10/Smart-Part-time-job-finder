@@ -1,10 +1,7 @@
 package com.smartparttime.parttimebackend.modules.JobSeeker;
 
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerAllDto;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.*;
 import com.smartparttime.parttimebackend.modules.User.UserMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -15,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -60,6 +58,12 @@ public class JobSeekerController {
     public ResponseEntity<JobSeekerDto> getSeekerById(@PathVariable UUID id) {
         var seeker= jobSeekerService.getJobSeekerById(id);
         return ResponseEntity.ok(jobSeekerMapper.toJobSeekerDto(seeker));
+
+    }
+
+    @GetMapping("profile/{id}")
+    public JobSeekerApplicantProfile getSeekerProfile(@PathVariable UUID id) {
+        return jobSeekerService.getJobSeekerProfile(id);
 
     }
 

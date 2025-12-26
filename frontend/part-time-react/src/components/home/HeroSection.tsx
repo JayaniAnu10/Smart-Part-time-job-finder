@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import heroBackground from "@/assets/hero6.png";
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +25,7 @@ const stats: StatItem[] = [
 ];
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   return (
     <section
       className="relative min-h-[90vh] md:min-h-screen bg-cover bg-center pt-24"
@@ -61,6 +63,7 @@ const HeroSection = () => {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
               size="lg"
+              onClick={() => navigate('/find-jobs')}
               className="bg-primary dark:bg-yellow-400 text-secondary px-8 transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-primary dark:hover:bg-yellow-400 hover:text-secondary dark:hover:text-secondary"
             >
               <img src={SearchIcon} alt="Search jobs" className="mr-2 h-5 w-5" />
@@ -69,6 +72,7 @@ const HeroSection = () => {
 
             <Button
               size="lg"
+              onClick={() => navigate('/post-job')}
               className="border border-secondary bg-primary-foreground/40 dark:bg-secondary/50
                          backdrop-blur-sm text-secondary dark:text-secondary-foreground px-8 transition-all duration-300 active:scale-95 hover:bg-primary-foreground/40 dark:hover:bg-secondary/50 hover:text-secondary dark:hover:text-secondary-foreground"
             >

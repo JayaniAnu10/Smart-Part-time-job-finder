@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.Notification;
+package com.smartparttime.parttimebackend.modules.Notification.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
