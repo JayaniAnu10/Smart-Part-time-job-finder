@@ -58,9 +58,6 @@ public class Job {
     @Column(name = "status")
     private JobStatus status;
 
-    @Column(name = "working_hours")
-    private Integer workingHours;
-
     @Column(name = "total_vacancies")
     private Long totalVacancies;
 

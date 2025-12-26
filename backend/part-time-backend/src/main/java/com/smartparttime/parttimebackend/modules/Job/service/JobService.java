@@ -1,9 +1,11 @@
 package com.smartparttime.parttimebackend.modules.Job.service;
 
+import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
+import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
@@ -34,6 +36,8 @@ public interface JobService {
     List<NearJobResponse> getNearByJobs(double userLat, double userLng, double radius);
 
     void markUrgent(UUID jobId, boolean urgent);
+
+    List<JobCategoryDto> getCategories();
 
 
 }

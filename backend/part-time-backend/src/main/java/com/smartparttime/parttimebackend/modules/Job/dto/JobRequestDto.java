@@ -42,13 +42,7 @@ public class JobRequestDto {
     private String accommodation;
 
     @NotNull(message = "Required field")
-    private Integer workingHours;
-
-    @NotNull(message = "Required field")
     private Long totalVacancies;
-
-    @NotNull(message = "Required field")
-    private Long availableVacancies;
 
     @NotNull(message = "Job schedules are required")
     private List<JobScheduleDto> schedules;

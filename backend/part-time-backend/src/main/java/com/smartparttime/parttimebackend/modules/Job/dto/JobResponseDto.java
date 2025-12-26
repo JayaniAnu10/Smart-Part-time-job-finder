@@ -39,8 +39,6 @@ public class JobResponseDto {
 
     private List<JobScheduleDto> jobSchedules;
 
-    private Integer workingHours;
-
     private String requirements;
 
     private String accommodation;

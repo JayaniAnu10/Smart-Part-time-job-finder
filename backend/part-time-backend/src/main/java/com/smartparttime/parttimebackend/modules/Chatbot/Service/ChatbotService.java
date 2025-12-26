@@ -65,7 +65,6 @@ public class ChatbotService {
             Min Salary: %s
             Max Salary: %s
             Description: %s
-            Working hours(How many,much): %s
             Deadline(When): %s
             Requirements: %s
             Available vacancies: %s
@@ -78,7 +77,6 @@ public class ChatbotService {
                     bestJob.getMinSalary(),
                     bestJob.getMaxSalary(),
                     bestJob.getDescription(),
-                    bestJob.getWorkingHours(),
                     bestJob.getDeadline(),
                     bestJob.getRequirements(),
                     bestJob.getAvailableVacancies()

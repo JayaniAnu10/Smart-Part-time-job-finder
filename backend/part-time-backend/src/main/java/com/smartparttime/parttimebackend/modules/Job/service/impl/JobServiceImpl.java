@@ -9,12 +9,14 @@ import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingServic
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
+import com.smartparttime.parttimebackend.modules.Job.mappers.JobCategoryMapper;
 import com.smartparttime.parttimebackend.modules.Job.mappers.JobMapper;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
@@ -55,10 +57,10 @@ public class JobServiceImpl implements JobService {
     private JobMapper jobMapper;
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
-
     private final JobSeekerRepository jobSeekerRepository;
     private final NotificationService notificationService;
-
+    @Autowired
+    private JobCategoryMapper jobCategoryMapper;
 
 
     @Transactional
@@ -70,6 +72,7 @@ public class JobServiceImpl implements JobService {
         var category = categoryRepo.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         job.setCategory(category);
+        job.setAvailableVacancies(request.getTotalVacancies());
         job.setEmployer(employer);
         job.setPostedDate(LocalDate.now());
         job.setStatus(JobStatus.ACTIVE);
@@ -79,6 +82,8 @@ public class JobServiceImpl implements JobService {
                     JobSchedule schedule = new JobSchedule();
                     schedule.setStartDatetime(dto.getStartDatetime());
                     schedule.setEndDatetime(dto.getEndDatetime());
+                    long hours = java.time.Duration.between(dto.getStartDatetime(), dto.getEndDatetime()).toHours();
+                    schedule.setWorkingHours((int) hours);
                     schedule.setJob(job);
                     schedule.setRequiredWorkers(dto.getRequiredWorkers());
                     return schedule;
@@ -224,7 +229,6 @@ public class JobServiceImpl implements JobService {
             Min Salary: %s
             Max Salary: %s
             Description: %s
-            Working hours: %s
             Deadline: %s
             Requirements: %s
             Available vacancies: %s
@@ -237,7 +241,6 @@ public class JobServiceImpl implements JobService {
                 job.getMinSalary(),
                 job.getMaxSalary(),
                 job.getDescription(),
-                job.getWorkingHours(),
                 job.getDeadline(),
                 job.getRequirements(),
                 job.getAvailableVacancies()
@@ -276,6 +279,12 @@ public class JobServiceImpl implements JobService {
                     job.getLocation()
             );
         }
+    }
+
+    @Override
+    public List<JobCategoryDto> getCategories() {
+        var categories =categoryRepo.findAll();
+        return jobCategoryMapper.toDto(categories);
     }
 
 

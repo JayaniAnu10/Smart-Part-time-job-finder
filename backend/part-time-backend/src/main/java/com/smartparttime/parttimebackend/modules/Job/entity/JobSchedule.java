@@ -50,4 +50,7 @@ public class JobSchedule {
     @JoinColumn(name = "schedule_id")
     private Set<JobApplication> jobApplications = new HashSet<>();
 
+    @Column(name = "working_hours")
+    private Integer workingHours;
+
 }
