@@ -6,7 +6,6 @@ import {
   useMap,
 } from "react-leaflet";
 import { useState } from "react";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import axios from "axios";
 import { redIcon } from "../map/NearByMap";
@@ -74,7 +73,7 @@ export default function LocationPicker({ onSelect }: Props) {
         />
         <button
           type="button"
-          className="border px-3 rounded-lg hover:bg-yellow-400 transition-transform duration-300 text-[#0f1f3d] dark:text-white font-medium cursor-pointer"
+          className="border px-3 rounded-lg hover:bg-[#0f1f3d]  hover:text-white transition-transform duration-300 text-[#0f1f3d] dark:text-white font-medium cursor-pointer text-sm"
           onClick={searchLocation}
         >
           Search

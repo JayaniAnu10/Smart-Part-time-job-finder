@@ -25,9 +25,10 @@ const NavBar = () => {
           </Button>
           <Button
             variant="ghost"
+            asChild
             className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer  xl:px-4"
           >
-            {t("postJobs")}
+            <Link to={"/postJob"}>{t("postJobs")}</Link>
           </Button>
           <Button
             variant="ghost"
@@ -104,19 +105,21 @@ const NavBar = () => {
           }`}
         >
           <ul className="text-left w-full p-4 space-y-1">
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("findJobs")}
             </li>
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              {t("postJobs")}
-            </li>
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+            <Link to={"/postJob"}>
+              <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+                {t("postJobs")}
+              </li>
+            </Link>
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("nearbyMap")}
             </li>
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("contact")}
             </li>
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("about")}
             </li>
             <li className="border-t border-secondary/20 mt-3 pt-3 flex gap-2">
