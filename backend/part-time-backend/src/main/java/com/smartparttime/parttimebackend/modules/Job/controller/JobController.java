@@ -82,6 +82,7 @@ public class JobController {
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) BigDecimal minSalary,
             @RequestParam(required = false) BigDecimal maxSalary,
+            @RequestParam(required = false) String requiredGender,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -95,6 +96,7 @@ public class JobController {
                 date,
                 minSalary,
                 maxSalary,
+                requiredGender,
                 page,
                 size);
         return ResponseEntity.ok(jobs);

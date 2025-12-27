@@ -140,7 +140,7 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String requirements, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, int page,int size) {
+    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String requirements, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary,String requiredGender, int page,int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Specification<Job> spec = Specification.allOf();
@@ -171,6 +171,9 @@ public class JobServiceImpl implements JobService {
         }
         if (maxSalary != null) {
             spec =spec.and(JobSpec.hasMaxSalaryLessThanOrEqualTo(maxSalary));
+        }
+        if (requiredGender != null) {
+            spec =spec.and(JobSpec.hasRequiredGender(requiredGender));
         }
 
         Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
