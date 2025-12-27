@@ -14,6 +14,7 @@ import { useEmployerStore } from "@/store/useEmployerStore";
 import toast from "react-hot-toast";
 import useAddEmployer from "@/hooks/useAddEmployer";
 import Logo from "@/components/common/Logo";
+import axios from "axios";
 
 export default function EmployerStep3() {
   const navigate = useNavigate();
@@ -42,6 +43,20 @@ export default function EmployerStep3() {
       onSuccess: () => {
         reset(); // clear zustand store
         navigate("/"); // navigate after success
+      },
+      onError: (error) => {
+        //Axios error handle
+        if (axios.isAxiosError(error)) {
+          //Get error from server
+          const msg =
+            error.response?.data.error ||
+            "Employer signup failed. Please try again.";
+          toast.error(msg);
+        } else {
+          toast.error("Employer signup failed. Please try again.");
+        }
+        reset();
+        setAgreeTerms(false);
       },
     });
   };

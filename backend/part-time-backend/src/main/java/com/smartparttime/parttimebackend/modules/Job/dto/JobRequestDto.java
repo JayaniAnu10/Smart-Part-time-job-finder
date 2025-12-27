@@ -31,19 +31,15 @@ public class JobRequestDto {
     private LocalDateTime deadline;
 
     @NotNull(message = "Required field")
-    private BigDecimal salary;
+    private BigDecimal minSalary;
 
     @NotNull(message = "Required field")
-    private Integer workingHours;
+    private BigDecimal maxSalary;
 
     @NotBlank(message = "Required field")
-    private String skills;
+    private String requirements;
 
-    @NotNull(message = "Required field")
-    private Long totalVacancies;
-
-    @NotNull(message = "Required field")
-    private Long availableVacancies;
+    private String accommodation;
 
     @NotNull(message = "Job schedules are required")
     private List<JobScheduleDto> schedules;
@@ -53,6 +49,11 @@ public class JobRequestDto {
 
     @NotNull(message = "Required")
     private Double longitude;
+
+    private Boolean isUrgent;
+
+    @NotBlank(message = "Required")
+    private String requiredGender;
 
 
 }

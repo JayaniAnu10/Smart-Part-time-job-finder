@@ -49,10 +49,6 @@ public class User {
     @Column(name = "contact")
     private String contact;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "language_id")
-    private Language language;
-
     @OneToMany(mappedBy = "user")
     private Set<Attendance> attendances = new HashSet<>();
 

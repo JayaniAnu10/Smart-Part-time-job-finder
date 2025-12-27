@@ -21,17 +21,17 @@ public class JobSpec {
                 "%" + description.toLowerCase() + "%");
     }
 
-    public static Specification<Job> hasSalaryGreaterThanOrEqualTo(BigDecimal salary) {
-        return (root, query, cb) ->   cb.greaterThanOrEqualTo(root.get("salary"), salary );
+    public static Specification<Job> hasMinSalaryGreaterThanOrEqualTo(BigDecimal minSalary) {
+        return (root, query, cb) ->   cb.greaterThanOrEqualTo(root.get("minSalary"), minSalary );
     }
 
-    public static Specification<Job> hasSalaryLessThanOrEqualTo(BigDecimal salary) {
-        return (root, query, cb) ->  cb.lessThanOrEqualTo(root.get("salary"), salary);
+    public static Specification<Job> hasMaxSalaryLessThanOrEqualTo(BigDecimal maxSalary) {
+        return (root, query, cb) ->  cb.lessThanOrEqualTo(root.get("maxSalary"), maxSalary);
     }
 
-    public static Specification<Job> hasSkills(String skills) {
-        return  (root, query, cb) ->   cb.like( cb.lower(root.get("skills")),
-                "%" + skills.toLowerCase() + "%");
+    public static Specification<Job> hasRequirements(String requirements) {
+        return  (root, query, cb) ->   cb.like( cb.lower(root.get("requirements")),
+                "%" + requirements.toLowerCase() + "%");
     }
 
     public static Specification<Job> hasCategory(String category) {

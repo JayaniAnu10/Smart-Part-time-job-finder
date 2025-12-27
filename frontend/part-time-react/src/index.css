@@ -10,6 +10,11 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+/* Dark mode calendar icon */
+input[type="datetime-local"].dark-calendar::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2); /* inverts the icon to light */
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -86,7 +91,7 @@ body {
 .dark {
   --background: #020419;
   --foreground: oklch(0.985 0 0);
-  --card: #0f192e;
+  --card: #080c23;
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(13.018% 0.04533 274.905);
   --popover-foreground: oklch(0.985 0 0);
@@ -98,7 +103,7 @@ body {
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: oklch(61.187% 0.23391 27.136);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);

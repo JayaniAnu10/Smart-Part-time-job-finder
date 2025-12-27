@@ -1,9 +1,11 @@
 package com.smartparttime.parttimebackend.modules.Job.controller;
 
+import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
+import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.service.JobService;
@@ -140,6 +142,11 @@ public class JobController {
             @RequestParam boolean urgent
     ) {
         jobService.markUrgent(jobId, urgent);
+    }
+
+    @GetMapping("/category")
+    public List<JobCategoryDto> getCategories(){
+        return jobService.getCategories();
     }
 
 }

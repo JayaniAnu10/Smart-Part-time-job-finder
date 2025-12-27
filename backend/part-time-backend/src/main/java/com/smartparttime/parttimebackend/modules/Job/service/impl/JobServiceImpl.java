@@ -9,12 +9,14 @@ import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingServic
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
 import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
+import com.smartparttime.parttimebackend.modules.Job.mappers.JobCategoryMapper;
 import com.smartparttime.parttimebackend.modules.Job.mappers.JobMapper;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
@@ -55,10 +57,10 @@ public class JobServiceImpl implements JobService {
     private JobMapper jobMapper;
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
-
     private final JobSeekerRepository jobSeekerRepository;
     private final NotificationService notificationService;
-
+    @Autowired
+    private JobCategoryMapper jobCategoryMapper;
 
 
     @Transactional
@@ -66,7 +68,6 @@ public class JobServiceImpl implements JobService {
     public JobResponseDto createJob(JobRequestDto request, UUID employerId){
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
-        System.out.println(request.getLatitude());
 
         var category = categoryRepo.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -74,18 +75,31 @@ public class JobServiceImpl implements JobService {
         job.setEmployer(employer);
         job.setPostedDate(LocalDate.now());
         job.setStatus(JobStatus.ACTIVE);
+        job.setIsUrgent(request.getIsUrgent() != null ? request.getIsUrgent() : false);
 
         Set<JobSchedule> schedules = request.getSchedules().stream()
                 .map(dto -> {
                     JobSchedule schedule = new JobSchedule();
                     schedule.setStartDatetime(dto.getStartDatetime());
                     schedule.setEndDatetime(dto.getEndDatetime());
+                    long hours = java.time.Duration.between(dto.getStartDatetime(), dto.getEndDatetime()).toHours();
+                    schedule.setWorkingHours((int) hours);
                     schedule.setJob(job);
                     schedule.setRequiredWorkers(dto.getRequiredWorkers());
                     return schedule;
                 }).collect(Collectors.toSet());
 
         job.setJobSchedules(schedules);
+
+        Long totalRequiredWorkers = schedules.stream()
+                .mapToLong(JobSchedule::getRequiredWorkers)
+                .sum();
+
+        job.setTotalVacancies(totalRequiredWorkers);
+
+        job.setAvailableVacancies(totalRequiredWorkers);
+
+
         try{
             saveJobEmbedding(job, job.getJobSchedules());
         }catch (Exception e){
@@ -126,7 +140,7 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String skills, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, int page,int size) {
+    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String requirements, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, int page,int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Specification<Job> spec = Specification.allOf();
@@ -140,8 +154,8 @@ public class JobServiceImpl implements JobService {
         if (title != null) {
             spec = spec.and(JobSpec.hasTitle(title));
         }
-        if (skills != null) {
-            spec = spec.and(JobSpec.hasSkills(skills));
+        if (requirements != null) {
+            spec = spec.and(JobSpec.hasRequirements(requirements));
         }
         if (category != null) {
             spec = spec.and(JobSpec.hasCategory(category));
@@ -153,10 +167,10 @@ public class JobServiceImpl implements JobService {
             spec = spec.and(JobSpec.hasDate(date));
         }
         if (minSalary != null) {
-            spec =spec.and(JobSpec.hasSalaryGreaterThanOrEqualTo(minSalary));
+            spec =spec.and(JobSpec.hasMinSalaryGreaterThanOrEqualTo(minSalary));
         }
         if (maxSalary != null) {
-            spec =spec.and(JobSpec.hasSalaryLessThanOrEqualTo(maxSalary));
+            spec =spec.and(JobSpec.hasMaxSalaryLessThanOrEqualTo(maxSalary));
         }
 
         Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
@@ -222,11 +236,11 @@ public class JobServiceImpl implements JobService {
             Job schedules: %s
             Location: %s
             Job Type: %s
-            Salary: %s
+            Min Salary: %s
+            Max Salary: %s
             Description: %s
-            Working hours: %s
             Deadline: %s
-            Skills: %s
+            Requirements: %s
             Available vacancies: %s
             """,
                 job.getId(),
@@ -234,11 +248,11 @@ public class JobServiceImpl implements JobService {
                 jobSchedules,
                 job.getLocation(),
                 job.getJobType(),
-                job.getSalary(),
+                job.getMinSalary(),
+                job.getMaxSalary(),
                 job.getDescription(),
-                job.getWorkingHours(),
                 job.getDeadline(),
-                job.getSkills(),
+                job.getRequirements(),
                 job.getAvailableVacancies()
         );
 
@@ -261,7 +275,7 @@ public class JobServiceImpl implements JobService {
         if (urgent) {
             List<JobSeeker> seekers =
                     jobSeekerRepository.findMatchingJobSeekers(
-                            job.getSkills(),
+                            job.getRequirements(),
                             job.getLocation()
                     );
 
@@ -275,6 +289,12 @@ public class JobServiceImpl implements JobService {
                     job.getLocation()
             );
         }
+    }
+
+    @Override
+    public List<JobCategoryDto> getCategories() {
+        var categories =categoryRepo.findAll();
+        return jobCategoryMapper.toDto(categories);
     }
 
 
