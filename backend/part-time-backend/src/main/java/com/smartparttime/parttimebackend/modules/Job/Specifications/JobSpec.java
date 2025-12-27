@@ -50,10 +50,15 @@ public class JobSpec {
     }
 
     public static Specification<Job> hasLocation(String location) {
-        return (root, query, cb) -> cb.equal(root.get("location"), location);
+        return (root, query, cb) -> cb.like(cb.lower(root.get("location")),
+                "%" + location.toLowerCase() + "%");
     }
 
     public static Specification<Job> hasJobType(String jobType) {
         return (root, query, cb) -> cb.equal(root.get("jobType"), jobType);
+    }
+
+    public static Specification<Job> hasRequiredGender(String requiredGender) {
+        return (root, query, cb) -> cb.equal(root.get("requiredGender"), requiredGender);
     }
 }
