@@ -76,6 +76,7 @@ public class JobServiceImpl implements JobService {
         job.setEmployer(employer);
         job.setPostedDate(LocalDate.now());
         job.setStatus(JobStatus.ACTIVE);
+        job.setIsUrgent(request.getIsUrgent() != null ? request.getIsUrgent() : false);
 
         Set<JobSchedule> schedules = request.getSchedules().stream()
                 .map(dto -> {

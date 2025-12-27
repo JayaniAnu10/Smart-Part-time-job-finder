@@ -53,5 +53,6 @@ public class JobRequestDto {
     @NotNull(message = "Required")
     private Double longitude;
 
+    private Boolean isUrgent;
 
 }

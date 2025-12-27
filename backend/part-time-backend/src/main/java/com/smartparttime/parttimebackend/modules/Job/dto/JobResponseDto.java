@@ -52,4 +52,7 @@ public class JobResponseDto {
     private Double latitude;
 
     private Double longitude;
+
+    private Boolean isUrgent;
+
 }
