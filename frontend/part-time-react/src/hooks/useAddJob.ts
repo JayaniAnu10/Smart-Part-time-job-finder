@@ -19,15 +19,16 @@ export interface JobData {
   minSalary: number;
   maxSalary: number;
   requirements: string;
-  accommodation: string[];
+  accommodation: string;
   totalVacancies: number;
   schedules: JobSchedule[];
   latitude: number;
   longitude: number;
+  isUrgent: boolean;
 }
 
 const useAddJob = (id: string, onAddSucess: () => void) => {
-  const apiClient = new APIClient<JobData>(`/create/${id}`);
+  const apiClient = new APIClient<JobData>(`jobs/create/${id}`);
 
   return useMutation<any, Error, JobData>({
     mutationFn: apiClient.post,

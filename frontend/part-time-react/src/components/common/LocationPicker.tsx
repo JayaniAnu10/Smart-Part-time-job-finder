@@ -1,10 +1,4 @@
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMapEvents,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import axios from "axios";
@@ -14,7 +8,7 @@ type Props = {
   onSelect: (value: {
     latitude: number;
     longitude: number;
-    label: string;
+    location: string;
   }) => void;
 };
 
@@ -24,10 +18,34 @@ function RecenterMap({ lat, lng }: { lat: number; lng: number }) {
   return null;
 }
 
+async function reverseGeocode(lat: number, lng: number) {
+  const res = await axios.get(
+    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+  );
+  const data = await res.data;
+  return data?.display_name ?? "";
+}
+
 export default function LocationPicker({ onSelect }: Props) {
   const [search, setSearch] = useState("");
   const [lat, setLat] = useState<number>(6.9271);
   const [lng, setLng] = useState<number>(79.8612);
+
+  const handleSelectPoint = async (newLat: number, newLng: number) => {
+    setLat(newLat);
+    setLng(newLng);
+
+    let location = search.trim();
+    if (!location) {
+      location = await reverseGeocode(newLat, newLng);
+    }
+
+    onSelect({
+      latitude: newLat,
+      longitude: newLng,
+      location,
+    });
+  };
 
   const searchLocation = async () => {
     const res = await axios.get(
@@ -41,27 +59,8 @@ export default function LocationPicker({ onSelect }: Props) {
     const newLat = parseFloat(data[0].lat);
     const newLng = parseFloat(data[0].lon);
 
-    setLat(newLat);
-    setLng(newLng);
-
-    onSelect({
-      latitude: newLat,
-      longitude: newLng,
-      label: data[0].display_name,
-    });
+    await handleSelectPoint(newLat, newLng);
   };
-
-  function DragHandler() {
-    useMapEvents({
-      dragend(e) {
-        const { lat, lng } = e.target.getCenter();
-        setLat(lat);
-        setLng(lng);
-        onSelect({ latitude: lat, longitude: lng, label: search });
-      },
-    });
-    return null;
-  }
 
   return (
     <div className="space-y-3 flex flex-col gap-4">
@@ -86,8 +85,17 @@ export default function LocationPicker({ onSelect }: Props) {
         style={{ height: 400, width: "100%" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Marker icon={redIcon} position={[lat, lng]} draggable />
-        <DragHandler />
+        <Marker
+          icon={redIcon}
+          position={[lat, lng]}
+          draggable
+          eventHandlers={{
+            dragend: async (e) => {
+              const pos = e.target.getLatLng();
+              await handleSelectPoint(pos.lat, pos.lng);
+            },
+          }}
+        />
         <RecenterMap lat={lat} lng={lng} />
       </MapContainer>
     </div>
