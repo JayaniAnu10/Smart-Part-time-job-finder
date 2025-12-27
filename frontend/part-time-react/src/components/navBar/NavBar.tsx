@@ -10,7 +10,7 @@ const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
   return (
-    <nav className="fixed flex px-4 lg:px-6 top-0 right-0 left-0 bg-background/50 backdrop-blur-lg min-h-18 z-50 w-full">
+    <nav className="fixed flex px-4 lg:px-6 top-0 right-0 left-0 bg-background/75 backdrop-blur-lg min-h-17 z-50 w-full">
       <div className="flex justify-between w-full items-center gap-2 flex-wrap lg:flex-nowrap">
         <Logo />
 
@@ -67,7 +67,7 @@ const NavBar = () => {
             <Link to="/getstarted">
               <Button
                 variant="default"
-                className="bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md  transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25 whitespace-nowrap px-3 xl:px-4"
+                className="bg-yellow-400 shadow-none cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md  transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25  px-3 xl:px-4"
               >
                 {t("getStarted")}
               </Button>
