@@ -41,9 +41,6 @@ public class JobRequestDto {
 
     private String accommodation;
 
-    @NotNull(message = "Required field")
-    private Long totalVacancies;
-
     @NotNull(message = "Job schedules are required")
     private List<JobScheduleDto> schedules;
 
@@ -54,5 +51,9 @@ public class JobRequestDto {
     private Double longitude;
 
     private Boolean isUrgent;
+
+    @NotBlank(message = "Required")
+    private String requiredGender;
+
 
 }

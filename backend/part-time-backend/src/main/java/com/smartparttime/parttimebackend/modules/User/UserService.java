@@ -7,9 +7,7 @@ import com.smartparttime.parttimebackend.modules.User.UserDtos.UserLoginRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
-import com.smartparttime.parttimebackend.modules.User.entities.Language;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
-import com.smartparttime.parttimebackend.modules.User.repo.LanguageRepository;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -25,7 +23,6 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserService{
-    private final LanguageRepository languageRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -41,8 +38,6 @@ public class UserService{
 
         var user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Language defaultLang = languageRepository.findById(1).orElseThrow();
-        user.setLanguage(defaultLang);
         user.setAverageRate(BigDecimal.valueOf(0.0));
         user.setTotalRatings(0);
         user.setCreatedAt(LocalDateTime.now());

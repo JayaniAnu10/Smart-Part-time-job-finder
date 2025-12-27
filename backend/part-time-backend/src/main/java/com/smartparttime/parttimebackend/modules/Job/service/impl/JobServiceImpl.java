@@ -72,7 +72,6 @@ public class JobServiceImpl implements JobService {
         var category = categoryRepo.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         job.setCategory(category);
-        job.setAvailableVacancies(request.getTotalVacancies());
         job.setEmployer(employer);
         job.setPostedDate(LocalDate.now());
         job.setStatus(JobStatus.ACTIVE);
@@ -91,6 +90,16 @@ public class JobServiceImpl implements JobService {
                 }).collect(Collectors.toSet());
 
         job.setJobSchedules(schedules);
+
+        Long totalRequiredWorkers = schedules.stream()
+                .mapToLong(JobSchedule::getRequiredWorkers)
+                .sum();
+
+        job.setTotalVacancies(totalRequiredWorkers);
+
+        job.setAvailableVacancies(totalRequiredWorkers);
+
+
         try{
             saveJobEmbedding(job, job.getJobSchedules());
         }catch (Exception e){
