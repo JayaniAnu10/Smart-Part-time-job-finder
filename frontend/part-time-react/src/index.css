@@ -11,8 +11,9 @@ body {
 }
 
 /* Dark mode calendar icon */
-input[type="datetime-local"].dark-calendar::-webkit-calendar-picker-indicator {
-  filter: invert(1) brightness(2); /* inverts the icon to light */
+input.dark-calendar[type="date"]::-webkit-calendar-picker-indicator,
+input.dark-calendar[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
 }
 
 @theme inline {

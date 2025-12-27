@@ -22,6 +22,7 @@ import SeekerProfile from "./pages/EmployerDashboard/SeekerProfile";
 import JobSeekerDashboard from "./pages/JobseekerDashboard";
 import AboutPage from "./pages/AboutUs/AboutPage";
 import PostJob from "./pages/PostJobs/PostJob";
+import FindJob from "./pages/FindYourJob/FindJob";
 
 const App: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const App: React.FC = () => {
         <Route index element={<HomePage />} />
         <Route path="chatbot" element={<ChatBot />} />
         <Route path="nearby" element={<NearByJobPage />} />
+        <Route path="/find-your-job" element={<FindJob />} />
       </Route>
 
       <Route path="/getstarted" element={<GetStarted />} />
@@ -49,6 +51,7 @@ const App: React.FC = () => {
 
       {/* New Routes from GitHub */}
       <Route path="/find-jobs" element={<FindJobs />} />
+      <Route path="/find-your-job" element={<FindJob />} />
       <Route path="/job/:id" element={<JobDetails />} />
 
       {/* Post Job Routes */}
