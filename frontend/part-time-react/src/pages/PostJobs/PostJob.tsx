@@ -31,15 +31,16 @@ const benefitOptions = [
   "Health",
   "Training",
   "Uniform",
-  "Team work",
-  "Individual work",
+  "Daily Payment",
 ];
+
+const requiredGenderOptions = ["Male", "Female", "Male & Female both"];
 
 const PostJob = () => {
   const navigate = useNavigate();
   const [benefits, setBenefits] = useState<string[]>([]);
   const [isUrgent, setIsUrgent] = useState(false);
-  const id = "49fe9b1f-06d6-4c66-8acd-454a83982362";
+  const id = "511e9a6c-3ce6-494b-bf39-80e1afce4d5e";
   const { data: categories } = useCategory();
 
   const handleAddJob = useAddJob(id, () => {
@@ -76,7 +77,6 @@ const PostJob = () => {
       minSalary: Number(data.minSalary),
       maxSalary: Number(data.maxSalary),
       isUrgent,
-      totalVacancies: Number(data.totalVacancies),
       accommodation: benefits.join(", "),
       deadline: new Date(data.deadline).toISOString(),
       schedules: data.schedules.map((s) => ({
@@ -91,11 +91,11 @@ const PostJob = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background py-12">
+    <div className="min-h-screen bg-background md:py-12 py-2">
       <div className="container md:mx-auto md:px-4 max-w-4xl px-2">
-        <Card className="md:p-8 border p-5">
+        <Card className="md:p-8 border dark:border-0 p-5">
           <h1 className="text-4xl font-bold text-[#0f1f3d] dark:text-white mb-2">
-            Post a New Job
+            Post a <span className="dark:text-yellow-400">New Job</span>
           </h1>
           <p className="text-muted-foreground mb-8">
             Fill in the details to create your job listing
@@ -280,6 +280,33 @@ const PostJob = () => {
             </div>
             <div>
               <Label>Requirements</Label>
+              <Controller
+                name="requiredGender"
+                control={control}
+                rules={{ required: "Needed Gender is required" }}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value ? String(field.value) : ""}
+                  >
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Select required gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {requiredGenderOptions?.map((gender) => (
+                        <SelectItem key={gender} value={gender}>
+                          {gender}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.requiredGender && (
+                <p className="text-red-500 text-sm">
+                  {errors.requiredGender.message}
+                </p>
+              )}
               <Textarea
                 placeholder="List the required qualifications and skills..."
                 className="mt-2 min-h-30 resize-none"
@@ -293,60 +320,11 @@ const PostJob = () => {
                 </p>
               )}
             </div>
-
-            {/* Job Schedules */}
-            <AddJobSchedules
-              control={control}
-              register={register}
-              errors={errors}
-              watch={watch}
-              getValues={getValues}
-            />
-
-            {/* Vacancies & Deadline */}
-            <div className="flex md:flex-row gap-6 flex-col">
-              <div className="flex-1">
-                <Label>Number of Vacancies</Label>
-                <Input
-                  type="number"
-                  placeholder="1"
-                  className="mt-2"
-                  min={1}
-                  {...register("totalVacancies", {
-                    required: "Number of vacancies is required",
-                    min: { value: 1, message: "At least 1 vacancy" },
-                  })}
-                />
-                {errors.totalVacancies && (
-                  <p className="text-red-500 text-sm">
-                    {errors.totalVacancies.message}
-                  </p>
-                )}
-              </div>
-              <div className="flex-1">
-                <Label>Application Deadline</Label>
-                <Input
-                  type="datetime-local"
-                  className="mt-2"
-                  {...register("deadline", {
-                    required: "Deadline is required",
-                    validate: (value) =>
-                      new Date(value) > new Date() || "Invalid Deadline",
-                    onChange: () => trigger("schedules"),
-                  })}
-                />
-                {errors.deadline && (
-                  <p className="text-red-500 text-sm">
-                    {errors.deadline.message}
-                  </p>
-                )}
-              </div>
-            </div>
             {/* Benefits */}
             <div>
               <Label>Benefits (Optional)</Label>
 
-              <div className="border border-input rounded-lg p-6 flex flex-wrap gap-4">
+              <div className="border border-input rounded-lg p-6 flex flex-wrap gap-4 mt-2">
                 {benefitOptions.map((benefit) => (
                   <SkillTag
                     label={benefit}
@@ -363,6 +341,35 @@ const PostJob = () => {
               </div>
             </div>
 
+            {/* Job Schedules */}
+            <AddJobSchedules
+              control={control}
+              register={register}
+              errors={errors}
+              watch={watch}
+              getValues={getValues}
+            />
+
+            {/* Deadline */}
+            <div>
+              <Label>Application Deadline</Label>
+              <Input
+                type="datetime-local"
+                className="mt-2 dark-calendar"
+                {...register("deadline", {
+                  required: "Deadline is required",
+                  validate: (value) =>
+                    new Date(value) > new Date() || "Invalid Deadline",
+                  onChange: () => trigger("schedules"),
+                })}
+              />
+              {errors.deadline && (
+                <p className="text-red-500 text-sm">
+                  {errors.deadline.message}
+                </p>
+              )}
+            </div>
+
             <div>
               <Checkbox
                 label="Urgent Job Post"
@@ -375,7 +382,7 @@ const PostJob = () => {
             <div className="flex gap-4 pt-4">
               <Button
                 type="submit"
-                className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-[#0f1f3d]"
+                className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-[#0f1f3d] cursor-pointer"
                 disabled={handleAddJob.isPending}
               >
                 {handleAddJob.isPending ? "Publishing..." : "Publish Job"}

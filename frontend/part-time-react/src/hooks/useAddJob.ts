@@ -20,11 +20,11 @@ export interface JobData {
   maxSalary: number;
   requirements: string;
   accommodation: string;
-  totalVacancies: number;
   schedules: JobSchedule[];
   latitude: number;
   longitude: number;
   isUrgent: boolean;
+  requiredGender: string;
 }
 
 const useAddJob = (id: string, onAddSucess: () => void) => {

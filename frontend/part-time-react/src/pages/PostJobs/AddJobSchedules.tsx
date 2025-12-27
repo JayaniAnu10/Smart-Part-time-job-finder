@@ -42,7 +42,7 @@ export default function AddJobSchedules({
             <input
               type="datetime-local"
               id={`schedules.${index}.startDatetime`}
-              className="w-full rounded-md border border-input px-3 py-2 text-base focus:outline-none focus:ring-1 focus:ring-yellow-300"
+              className="w-full rounded-md border border-input px-3 py-2 text-base focus:outline-none focus:ring-1 focus:ring-yellow-300 dark-calendar"
               {...register(`schedules.${index}.startDatetime`, {
                 required: "Start time is required",
                 validate: (start) => {
@@ -68,7 +68,7 @@ export default function AddJobSchedules({
             <input
               type="datetime-local"
               id={`schedules.${index}.endDatetime`}
-              className="w-full rounded-md border border-input px-3 py-2 text-base focus:outline-none focus:ring-1 focus:ring-yellow-300"
+              className="w-full rounded-md border border-input px-3 py-2 text-base focus:outline-none focus:ring-1 focus:ring-yellow-300 dark-calendar"
               {...register(`schedules.${index}.endDatetime`, {
                 required: "End time is required",
                 validate: (end) => {
@@ -131,11 +131,14 @@ export default function AddJobSchedules({
           type="button"
           variant="outline"
           onClick={() =>
-            append({
-              startDatetime: "",
-              endDatetime: "",
-              requiredWorkers: 1,
-            })
+            append(
+              {
+                startDatetime: "",
+                endDatetime: "",
+                requiredWorkers: 1,
+              },
+              { shouldFocus: false }
+            )
           }
         >
           + Add Schedule
