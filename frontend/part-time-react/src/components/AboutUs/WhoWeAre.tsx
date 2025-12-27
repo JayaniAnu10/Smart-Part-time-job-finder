@@ -2,9 +2,9 @@ import React from 'react';
 
 const WhoWeAre: React.FC = () => {
   return (
-    <section className="bg-[var(--card)] p-10 rounded-xl shadow-sm border border-[var(--border)]">
-      <h2 className="text-2xl font-bold text-[var(--secondary)] mb-5">Who We Are</h2>
-      <div className="space-y-5 text-[var(--foreground)] opacity-90 leading-relaxed text-[15px]">
+    <section className="bg-[var(--card)] p-12 rounded-xl shadow-sm border border-blue-100/50">
+      <h2 className="text-3xl font-bold text-[var(--secondary)] mb-6">Who We Are</h2>
+      <div className="space-y-6 text-[var(--secondary)]/80 leading-relaxed text-[17px]">
         <p>
           DayBee.lk is a modern job-matching platform designed specifically for the Sri Lankan market. We understand the unique challenges of finding flexible, part-time work and aim to bridge the gap between employers seeking reliable workers and individuals looking for flexible employment opportunities.
         </p>
