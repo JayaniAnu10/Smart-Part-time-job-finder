@@ -69,8 +69,6 @@ const PostJob = () => {
     },
   });
 
-  const minSalary = watch("minSalary");
-
   const onSubmit = (data: JobData) => {
     const payload = {
       ...data,
@@ -94,8 +92,8 @@ const PostJob = () => {
 
   return (
     <div className="min-h-screen bg-background py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <Card className="p-8 border">
+      <div className="container md:mx-auto md:px-4 max-w-4xl px-2">
+        <Card className="md:p-8 border p-5">
           <h1 className="text-4xl font-bold text-[#0f1f3d] dark:text-white mb-2">
             Post a New Job
           </h1>
@@ -306,7 +304,7 @@ const PostJob = () => {
             />
 
             {/* Vacancies & Deadline */}
-            <div className="flex flex-row gap-6">
+            <div className="flex md:flex-row gap-6 flex-col">
               <div className="flex-1">
                 <Label>Number of Vacancies</Label>
                 <Input
@@ -377,7 +375,7 @@ const PostJob = () => {
             <div className="flex gap-4 pt-4">
               <Button
                 type="submit"
-                className="flex-1 bg-primary hover:bg-primary/80 text-[#0f1f3d]"
+                className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-[#0f1f3d]"
                 disabled={handleAddJob.isPending}
               >
                 {handleAddJob.isPending ? "Publishing..." : "Publish Job"}
