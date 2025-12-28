@@ -21,17 +21,17 @@ public class JobSpec {
                 "%" + description.toLowerCase() + "%");
     }
 
-    public static Specification<Job> hasSalaryGreaterThanOrEqualTo(BigDecimal salary) {
-        return (root, query, cb) ->   cb.greaterThanOrEqualTo(root.get("salary"), salary );
+    public static Specification<Job> hasMinSalaryGreaterThanOrEqualTo(BigDecimal minSalary) {
+        return (root, query, cb) ->   cb.greaterThanOrEqualTo(root.get("minSalary"), minSalary );
     }
 
-    public static Specification<Job> hasSalaryLessThanOrEqualTo(BigDecimal salary) {
-        return (root, query, cb) ->  cb.lessThanOrEqualTo(root.get("salary"), salary);
+    public static Specification<Job> hasMaxSalaryLessThanOrEqualTo(BigDecimal maxSalary) {
+        return (root, query, cb) ->  cb.lessThanOrEqualTo(root.get("maxSalary"), maxSalary);
     }
 
-    public static Specification<Job> hasSkills(String skills) {
-        return  (root, query, cb) ->   cb.like( cb.lower(root.get("skills")),
-                "%" + skills.toLowerCase() + "%");
+    public static Specification<Job> hasRequirements(String requirements) {
+        return  (root, query, cb) ->   cb.like( cb.lower(root.get("requirements")),
+                "%" + requirements.toLowerCase() + "%");
     }
 
     public static Specification<Job> hasCategory(String category) {
@@ -50,10 +50,15 @@ public class JobSpec {
     }
 
     public static Specification<Job> hasLocation(String location) {
-        return (root, query, cb) -> cb.equal(root.get("location"), location);
+        return (root, query, cb) -> cb.like(cb.lower(root.get("location")),
+                "%" + location.toLowerCase() + "%");
     }
 
     public static Specification<Job> hasJobType(String jobType) {
         return (root, query, cb) -> cb.equal(root.get("jobType"), jobType);
+    }
+
+    public static Specification<Job> hasRequiredGender(String requiredGender) {
+        return (root, query, cb) -> cb.equal(root.get("requiredGender"), requiredGender);
     }
 }

@@ -7,6 +7,7 @@ import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,36 +58,11 @@ public class Job {
     @Column(name = "status")
     private JobStatus status;
 
-    @Column(name = "salary")
-    private BigDecimal salary;
-
-    @Column(name = "working_hours")
-    private Integer workingHours;
-
-    @Column(name = "skills")
-    private String skills;
-
     @Column(name = "total_vacancies")
     private Long totalVacancies;
 
     @Column(name = "available_vacancies")
     private Long availableVacancies;
-
-    @OneToMany(mappedBy = "job")
-    private Set<Attendance> attendances = new HashSet<>();
-
-    @OneToMany(mappedBy = "job")
-    private Set<JobApplication> jobApplications = new HashSet<>();
-
-    @OneToMany(mappedBy = "job")
-    private Set<Promotion> promotions = new HashSet<>();
-
-
-    @OneToMany(mappedBy = "job")
-    private Set<Rate> rates = new HashSet<>();
-
-    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<JobSchedule> jobSchedules = new HashSet<>();
 
     @Lob
     private String embedding;
@@ -100,5 +76,34 @@ public class Job {
     @Column(name = "is_urgent")
     private Boolean isUrgent = false;
 
+    @Column(name = "min_salary")
+    private BigDecimal minSalary;
+
+    @Column(name = "max_salary")
+    private BigDecimal maxSalary;
+
+    @Column(name = "requirements")
+    private String requirements;
+
+    @Column(name = "accommodation")
+    private String accommodation;
+
+    @OneToMany(mappedBy = "job")
+    private Set<Attendance> attendances = new HashSet<>();
+
+    @OneToMany(mappedBy = "job")
+    private Set<JobApplication> jobApplications = new HashSet<>();
+
+    @OneToMany(mappedBy = "job")
+    private Set<Promotion> promotions = new HashSet<>();
+
+    @OneToMany(mappedBy = "job")
+    private Set<Rate> rates = new HashSet<>();
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<JobSchedule> jobSchedules = new HashSet<>();
+
+    @Column(name = "required_gender")
+    private String requiredGender;
 
 }

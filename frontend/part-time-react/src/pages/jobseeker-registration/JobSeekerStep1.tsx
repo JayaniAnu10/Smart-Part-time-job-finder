@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 export default function JobSeekerStep2() {
   const navigate = useNavigate();
   const { data, setData } = useJobSeekerStore();
+  const nicPattern = /^(?:\d{9}[VvXx]|\d{12})$/;
 
   const handleNext = () => {
     //  validation
@@ -29,6 +30,20 @@ export default function JobSeekerStep2() {
       toast.error("Please fill all required fields.");
       return;
     }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // remove time part
+
+    if (data.dob >= today) {
+      toast.error("Date of birth is invalid.");
+      return;
+    }
+
+    if (!nicPattern.test(data.nic)) {
+      toast.error("Please enter a valid NIC number.");
+      return;
+    }
+
     navigate("/jobseeker/register/step2");
   };
 

@@ -33,13 +33,15 @@ public class JobResponseDto {
 
     private JobStatus status;
 
-    private BigDecimal salary;
+    private BigDecimal minSalary;
+
+    private BigDecimal maxSalary;
 
     private List<JobScheduleDto> jobSchedules;
 
-    private Integer workingHours;
+    private String requirements;
 
-    private String skills;
+    private String accommodation;
 
     private Long availableVacancies;
 
@@ -50,4 +52,9 @@ public class JobResponseDto {
     private Double latitude;
 
     private Double longitude;
+
+    private Boolean isUrgent;
+
+    private String requiredGender;
+
 }

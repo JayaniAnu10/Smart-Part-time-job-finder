@@ -2,7 +2,6 @@ import APIClient from "@/services/apiClient";
 import type { JobSeekerRegistrationData } from "@/store/useJobSeekerStore";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import type { FormState } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const apiClient = new APIClient<JobSeekerRegistrationData>(
@@ -24,7 +23,7 @@ const useAddJobSeeker = () => {
         bio: data.bio,
         skills: data.skills.join(","),
         profilePicture: data.profilePicture,
-        userId: "822c715a-4e94-4240-acab-c9590fb3cbfe",
+        userId: "d92a94b8-d04d-4ad4-aafe-0a3b72a1a246",
       };
 
       formData.append(
@@ -43,18 +42,6 @@ const useAddJobSeeker = () => {
     },
     onSuccess: () => {
       toast.success("Signup successful!");
-    },
-    onError: (error) => {
-      //Axios error handle
-      if (axios.isAxiosError(error)) {
-        //Get error from server
-        const msg =
-          error.response?.data.error ||
-          "Job Seeker signup failed. Please try again.";
-        toast.error(msg);
-      } else {
-        toast.error("Job Seeker signup failed. Please try again.");
-      }
     },
   });
 };

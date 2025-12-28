@@ -10,7 +10,7 @@ const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
   return (
-    <nav className="fixed flex px-4 lg:px-6 top-0 right-0 left-0 bg-background/50 backdrop-blur-lg min-h-18 z-50 w-full">
+    <nav className="fixed flex px-4 lg:px-6 top-0 right-0 left-0 bg-background/75 backdrop-blur-lg min-h-16 z-50 w-full">
       <div className="flex justify-between w-full items-center gap-2 flex-wrap lg:flex-nowrap">
         <Logo />
 
@@ -25,9 +25,10 @@ const NavBar = () => {
           </Button>
           <Button
             variant="ghost"
+            asChild
             className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer  xl:px-4"
           >
-            {t("postJobs")}
+            <Link to={"/postJob"}>{t("postJobs")}</Link>
           </Button>
           <Button
             variant="ghost"
@@ -66,7 +67,7 @@ const NavBar = () => {
             <Link to="/getstarted">
               <Button
                 variant="default"
-                className="bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md  transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25 whitespace-nowrap px-3 xl:px-4"
+                className="bg-yellow-400 shadow-none cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md  transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25  px-3 xl:px-4"
               >
                 {t("getStarted")}
               </Button>
@@ -104,19 +105,21 @@ const NavBar = () => {
           }`}
         >
           <ul className="text-left w-full p-4 space-y-1">
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("findJobs")}
             </li>
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              {t("postJobs")}
-            </li>
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+            <Link to={"/postJob"}>
+              <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+                {t("postJobs")}
+              </li>
+            </Link>
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("nearbyMap")}
             </li>
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("contact")}
             </li>
-            <li className="hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("about")}
             </li>
             <li className="border-t border-secondary/20 mt-3 pt-3 flex gap-2">
