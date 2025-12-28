@@ -1,9 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Job.controller;
 
-import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
+import com.smartparttime.parttimebackend.modules.Job.dto.*;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobCategoryRepo;
@@ -72,7 +69,7 @@ public class JobController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<Page<JobResponseDto>> searchJobs(
+    public ResponseEntity<Page<JobListingResponse>> searchJobs(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String jobType,
@@ -86,7 +83,7 @@ public class JobController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<JobResponseDto> jobs = jobService.filterJobsBySpecification(
+        Page<JobListingResponse> jobs = jobService.filterJobsBySpecification(
                 location,
                 jobType,
                 title,

@@ -9,10 +9,7 @@ import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingServic
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
+import com.smartparttime.parttimebackend.modules.Job.dto.*;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
@@ -140,7 +137,7 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String requirements, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary,String requiredGender, int page,int size) {
+    public Page<JobListingResponse> filterJobsBySpecification(String location, String jobType, String title, String requirements, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, String requiredGender, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Specification<Job> spec = Specification.allOf();
@@ -177,7 +174,7 @@ public class JobServiceImpl implements JobService {
         }
 
         Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
-        return jobsPage.map(jobMapper::toDto);
+        return jobsPage.map(jobMapper::toListing);
     }
 
 
