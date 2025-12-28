@@ -29,7 +29,6 @@ import {
 import { useState } from "react";
 
 const genders = ["Male", "Female", "Male & Female Both"];
-
 const typesOfJob = ["Online", "Physical/On-site"];
 
 export interface FilterState {
@@ -57,7 +56,7 @@ const FilterContent = ({
   const activeFiltersCount = [
     filters.category !== "all",
     filters.jobType !== "all",
-    filters.requiredGender !== "all",
+    filters.requiredGender !== "",
     filters.salaryRange[0] > 0 || filters.salaryRange[1] < 10000,
   ].filter(Boolean).length;
 
@@ -85,10 +84,12 @@ const FilterContent = ({
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger className="flex items-center justify-between w-full py-3 px-4 hover:bg-muted/50 rounded-lg transition-colors group">
           <div className="flex items-center gap-3">
-            <div className="p-1.5 bg-primary/10 rounded-md">
-              <Icon className="h-4 w-4 text-primary" />
+            <div className="p-1.5 bg-yellow-200/15 rounded-md">
+              <Icon className="h-5 w-5 text-yellow-400" />
             </div>
-            <span className="font-medium text-sm">{title}</span>
+            <span className="font-sans font-semibold text-[#0f1f3d] dark:text-white text-sm">
+              {title}
+            </span>
           </div>
           <ChevronDown
             className={cn(
@@ -119,10 +120,10 @@ const FilterContent = ({
           key={option}
           onClick={() => onChange(option)}
           className={cn(
-            "px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200",
+            "px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200",
             value === option
-              ? "bg-primary text-primary-foreground shadow-sm"
-              : "bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
+              ? "bg-yellow-400 text-[#0f1f3d] shadow-sm hover:bg-amber-300"
+              : "dark:border dark:bg-none bg-gray-200 dark:bg-gray-200/0 hover:bg-gray-500/40 text-muted-foreground hover:text-foreground"
           )}
         >
           {option}
@@ -144,7 +145,7 @@ const FilterContent = ({
               variant="ghost"
               size="sm"
               onClick={onReset}
-              className="h-7 text-xs text-muted-foreground hover:text-foreground"
+              className="h-7 text-xs text-muted-foreground hover:text-[#0f1f3d]"
             >
               <RotateCcw className="h-3 w-3 mr-1" />
               Reset All
@@ -169,12 +170,12 @@ const FilterContent = ({
                 />
               </Badge>
             )}
-            {filters.requiredGender !== "all" && (
+            {filters.requiredGender !== "" && (
               <Badge variant="secondary" className="gap-1">
                 {filters.requiredGender}
                 <X
                   className="h-3 w-3 cursor-pointer"
-                  onClick={() => updateFilter("requiredGender", "all")}
+                  onClick={() => updateFilter("requiredGender", "")}
                 />
               </Badge>
             )}
@@ -203,11 +204,11 @@ const FilterContent = ({
       {/* Location Filter */}
       <FilterSection title="Required Gender" icon={Users}>
         <Select
-          value={filters.requiredGender}
+          value={filters.requiredGender || undefined}
           onValueChange={(v) => updateFilter("requiredGender", v)}
         >
           <SelectTrigger className="w-full mt-2">
-            <SelectValue placeholder="Select location" />
+            <SelectValue placeholder="Select Required Gender" />
           </SelectTrigger>
           <SelectContent>
             {genders.map((gender) => (
@@ -256,7 +257,7 @@ const DesktopFilterSidebar = (props: JobFiltersProps) => {
   const activeFiltersCount = [
     props.filters.category !== "all",
     props.filters.jobType !== "all",
-    props.filters.requiredGender !== "all",
+    props.filters.requiredGender !== "",
     props.filters.salaryRange[0] > 0 || props.filters.salaryRange[1] < 10000,
   ].filter(Boolean).length;
 
@@ -264,11 +265,13 @@ const DesktopFilterSidebar = (props: JobFiltersProps) => {
     <Card className="p-4 sticky top-24">
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">Filter Jobs</h3>
+          <SlidersHorizontal className="h-6 w-6 text-yellow-400" />
+          <h2 className="font-medium text-xl text-[#0f1f3d] dark:text-white">
+            Filter Jobs
+          </h2>
         </div>
         {activeFiltersCount > 0 && (
-          <Badge className="bg-primary text-primary-foreground">
+          <Badge className="bg-yellow-400 text-[#0f1f3d]">
             {activeFiltersCount} active
           </Badge>
         )}

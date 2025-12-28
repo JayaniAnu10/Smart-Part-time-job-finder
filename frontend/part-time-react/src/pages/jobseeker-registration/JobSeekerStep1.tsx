@@ -85,17 +85,18 @@ export default function JobSeekerStep2() {
             </div>
           </div>
 
-          <div className=" flex-row flex gap-6 ">
-            <div className=" ">
+          <div className="  flex gap-6  ">
+            <div className="flex-1">
               <SelectField
                 label="Gender"
+                option="Select Gender"
                 options={[
                   { value: "male", label: "Male" },
                   { value: "female", label: "Female" },
                   { value: "other", label: "Other" },
                 ]}
                 value={data.gender}
-                onChange={(e) => setData({ gender: e.target.value })}
+                onChange={(value) => setData({ gender: value })}
               />
             </div>
 
