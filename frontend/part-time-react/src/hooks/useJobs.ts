@@ -24,9 +24,14 @@ interface Job {
   isUrgent: boolean;
 }
 
+interface JobListing {
+  jobs: PageResponse<Job>;
+  totalJobs: number;
+}
+
 const useJobs = (filters: any, params: string) => {
-  const apiClient = new APIClient<PageResponse<Job>>(`jobs/search?${params}`);
-  return useQuery<PageResponse<Job>, Error>({
+  const apiClient = new APIClient<JobListing>(`jobs/search?${params}`);
+  return useQuery<JobListing, Error>({
     queryKey: ["jobs", "search", filters],
     queryFn: apiClient.getAll,
     staleTime: 1000 * 60 * 2, //2 min cache

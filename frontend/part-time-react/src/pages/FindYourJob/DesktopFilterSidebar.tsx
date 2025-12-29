@@ -307,7 +307,7 @@ const DesktopFilterSidebar = (props: JobFiltersProps) => {
   ].filter(Boolean).length;
 
   return (
-    <Card className="p-4 sticky top-24">
+    <Card className="p-4  top-24 border-none">
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="h-6 w-6 text-yellow-400" />

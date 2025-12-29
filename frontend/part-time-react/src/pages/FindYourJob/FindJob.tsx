@@ -54,9 +54,7 @@ const FindJob = () => {
 
   const queryParams = new URLSearchParams();
 
-  if (titleSearch) queryParams.append("title", titleSearch);
-  if (titleSearch) queryParams.append("keywords", titleSearch);
-  if (titleSearch) queryParams.append("skills", titleSearch);
+  if (titleSearch) queryParams.append("query", titleSearch);
   if (locationSearch) queryParams.append("location", locationSearch);
   if (selectedDate) queryParams.append("date", selectedDate);
 
@@ -74,14 +72,14 @@ const FindJob = () => {
     queryParams.toString()
   );
 
-  const filteredJobs = data?.content ?? [];
+  const filteredJobs = data?.jobs.content ?? [];
   const today = new Date();
   const upcomingJobs = filteredJobs.filter(
     (job) => new Date(job.deadline) > today
   );
 
   // Sort jobs based on sortBy
-  const sortedJobs = [...filteredJobs].sort((a, b) => {
+  const sortedJobs = [...upcomingJobs].sort((a, b) => {
     switch (sortBy) {
       case "newest":
         return (
@@ -192,8 +190,9 @@ const FindJob = () => {
                 />
               </div>
               <div className="text-sm text-muted-foreground hidden sm:block">
-                Showing <span className="font-semibold text-foreground"></span>{" "}
-                of jobs
+                Showing {sortedJobs.length}
+                <span className="font-semibold text-foreground"></span> of{" "}
+                {data?.totalJobs} jobs
               </div>
             </div>
 
@@ -222,7 +221,7 @@ const FindJob = () => {
         <div className="container px-2 lg:px-8 pb-12 pt-12">
           <div className="lg:flex lg:gap-6">
             {/* Desktop Sidebar Filters */}
-            <div className="hidden lg:block w-72 shrink-0 border rounded-2xl ">
+            <div className="hidden lg:block w-72 shrink-0 rounded-2xl ">
               <DesktopFilterSidebar
                 filters={filters}
                 onFilterChange={setFilters}
@@ -284,12 +283,12 @@ const FindJob = () => {
                               )}
                               <Badge
                                 variant="secondary"
-                                className="text-xs bg-gray-400/30 dark:text-white"
+                                className="text-sm bg-green-700 dark:text-black text-white mb-2 hover:text-white hover:bg-green-700"
                               >
                                 {job.category}
                               </Badge>
                             </div>
-                            <h3 className="text-2xl font-semibold text-[#0f1f3d] dark:text-white group-hover:text-yellow-400 transition-colors line-clamp-2">
+                            <h3 className="text-3xl font-semibold text-[#0f1f3d] dark:text-yellow-100 group-hover:text-yellow-400 transition-colors line-clamp-2">
                               {job.title}
                             </h3>
                           </div>
@@ -350,7 +349,7 @@ const FindJob = () => {
                             })}
                           </div>
 
-                          <div className="flex gap-2">
+                          <div className="flex flex-wrap gap-2 mt-5">
                             {accommodations.map((item, index) => (
                               <Badge
                                 key={index}
@@ -360,7 +359,7 @@ const FindJob = () => {
                               </Badge>
                             ))}
                           </div>
-                          <div className="flex md:flex-row gap-15">
+                          <div className="flex md:flex-row gap-15 mt-3">
                             <div className="flex items-center gap-2">
                               <Calendar className="w-4 h-4 text-yellow-400 shrink-0" />
                               <span className="truncate">
