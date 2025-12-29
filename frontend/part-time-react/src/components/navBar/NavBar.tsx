@@ -21,7 +21,7 @@ const NavBar = () => {
             dark:hover:text-yellow-400
             cursor-pointer  xl:px-4"
           >
-            {t("findJobs")}
+            <Link to={"/find-your-job"}>{t("findJobs")}</Link>
           </Button>
           <Button
             variant="ghost"
@@ -31,10 +31,11 @@ const NavBar = () => {
             <Link to={"/postJob"}>{t("postJobs")}</Link>
           </Button>
           <Button
+            asChild
             variant="ghost"
             className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer whitespace-nowrap  xl:px-4"
           >
-            {t("nearbyMap")}
+            <Link to={"/nearBy"}>{t("nearbyMap")}</Link>
           </Button>
           <Button
             variant="ghost"
@@ -106,15 +107,15 @@ const NavBar = () => {
         >
           <ul className="text-left w-full p-4 space-y-1">
             <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              {t("findJobs")}
+              <Link to={"/find-your-job"}>{t("findJobs")}</Link>
             </li>
             <Link to={"/postJob"}>
               <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-                {t("postJobs")}
+                <Link to={"/postJob"}>{t("postJobs")}</Link>
               </li>
             </Link>
             <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              {t("nearbyMap")}
+              <Link to={"/nearBy"}>{t("nearbyMap")}</Link>
             </li>
             <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               {t("contact")}

@@ -19,7 +19,7 @@ interface Job {
   minSalary: number;
   jobSchedules: Schedules[];
   accommodation: string;
-  availabaleVacancies: number;
+  availableVacancies: number;
   employer: string;
   isUrgent: boolean;
 }

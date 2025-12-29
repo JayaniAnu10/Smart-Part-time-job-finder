@@ -9,11 +9,11 @@ const Logo = () => {
         <img
           src={logoLight}
           alt="Logo"
-          className="w-55 h-12 container  hover:scale-110 transition-transform duration-300 dark:hidden"
+          className="md:w-55 md:h-12 w-30 h-8 container  hover:scale-110 transition-transform duration-300 dark:hidden"
         />
         <img
           src={logodark}
-          className="hidden dark:block container hover:scale-110  w-55 h-12 transition-transform duration-300"
+          className="hidden dark:block container hover:scale-110  md:w-55 md:h-12 w-30 h-8 transition-transform duration-300"
         />
       </NavLink>
     </div>

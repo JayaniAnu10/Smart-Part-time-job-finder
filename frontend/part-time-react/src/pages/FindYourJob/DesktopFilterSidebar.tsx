@@ -13,6 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
 import useCategory from "@/hooks/useCategory";
 import { cn } from "@/lib/utils";
@@ -253,6 +260,44 @@ const FilterContent = ({
   );
 };
 
+// Mobile Filter Button with Sheet
+export const MobileFilterButton = (props: JobFiltersProps) => {
+  const activeFiltersCount = [
+    props.filters.category !== "all",
+    props.filters.jobType !== "all",
+    props.filters.requiredGender !== "",
+    props.filters.salaryRange[0] > 0 || props.filters.salaryRange[1] < 10000,
+  ].filter(Boolean).length;
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="sm" className="relative">
+          <SlidersHorizontal className="h-4 w-4 mr-2" />
+          Filters
+          {activeFiltersCount > 0 && (
+            <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-primary text-primary-foreground text-xs">
+              {activeFiltersCount}
+            </Badge>
+          )}
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-full sm:max-w-md overflow-y-auto">
+        <SheetHeader className="pb-4 border-b border-border">
+          <SheetTitle className="flex items-center gap-2">
+            <SlidersHorizontal className="h-5 w-5 text-primary" />
+            Filter Jobs
+          </SheetTitle>
+        </SheetHeader>
+        <div className="pt-4">
+          <FilterContent {...props} />
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+};
+
+// Desktop Filter Sidebar
 const DesktopFilterSidebar = (props: JobFiltersProps) => {
   const activeFiltersCount = [
     props.filters.category !== "all",

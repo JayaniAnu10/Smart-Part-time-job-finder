@@ -7,9 +7,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Clock, DollarSign, MapPin, Search, Zap } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  DollarSign,
+  MapPin,
+  Search,
+  Users,
+  Zap,
+} from "lucide-react";
 import { useState } from "react";
-import DesktopFilterSidebar, { type FilterState } from "./DesktopFilterSidebar";
+import DesktopFilterSidebar, {
+  MobileFilterButton,
+  type FilterState,
+} from "./DesktopFilterSidebar";
 import useJobs from "@/hooks/useJobs";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
@@ -64,10 +75,56 @@ const FindJob = () => {
   );
 
   const filteredJobs = data?.content ?? [];
+  const today = new Date();
+  const upcomingJobs = filteredJobs.filter(
+    (job) => new Date(job.deadline) > today
+  );
+
+  // Sort jobs based on sortBy
+  const sortedJobs = [...filteredJobs].sort((a, b) => {
+    switch (sortBy) {
+      case "newest":
+        return (
+          new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime()
+        );
+      case "oldest":
+        return (
+          new Date(a.postedDate).getTime() - new Date(b.postedDate).getTime()
+        );
+      case "salary-high":
+        return b.minSalary - a.minSalary;
+      case "salary-low":
+        return a.minSalary - b.minSalary;
+      default:
+        return 0; // no sorting
+    }
+  });
+
+  const getDaysLeft = (deadline: string) => {
+    const now = new Date();
+    const end = new Date(deadline);
+    const diffTime = end.getTime() - now.getTime();
+    return diffTime > 0 ? Math.ceil(diffTime / (1000 * 60 * 60 * 24)) : 0;
+  };
+
+  const getTimeAgo = (postedDate: string) => {
+    const now = new Date();
+    const posted = new Date(postedDate);
+    const diffHours = Math.floor(
+      (now.getTime() - posted.getTime()) / (1000 * 60 * 60)
+    );
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} days ago`;
+  };
+
+  const shortenLocation = (location: string) => {
+    return location.split(",")[0];
+  };
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-13 mt-15">
+      <div className="md:mx-13 mx-7 mt-15">
         {/* Header */}
         <div>
           <div className="container py-8 md:py-12">
@@ -103,16 +160,16 @@ const FindJob = () => {
               />
             </div>
             <div className="flex-1 relative">
-              <Input
+              <input
                 type="date"
                 placeholder="Search date"
-                className="pl-10 dark-calendar"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full rounded-md border border-input px-3 py-2 text-base focus:outline-none focus:ring-1 focus:ring-yellow-300 dark-calendar"
               />
             </div>
 
-            <button className="bg-yellow-400 hover:bg-yellow-300 md:w-12 text-[#0f1f3d] w-full rounded-lg items-center justify-center flex cursor-pointer">
+            <button className="bg-yellow-400 hover:bg-yellow-300 md:w-12 text-[#0f1f3d] w-full rounded-lg items-center justify-center flex cursor-pointer p-2">
               <Search className="h-5 w-5 md:mr-0" />
               <span className="md:hidden ml-2">Search</span>
             </button>
@@ -122,8 +179,18 @@ const FindJob = () => {
       {/* Filters & View Controls */}
       <div className="border-y border-border bg-card mt-10">
         <div className="container mx-auto px-4 lg:px-8 py-4">
-          <div className="flex justify-between items-center gap-4">
+          <div className="flex justify-between items-center md:gap-4">
             <div className="flex items-center gap-3">
+              {/* Mobile Filter Button */}
+              <div className="lg:hidden">
+                <MobileFilterButton
+                  filters={filters}
+                  onFilterChange={setFilters}
+                  onReset={resetFilters}
+                  totalJobs={filteredJobs.length}
+                  filteredCount={filteredJobs.length}
+                />
+              </div>
               <div className="text-sm text-muted-foreground hidden sm:block">
                 Showing <span className="font-semibold text-foreground"></span>{" "}
                 of jobs
@@ -133,8 +200,8 @@ const FindJob = () => {
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Sort Dropdown */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-28 sm:w-40">
-                  <SelectValue placeholder="Sort" />
+                <SelectTrigger className="w-32 sm:w-40">
+                  <SelectValue placeholder="Newest First" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="newest">Newest First</SelectItem>
@@ -183,7 +250,7 @@ const FindJob = () => {
                     </p>
                     <Button
                       variant="outline"
-                      className="hover:bg-gray-400 cursor-pointer"
+                      className="hover:bg-gray-400 dark:hover:text-black cursor-pointer"
                       onClick={resetFilters}
                     >
                       Reset Filters
@@ -194,69 +261,137 @@ const FindJob = () => {
                 <div
                   className={"grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6"}
                 >
-                  {filteredJobs.map((job) => (
-                    <Card
-                      key={job.id}
-                      className="p-4 md:p-6 hover:shadow-xl hover:shadow-yellow-400/5 border transition-all duration-300 group h-full flex flex-col"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 flex-wrap mb-1">
-                            {job.isUrgent && (
-                              <Badge variant="destructive" className="text-xs">
-                                <Zap className="w-3 h-3 mr-1" />
-                                Urgent
+                  {sortedJobs.map((job) => {
+                    const accommodations = job.accommodation
+                      ? job.accommodation.split(",").map((a) => a.trim())
+                      : [];
+                    return (
+                      <Card
+                        key={job.id}
+                        className="p-4 md:p-6 hover:shadow-xl hover:shadow-yellow-400/5 border transition-all duration-300 group h-full flex flex-col"
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 flex-wrap mb-1">
+                              {job.isUrgent && (
+                                <Badge
+                                  variant="destructive"
+                                  className="text-xs"
+                                >
+                                  <Zap className="w-3 h-3 mr-1" />
+                                  Urgent
+                                </Badge>
+                              )}
+                              <Badge
+                                variant="secondary"
+                                className="text-xs bg-gray-400/30 dark:text-white"
+                              >
+                                {job.category}
                               </Badge>
-                            )}
-                            <Badge
-                              variant="secondary"
-                              className="text-xs bg-gray-400/30 dark:text-white"
-                            >
-                              {job.category}
-                            </Badge>
+                            </div>
+                            <h3 className="text-2xl font-semibold text-[#0f1f3d] dark:text-white group-hover:text-yellow-400 transition-colors line-clamp-2">
+                              {job.title}
+                            </h3>
                           </div>
-                          <h3 className="text-2xl font-semibold text-[#0f1f3d] dark:text-white group-hover:text-yellow-400 transition-colors line-clamp-2">
-                            {job.title}
-                          </h3>
                         </div>
-                      </div>
 
-                      <p className="text-muted-foreground mb-4 text-xl">
-                        {job.employer}
-                      </p>
+                        <p className="text-muted-foreground mb-4 text-xl">
+                          {job.employer}
+                        </p>
 
-                      <div className="space-y-2 text-md text-muted-foreground flex-1">
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-yellow-400 shrink-0" />
-                          <span className="truncate">{job.location}</span>
+                        <div className="space-y-2 text-md text-muted-foreground flex-1">
+                          <div className="flex flex-col  gap-2">
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-yellow-400 shrink-0" />
+                              <span className="truncate">
+                                {shortenLocation(job.location)}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <DollarSign className="w-4 h-4 text-yellow-400 shrink-0" />
+                              <span className="truncate">
+                                Rs {job.minSalary}/day
+                              </span>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex flex-row gap-2">
+                              <Clock className="w-4 h-4 text-yellow-400 shrink-0 mt-1" />
+                              <span className="truncate">Job Schedules</span>
+                            </div>
+                            {job.jobSchedules.map((s, i) => {
+                              const start = new Date(s.startDatetime);
+                              const end = new Date(s.endDatetime);
+
+                              return (
+                                <div
+                                  key={i}
+                                  className="flex justify-between text-sm ml-7 dark:text-yellow-100 text-gray-700"
+                                >
+                                  <span>
+                                    {start.toLocaleDateString(undefined, {
+                                      dateStyle: "medium",
+                                    })}{" "}
+                                    —{" "}
+                                    {start.toLocaleTimeString(undefined, {
+                                      hour: "numeric",
+                                      minute: "2-digit",
+                                      hour12: true,
+                                    })}{" "}
+                                    →{" "}
+                                    {end.toLocaleTimeString(undefined, {
+                                      hour: "numeric",
+                                      minute: "2-digit",
+                                      hour12: true,
+                                    })}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          <div className="flex gap-2">
+                            {accommodations.map((item, index) => (
+                              <Badge
+                                key={index}
+                                className="text-xs bg-blue-200/60 dark:bg-yellow-100/60 text-blue-900 dark:text-[#0f1f3d]"
+                              >
+                                {item}
+                              </Badge>
+                            ))}
+                          </div>
+                          <div className="flex md:flex-row gap-15">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="w-4 h-4 text-yellow-400 shrink-0" />
+                              <span className="truncate">
+                                {getDaysLeft(job.deadline)} days left
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Users className="w-4 h-4 text-yellow-400 shrink-0" />
+                              <span className="truncate">
+                                {job.availableVacancies} vacancies
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="w-4 h-4 text-yellow-400 shrink-0" />
-                          <span className="truncate">
-                            Rs {job.minSalary}/day
+
+                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+                          <span className="text-xs text-muted-foreground">
+                            {getTimeAgo(job.postedDate)}
                           </span>
+                          <Link to={`/job-details/${job.id}`}>
+                            <Button
+                              size="sm"
+                              className="text-[#0f1f3d] bg-yellow-400 text-sm hover:bg-yellow-300 cursor-pointer"
+                            >
+                              View Details
+                            </Button>
+                          </Link>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-yellow-400 shrink-0" />
-                          <span className="truncate">{job.deadline}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-                        <span className="text-xs text-muted-foreground">
-                          {job.postedDate}
-                        </span>
-                        <Link to={`/job-details/${job.id}`}>
-                          <Button
-                            size="sm"
-                            className="text-[#0f1f3d] bg-yellow-400 text-sm hover:bg-yellow-300 cursor-pointer"
-                          >
-                            View Details
-                          </Button>
-                        </Link>
-                      </div>
-                    </Card>
-                  ))}
+                      </Card>
+                    );
+                  })}
                 </div>
               )}
             </div>
