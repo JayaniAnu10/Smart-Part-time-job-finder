@@ -8,6 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  ArrowLeft,
+  ArrowRight,
   Calendar,
   Clock,
   DollarSign,
@@ -32,6 +34,7 @@ const FindJob = () => {
   const [locationSearch, setLocationSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [page, setPage] = useState(1);
 
   const [filters, setFilters] = useState<FilterState>({
     category: "all",
@@ -67,12 +70,14 @@ const FindJob = () => {
   queryParams.append("minSalary", String(filters.salaryRange[0]));
   queryParams.append("maxSalary", String(filters.salaryRange[1]));
 
-  const { data, isLoading, error } = useJobs(
+  const { data, isLoading } = useJobs(
     { titleSearch, locationSearch, selectedDate, ...filters },
-    queryParams.toString()
+    queryParams.toString(),
+    { page }
   );
 
   const filteredJobs = data?.jobs.content ?? [];
+  const totalPages = data?.jobs.totalPages ?? 1;
   const today = new Date();
   const upcomingJobs = filteredJobs.filter(
     (job) => new Date(job.deadline) > today
@@ -394,6 +399,26 @@ const FindJob = () => {
                 </div>
               )}
             </div>
+          </div>
+          <div className="flex flex-wrap gap-3 justify-center mt-6 md:ml-70">
+            <Button
+              className="dark:bg-yellow-400"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+              size="lg"
+            >
+              <ArrowLeft />
+              Previous
+            </Button>
+            <Button
+              className="dark:bg-yellow-400"
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+              size="lg"
+            >
+              Next
+              <ArrowRight />
+            </Button>
           </div>
         </div>
       </Card>

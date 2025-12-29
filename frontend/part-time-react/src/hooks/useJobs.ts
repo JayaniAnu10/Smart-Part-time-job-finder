@@ -1,6 +1,7 @@
 import APIClient from "@/services/apiClient";
 import type { PageResponse } from "@/types/pageResponse";
-import { useQuery } from "@tanstack/react-query";
+import type { Query } from "@/types/Query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 interface Schedules {
   startDatetime: Date;
@@ -29,11 +30,16 @@ interface JobListing {
   totalJobs: number;
 }
 
-const useJobs = (filters: any, params: string) => {
+const useJobs = (filters: any, params: string, query: Query) => {
   const apiClient = new APIClient<JobListing>(`jobs/search?${params}`);
   return useQuery<JobListing, Error>({
     queryKey: ["jobs", "search", filters],
-    queryFn: apiClient.getAll,
+    queryFn: () =>
+      apiClient.getAll({
+        page: query.page - 1,
+        size: query.pageSize,
+      }),
+    placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 2, //2 min cache
   });
 };
