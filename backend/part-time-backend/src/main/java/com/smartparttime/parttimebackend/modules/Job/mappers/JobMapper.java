@@ -1,11 +1,9 @@
 package com.smartparttime.parttimebackend.modules.Job.mappers;
 
-import com.smartparttime.parttimebackend.modules.Job.dto.JobListingResponse;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
+import com.smartparttime.parttimebackend.modules.Job.dto.*;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import org.mapstruct.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -26,6 +24,6 @@ public interface JobMapper {
 
     @Mapping(source = "employer.companyName" ,target = "employer")
     @Mapping(source = "category.category",target = "category")
-    JobListingResponse toListing(Job job);
+    JobListingDetailsDto toListing(Job job);
 
 }

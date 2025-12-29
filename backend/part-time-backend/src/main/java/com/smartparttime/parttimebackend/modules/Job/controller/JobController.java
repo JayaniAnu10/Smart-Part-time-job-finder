@@ -69,13 +69,11 @@ public class JobController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<Page<JobListingResponse>> searchJobs(
+    public ResponseEntity<JobListingResponse> searchJobs(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String jobType,
-            @RequestParam(required = false) String keywords,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String skills,
+            @RequestParam(required = false) String query,
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) BigDecimal minSalary,
             @RequestParam(required = false) BigDecimal maxSalary,
@@ -83,13 +81,11 @@ public class JobController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<JobListingResponse> jobs = jobService.filterJobsBySpecification(
+        JobListingResponse jobs = jobService.filterJobsBySpecification(
                 location,
                 jobType,
-                title,
-                skills,
+                query,
                 category,
-                keywords,
                 date,
                 minSalary,
                 maxSalary,

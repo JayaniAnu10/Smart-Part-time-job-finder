@@ -22,7 +22,7 @@ public interface JobService {
 
     List<JobResponseDto> getJobsByEmployer(UUID employerId,int page,int size);
 
-    Page<JobListingResponse> filterJobsBySpecification(String location, String jobType, String title, String skills , String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, String requiredGender, int page, int size);
+    JobListingResponse filterJobsBySpecification(String location, String jobType, String query,String category, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, String requiredGender, int page, int size);
 
     JobResponseDto updateJob(UUID jobId, JobRequestDto dto);
 
