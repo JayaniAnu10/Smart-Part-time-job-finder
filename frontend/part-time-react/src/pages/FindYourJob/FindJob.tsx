@@ -78,13 +78,9 @@ const FindJob = () => {
 
   const filteredJobs = data?.jobs.content ?? [];
   const totalPages = data?.jobs.totalPages ?? 1;
-  const today = new Date();
-  const upcomingJobs = filteredJobs.filter(
-    (job) => new Date(job.deadline) > today
-  );
 
   // Sort jobs based on sortBy
-  const sortedJobs = [...upcomingJobs].sort((a, b) => {
+  const sortedJobs = [...filteredJobs].sort((a, b) => {
     switch (sortBy) {
       case "newest":
         return (
@@ -223,7 +219,7 @@ const FindJob = () => {
         </div>
       </div>
       <Card className="bg-background">
-        <div className="container px-2 lg:px-8 pb-12 pt-12">
+        <div className="container px-2 lg:px-8 pb-12 pt-12 md:mx-4">
           <div className="lg:flex lg:gap-6">
             {/* Desktop Sidebar Filters */}
             <div className="hidden lg:block w-72 shrink-0 rounded-2xl ">
@@ -231,8 +227,8 @@ const FindJob = () => {
                 filters={filters}
                 onFilterChange={setFilters}
                 onReset={resetFilters}
-                totalJobs={filteredJobs.length}
-                filteredCount={filteredJobs.length}
+                totalJobs={data?.totalJobs || 0}
+                filteredCount={sortedJobs.length}
               />
             </div>
             <div className=" justify-center w-full">
@@ -358,7 +354,7 @@ const FindJob = () => {
                             {accommodations.map((item, index) => (
                               <Badge
                                 key={index}
-                                className="text-xs bg-blue-200/60 dark:bg-yellow-100/60 text-blue-900 dark:text-[#0f1f3d]"
+                                className="text-xs bg-blue-200/60 dark:bg-blue-300 text-blue-900 dark:text-[#0f1f3d]"
                               >
                                 {item}
                               </Badge>
@@ -368,13 +364,19 @@ const FindJob = () => {
                             <div className="flex items-center gap-2">
                               <Calendar className="w-4 h-4 text-yellow-400 shrink-0" />
                               <span className="truncate">
-                                {getDaysLeft(job.deadline)} days left
+                                {getDaysLeft(job.deadline)}{" "}
+                                {getDaysLeft(job.deadline) === 1
+                                  ? "day left"
+                                  : "days left"}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Users className="w-4 h-4 text-yellow-400 shrink-0" />
                               <span className="truncate">
-                                {job.availableVacancies} vacancies
+                                {job.availableVacancies}{" "}
+                                {job.availableVacancies === 1
+                                  ? "vacancy"
+                                  : "vacancies"}
                               </span>
                             </div>
                           </div>
@@ -402,7 +404,7 @@ const FindJob = () => {
           </div>
           <div className="flex flex-wrap gap-3 justify-center mt-6 md:ml-70">
             <Button
-              className="dark:bg-yellow-400"
+              className="dark:bg-yellow-400 dark:hover:bg-yellow-300"
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
               size="lg"
@@ -411,7 +413,7 @@ const FindJob = () => {
               Previous
             </Button>
             <Button
-              className="dark:bg-yellow-400"
+              className="dark:bg-yellow-400 dark:hover:bg-yellow-300"
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
               size="lg"

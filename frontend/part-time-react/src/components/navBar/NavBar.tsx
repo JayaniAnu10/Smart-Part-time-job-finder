@@ -109,11 +109,9 @@ const NavBar = () => {
             <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               <Link to={"/find-your-job"}>{t("findJobs")}</Link>
             </li>
-            <Link to={"/postJob"}>
-              <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-                <Link to={"/postJob"}>{t("postJobs")}</Link>
-              </li>
-            </Link>
+            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
+              <Link to={"/postJob"}>{t("postJobs")}</Link>
+            </li>
             <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
               <Link to={"/nearBy"}>{t("nearbyMap")}</Link>
             </li>

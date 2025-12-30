@@ -33,7 +33,7 @@ interface JobListing {
 const useJobs = (filters: any, params: string, query: Query) => {
   const apiClient = new APIClient<JobListing>(`jobs/search?${params}`);
   return useQuery<JobListing, Error>({
-    queryKey: ["jobs", "search", filters],
+    queryKey: ["jobs", "search", { ...filters, query }],
     queryFn: () =>
       apiClient.getAll({
         page: query.page - 1,

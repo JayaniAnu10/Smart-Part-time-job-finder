@@ -16,6 +16,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -36,7 +37,10 @@ import {
 import { useState } from "react";
 
 const genders = ["Male", "Female", "Male & Female Both"];
-const typesOfJob = ["Online", "Physical/On-site"];
+const typesOfJob = [
+  { label: "Online", value: "online" },
+  { label: "Physical / On-site", value: "physical" },
+];
 
 export interface FilterState {
   category: string;
@@ -112,30 +116,37 @@ const FilterContent = ({
     );
   };
 
+  type ChipOption = string | { label: string; value: string };
+
   const FilterChips = ({
     options,
     value,
     onChange,
   }: {
-    options: string[];
+    options: ChipOption[];
     value: string;
     onChange: (value: string) => void;
   }) => (
     <div className="flex flex-wrap gap-2 pt-2">
-      {options.map((option) => (
-        <button
-          key={option}
-          onClick={() => onChange(option)}
-          className={cn(
-            "px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200",
-            value === option
-              ? "bg-yellow-400 text-[#0f1f3d] shadow-sm hover:bg-amber-300"
-              : "dark:border dark:bg-none bg-gray-200 dark:bg-gray-200/0 hover:bg-gray-500/40 text-muted-foreground hover:text-foreground"
-          )}
-        >
-          {option}
-        </button>
-      ))}
+      {options.map((option) => {
+        const label = typeof option === "string" ? option : option.label;
+        const val = typeof option === "string" ? option : option.value;
+
+        return (
+          <button
+            key={val}
+            onClick={() => onChange(val)}
+            className={cn(
+              "px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-200",
+              value === val
+                ? "bg-yellow-400 text-[#0f1f3d] shadow-sm hover:bg-amber-300"
+                : "dark:border dark:bg-none bg-gray-200 dark:bg-gray-200/0 hover:bg-gray-500/40 text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {label}
+          </button>
+        );
+      })}
     </div>
   );
 
@@ -237,7 +248,7 @@ const FilterContent = ({
             }
             min={0}
             max={10000}
-            step={500}
+            step={100}
             className="mb-4"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
@@ -272,8 +283,8 @@ export const MobileFilterButton = (props: JobFiltersProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="relative">
-          <SlidersHorizontal className="h-4 w-4 mr-2" />
+        <Button variant="outline" className="relative">
+          <SlidersHorizontal className="h-4 w-4 mr-2 " />
           Filters
           {activeFiltersCount > 0 && (
             <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-primary text-primary-foreground text-xs">
@@ -285,9 +296,10 @@ export const MobileFilterButton = (props: JobFiltersProps) => {
       <SheetContent side="left" className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader className="pb-4 border-b border-border">
           <SheetTitle className="flex items-center gap-2">
-            <SlidersHorizontal className="h-5 w-5 text-primary" />
+            <SlidersHorizontal className="h-5 w-5 text-primary " />
             Filter Jobs
           </SheetTitle>
+          <SheetDescription className="text-sm text-muted-foreground"></SheetDescription>
         </SheetHeader>
         <div className="pt-4">
           <FilterContent {...props} />
