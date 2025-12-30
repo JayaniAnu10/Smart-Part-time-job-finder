@@ -3,6 +3,7 @@ import type { JobStats } from "@/hooks/useEmpStats";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Eye, Trash2, Users } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   jobs?: JobStats[];
@@ -21,6 +22,7 @@ export const getDaysAgo = (date: string) => {
 };
 
 const EmpJobPost = ({ jobs }: Props) => {
+  const navigate = useNavigate();
   return (
     <div>
       <div className="border shadow-md rounded-xl p-7  ">
@@ -56,6 +58,7 @@ const EmpJobPost = ({ jobs }: Props) => {
                     size="icon"
                     variant="ghost"
                     className="cursor-pointer"
+                    onClick={() => navigate(`/${job.id}/applicants`)}
                   >
                     <Eye className="w-4 h-4 text-foreground" />
                   </Button>

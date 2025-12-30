@@ -17,10 +17,11 @@ import {
   X,
 } from "lucide-react";
 import RecentJobs from "./RecentJobs";
+import { useParams } from "react-router-dom";
 
 const SeekerProfile = () => {
-  const id = "7e131240-c539-4379-9f05-1ae34f4b35af";
-  const { data, isLoading, isError } = useSeekerDetails(id);
+  const { id } = useParams<{ id: string }>();
+  const { data, isLoading, isError } = useSeekerDetails(id!);
 
   if (isLoading) <Spinner />;
   if (isError) <p>Error loading the profile</p>;

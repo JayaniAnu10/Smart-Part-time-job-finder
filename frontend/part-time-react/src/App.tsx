@@ -39,9 +39,10 @@ const App: React.FC = () => {
       <Route path="/getstarted" element={<GetStarted />} />
       <Route path="/auth" element={<Auth />} />
 
+      {/* Employer Dashboard Routes */}
       <Route path="/empDashboard" element={<EmployerDashboard />} />
-      <Route path="/applicants" element={<JobApplicants />} />
-      <Route path="/seekerProfile" element={<SeekerProfile />} />
+      <Route path="/:jobId/applicants" element={<JobApplicants />} />
+      <Route path="/seekerProfile/:id" element={<SeekerProfile />} />
 
       {/* Job Seeker Routes */}
       <Route path="/jobseeker/register/step1" element={<JobSeekerStep1 />} />

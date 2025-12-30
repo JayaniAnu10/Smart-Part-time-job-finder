@@ -9,7 +9,7 @@ import { Badge } from "../../components/ui/badge";
 import { CheckCircle, MapPin, X } from "lucide-react";
 import { getDaysAgo } from "./EmpJobPost";
 import { Button } from "../../components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { StarRating } from "../../components/common/StarRating";
 import { lowerCase } from "@/pages/EmployerDashboard/JobApplicants";
 
@@ -18,6 +18,7 @@ interface Props {
 }
 
 const ApplicantCard = ({ applicants }: Props) => {
+  const navigate = useNavigate();
   return (
     <div>
       {applicants.length === 0 ? (
@@ -88,14 +89,15 @@ const ApplicantCard = ({ applicants }: Props) => {
                 </div>
 
                 <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto flex-wrap ">
-                  <Link to="/applicant-details" className="w-full">
-                    <Button
-                      variant="outline"
-                      className="w-full md:w-auto cursor-pointer md:p-5"
-                    >
-                      View Profile
-                    </Button>
-                  </Link>
+                  <Button
+                    onClick={() =>
+                      navigate(`/seekerProfile/${applicant.jobSeekerId}`)
+                    }
+                    variant="outline"
+                    className="w-full md:w-auto cursor-pointer md:p-5"
+                  >
+                    View Profile
+                  </Button>
 
                   {lowerCase(applicant.status) === "pending" && (
                     <>

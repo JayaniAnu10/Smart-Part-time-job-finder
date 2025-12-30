@@ -13,15 +13,16 @@ import { Spinner } from "@/components/ui/spinner";
 import useApplicants from "@/hooks/useApplicants";
 import { ArrowLeft, ArrowRight, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 export const lowerCase = (s: string) => s.toLowerCase();
 
 const JobApplicants = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
-  const jobId = "0f8cde51-063a-40b1-89e0-d73942e3ea6e";
+  const { jobId } = useParams<{ jobId: string }>();
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useApplicants(jobId, { page });
+  const { data, isLoading, isError } = useApplicants(jobId!, { page });
   const applicants = data?.applicants.content ?? [];
   const totalPages = data?.applicants.totalPages ?? 1;
 
