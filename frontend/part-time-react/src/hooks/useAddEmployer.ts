@@ -1,7 +1,6 @@
 import APIClient from "@/services/apiClient";
 import type { EmployerRegistrationData } from "@/store/useEmployerStore";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import toast from "react-hot-toast";
 
 const apiClient = new APIClient<EmployerRegistrationData>("/employer/register");
@@ -20,7 +19,7 @@ const useAddEmployer = () => {
         industry: data.industry,
         website: data.website,
         description: data.description,
-        userId: "c64b05a2-295a-455a-9fe6-ac5a5db4a889",
+        userId: "e05752c6-9f09-4c57-85e6-83494098f7f9",
       };
 
       formData.append(

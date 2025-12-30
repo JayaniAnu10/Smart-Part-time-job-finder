@@ -6,10 +6,7 @@ import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingResponse;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingStats;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateRequest;
+import com.smartparttime.parttimebackend.modules.Rating.RateDtos.*;
 import com.smartparttime.parttimebackend.modules.Rating.RateMapper;
 import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
 import com.smartparttime.parttimebackend.modules.Rating.service.RateService;
@@ -229,12 +226,16 @@ public class RateServiceImpl implements RateService {
     }
 
     @Override
-    public BigDecimal getAverageRateOfUser(UUID id) {
+    public UserAverageRateResponse getAverageRateOfUser(UUID id) {
         var user =userRepository.findById(id).orElse(null);
         if(user==null){
             throw new NotFoundException("User not found");
         }
+        var reviews= rateRepository.countByRateReceiver_Id(id);
+        UserAverageRateResponse res= new UserAverageRateResponse();
+        res.setReviews(reviews);
+        res.setAverageRate(user.getAverageRate());
 
-        return user.getAverageRate();
+        return res;
     }
 }

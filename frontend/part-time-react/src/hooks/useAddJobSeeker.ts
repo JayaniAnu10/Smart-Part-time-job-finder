@@ -1,7 +1,6 @@
 import APIClient from "@/services/apiClient";
 import type { JobSeekerRegistrationData } from "@/store/useJobSeekerStore";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import toast from "react-hot-toast";
 
 const apiClient = new APIClient<JobSeekerRegistrationData>(
@@ -23,7 +22,7 @@ const useAddJobSeeker = () => {
         bio: data.bio,
         skills: data.skills.join(","),
         profilePicture: data.profilePicture,
-        userId: "d92a94b8-d04d-4ad4-aafe-0a3b72a1a246",
+        userId: "e05752c6-9f09-4c57-85e6-83494098f7f9",
       };
 
       formData.append(

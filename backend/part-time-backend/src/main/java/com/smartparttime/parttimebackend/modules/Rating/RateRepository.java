@@ -27,4 +27,6 @@ public interface RateRepository extends CrudRepository<Rate, UUID> {
         ) from Rate r
           where r.rateReceiver.id=:userId""")
     RatingStats getRatingStatsByUserId(@Param("userId") UUID userId);
+
+    Integer countByRateReceiver_Id(UUID rateReceiverId);
 }

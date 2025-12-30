@@ -43,15 +43,16 @@ export const StarRating = ({
             key={index}
             className={cn(
               "relative",
-              interactive && "cursor-pointer hover:scale-110 transition-transform"
+              interactive &&
+                "cursor-pointer hover:scale-110 transition-transform"
             )}
             onClick={() => handleClick(index)}
           >
             <Star
               className={cn(
                 sizeClasses[size],
-                filled || partial
-                  ? "fill-primary text-primary"
+                filled
+                  ? "fill-yellow-400 text-yellow-400"
                   : "fill-none text-muted-foreground"
               )}
             />
@@ -60,7 +61,12 @@ export const StarRating = ({
                 className="absolute top-0 left-0 overflow-hidden"
                 style={{ width: `${(rating % 1) * 100}%` }}
               >
-                <Star className={cn(sizeClasses[size], "fill-primary text-primary")} />
+                <Star
+                  className={cn(
+                    sizeClasses[size],
+                    "fill-yellow-400 text-yellow-400"
+                  )}
+                />
               </div>
             )}
           </div>

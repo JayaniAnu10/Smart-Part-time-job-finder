@@ -3,6 +3,7 @@ package com.smartparttime.parttimebackend.modules.Rating.service;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingResponse;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateRequest;
+import com.smartparttime.parttimebackend.modules.Rating.RateDtos.UserAverageRateResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
@@ -24,6 +25,6 @@ public interface RateService {
 
     ResponseEntity<Void> deleteRateById(UUID userId, UUID id);
 
-    BigDecimal getAverageRateOfUser(UUID id);
+    UserAverageRateResponse getAverageRateOfUser(UUID id);
 
 }

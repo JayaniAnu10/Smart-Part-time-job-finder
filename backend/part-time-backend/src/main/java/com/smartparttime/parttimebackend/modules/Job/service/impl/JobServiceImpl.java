@@ -9,10 +9,7 @@ import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingServic
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
+import com.smartparttime.parttimebackend.modules.Job.dto.*;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
@@ -140,28 +137,22 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String requirements, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary,String requiredGender, int page,int size) {
+    public JobListingResponse filterJobsBySpecification(String location, String jobType, String query,  String category, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, String requiredGender, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Specification<Job> spec = Specification.allOf();
 
-        if (location != null) {
+        if (location != null && !location.isBlank()) {
             spec = spec.and(JobSpec.hasLocation(location));
         }
-        if (jobType != null) {
+        if (jobType != null && !jobType.isBlank()) {
             spec = spec.and(JobSpec.hasJobType(jobType));
         }
-        if (title != null) {
-            spec = spec.and(JobSpec.hasTitle(title));
+        if (query != null) {
+            spec = spec.and(JobSpec.hasTitleRequirementsDescription(query));
         }
-        if (requirements != null) {
-            spec = spec.and(JobSpec.hasRequirements(requirements));
-        }
-        if (category != null) {
+        if (category != null && !category.equalsIgnoreCase("all") && !category.isBlank()) {
             spec = spec.and(JobSpec.hasCategory(category));
-        }
-        if (description != null) {
-            spec = spec.and(JobSpec.hasDescription(description));
         }
         if (date != null) {
             spec = spec.and(JobSpec.hasDate(date));
@@ -172,12 +163,21 @@ public class JobServiceImpl implements JobService {
         if (maxSalary != null) {
             spec =spec.and(JobSpec.hasMaxSalaryLessThanOrEqualTo(maxSalary));
         }
-        if (requiredGender != null) {
+        if (requiredGender != null && !requiredGender.isBlank()) {
             spec =spec.and(JobSpec.hasRequiredGender(requiredGender));
         }
 
+        spec = spec.and(JobSpec.notExpired());
+
         Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
-        return jobsPage.map(jobMapper::toDto);
+        Page<JobListingDetailsDto> jobDtosPage = jobsPage.map(jobMapper::toListing);
+        long totalJobs = jobRepo.count(JobSpec.notExpired());
+
+        JobListingResponse res=new JobListingResponse();
+        res.setJobs(jobDtosPage);
+        res.setTotalJobs(totalJobs);
+        return res;
+
     }
 
 
