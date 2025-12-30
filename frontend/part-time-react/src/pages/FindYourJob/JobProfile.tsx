@@ -18,11 +18,14 @@ import { Link } from "react-router-dom";
 import useJobDetails from "@/hooks/useJobDetails";
 import { getDaysLeft, getTimeAgo } from "@/utils/date";
 import { Spinner } from "@/components/ui/spinner";
+import useUserRate from "@/hooks/useUserRate";
+import { StarRating } from "@/components/common/StarRating";
 
 const JobProfile = () => {
   const id = "5160b068-4477-4aaa-835c-670ef69ba27e";
 
   const { data, isLoading, isError } = useJobDetails(id);
+  const { data: rate } = useUserRate(data?.employerId);
   const accommodations = data?.accommodation
     ? data.accommodation.split(",").map((a) => a.trim())
     : [];
@@ -40,9 +43,11 @@ const JobProfile = () => {
   }
 
   if (isError) {
-    <div className="flex mt-30">
-      <p>Something went wrong...</p>
-    </div>;
+    return (
+      <div className="flex mt-30">
+        <p>Something went wrong...</p>
+      </div>
+    );
   }
 
   return (
@@ -60,7 +65,7 @@ const JobProfile = () => {
             </Link>
           </div>
 
-          <Card className="p-4 md:p-10">
+          <Card className="p-4 md:p-10 border">
             <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
               <div className="flex-1">
                 <div className="flex gap-5">
@@ -215,7 +220,7 @@ const JobProfile = () => {
                     "_blank"
                   )
                 }
-                className="flex-1 flex hover:bg-[#0f1f3d] dark:hover:text-white"
+                className="flex-1 flex hover:bg-[#0f1f3d] hover:text-white"
               >
                 <Map className="w-5 h-5 text-yellow-400 shrink-0" />
                 <span>View Location</span>
@@ -235,26 +240,30 @@ const JobProfile = () => {
             </div>
           </Card>
 
-          <Card className="mt-6 p-4 md:p-6">
-            <h3 className="text-lg md:text-xl font-semibold mb-4 flex items-center gap-2">
-              <Star className="w-5 h-5 text-primary" />
+          <Card className="mt-6 p-4 md:p-8 border hover:shadow-lg/10 shadow-yellow-400 shadow-none hover:scale-102 transition-transform duration-300">
+            <h3 className="text-lg md:text-2xl font-semibold mb-4 flex items-center gap-2">
+              <Star className="w-7 h-7 text-yellow-400" />
               Employer Rating
             </h3>
             <div className="flex items-center gap-4">
-              <div className="text-3xl md:text-4xl font-bold text-primary">
-                4.8
+              <div className="text-3xl md:text-5xl font-bold text-yellow-400 ">
+                {rate?.averageRate}
               </div>
               <div>
                 <div className="flex gap-1 mb-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className="w-4 h-4 fill-primary text-primary"
-                    />
-                  ))}
+                  {rate ? (
+                    <div className="flex gap-1 mb-1">
+                      <StarRating
+                        rating={rate.averageRate}
+                        className="text-yellow-400 "
+                      />
+                    </div>
+                  ) : (
+                    <Spinner />
+                  )}
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Based on 127 reviews
+                <p className="text-md text-muted-foreground">
+                  Based on {rate?.reviews} reviews
                 </p>
               </div>
             </div>

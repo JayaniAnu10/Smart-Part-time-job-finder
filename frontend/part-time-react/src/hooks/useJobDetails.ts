@@ -25,6 +25,7 @@ interface JobDetails {
   availableVacancies: number;
   totalVacancies: number;
   employer: string;
+  employerId: string;
   latitude: number;
   longitude: number;
   isUrgent: boolean;
