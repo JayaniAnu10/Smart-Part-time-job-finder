@@ -29,7 +29,7 @@ export default function RecentActivities() {
                 {activity}
               </p>
             </div>
-            <p className="mt-1text-sm text-secondary/70 dark:text-primary/70 ml-5">
+            <p className="mt-1 text-sm text-secondary/70 dark:text-primary/70 ml-5">
               2 hours ago
             </p>
           </div>

@@ -11,7 +11,7 @@ export default function QuickActions() {
   return (
     <Card className="rounded-2xl">
       <CardHeader>
-        <CardTitle className="text-2xl font-medium text-secondary dark:text-primary">Quick Actions</CardTitle>
+        <CardTitle className="text-2xl font-medium text-secondary dark:text-primary"></CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
