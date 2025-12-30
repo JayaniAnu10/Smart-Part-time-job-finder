@@ -72,6 +72,6 @@ public class JobSpec {
     }
 
     public static Specification<Job> notExpired() {
-        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("deadline"), LocalDate.now());
+        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("deadline"), LocalDateTime.now());
     }
 }

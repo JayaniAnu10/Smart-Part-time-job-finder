@@ -3,6 +3,7 @@ package com.smartparttime.parttimebackend.modules.Rating;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingResponse;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateRequest;
+import com.smartparttime.parttimebackend.modules.Rating.RateDtos.UserAverageRateResponse;
 import com.smartparttime.parttimebackend.modules.Rating.service.RateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -66,7 +67,8 @@ public class RateController {
     }
 
     @GetMapping("/user/{id}/average")
-    public BigDecimal getAverageRateOfUser(@PathVariable UUID id){
+    public UserAverageRateResponse getAverageRateOfUser(@PathVariable UUID id){
+
         return rateService.getAverageRateOfUser(id);
     }
 

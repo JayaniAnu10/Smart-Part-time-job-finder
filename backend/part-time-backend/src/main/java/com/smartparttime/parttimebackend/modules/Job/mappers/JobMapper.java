@@ -14,6 +14,7 @@ public interface JobMapper {
     Job toEntity(JobRequestDto request);
 
     @Mapping(source = "employer.companyName" ,target = "employer")
+    @Mapping(source = "employer.id" ,target = "employerId")
     @Mapping(source = "category.category",target = "category")
     JobResponseDto toDto(Job savedJob);
 

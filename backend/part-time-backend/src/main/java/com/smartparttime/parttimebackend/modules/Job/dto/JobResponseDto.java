@@ -49,6 +49,8 @@ public class JobResponseDto {
 
     private String employer;
 
+    private String employerId;
+
     private Double latitude;
 
     private Double longitude;
