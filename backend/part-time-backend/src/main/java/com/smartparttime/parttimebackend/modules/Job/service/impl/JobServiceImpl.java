@@ -167,7 +167,7 @@ public class JobServiceImpl implements JobService {
             spec =spec.and(JobSpec.hasRequiredGender(requiredGender));
         }
 
-
+        spec = spec.and(JobSpec.notExpired());
 
         Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
         Page<JobListingDetailsDto> jobDtosPage = jobsPage.map(jobMapper::toListing);

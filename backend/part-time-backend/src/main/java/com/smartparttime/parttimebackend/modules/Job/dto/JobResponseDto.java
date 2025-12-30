@@ -21,7 +21,7 @@ public class JobResponseDto {
 
     private String description;
 
-    private Integer category;
+    private String category;
 
     private String location;
 
@@ -47,7 +47,7 @@ public class JobResponseDto {
 
     private Long totalVacancies;
 
-    private UUID employer;
+    private String employer;
 
     private Double latitude;
 

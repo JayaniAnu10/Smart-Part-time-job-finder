@@ -79,7 +79,7 @@ public class JobController {
             @RequestParam(required = false) BigDecimal maxSalary,
             @RequestParam(required = false) String requiredGender,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "8") int size
     ) {
         JobListingResponse jobs = jobService.filterJobsBySpecification(
                 location,

@@ -64,7 +64,7 @@ public class JobSpec {
     }
 
     public static Specification<Job> hasJobType(String jobType) {
-        return (root, query, cb) -> cb.equal(root.get("jobType"), jobType);
+        return (root, query, cb) -> cb.equal(cb.lower(root.get("jobType")), jobType.toLowerCase());
     }
 
     public static Specification<Job> hasRequiredGender(String requiredGender) {
