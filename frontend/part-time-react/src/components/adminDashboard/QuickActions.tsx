@@ -6,8 +6,11 @@ import {
   AlertTriangle,
   Activity,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function QuickActions() {
+  const navigate = useNavigate();
+
   return (
     <Card className="rounded-2xl">
       <CardHeader>
@@ -19,6 +22,7 @@ export default function QuickActions() {
           variant="outline"
           className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary hover:text-secondary 
                      hover:bg-yellow-400 transition-all duration-300 hover:scale-102 active:scale-98"
+          onClick={() => navigate("/admin/manage-users")}
         >
           <Users className="w-5 h-5 text-secondary dark:text-primary group-hover:text-secondary" />
           Manage Users
@@ -28,6 +32,7 @@ export default function QuickActions() {
           variant="outline"
           className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary hover:text-secondary 
                      hover:bg-yellow-400 transition-all duration-300 hover:scale-102 active:scale-98"
+           onClick={() => navigate("/admin/moderate-job-posts")}
         >
           <Briefcase className="w-5 h-5 text-secondary dark:text-primary group-hover:text-secondary" />
           Moderate Job Posts
@@ -37,6 +42,7 @@ export default function QuickActions() {
           variant="outline"
           className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary hover:text-secondary 
                      hover:bg-yellow-400 transition-all duration-300 hover:scale-102 active:scale-98"
+          onClick={() => navigate("/admin/review-reports")}
         >
           <AlertTriangle className="w-5 h-5 text-secondary dark:text-primary group-hover:text-secondary" />
           Review Reports
@@ -46,6 +52,7 @@ export default function QuickActions() {
           variant="outline"
           className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary hover:text-secondary 
                      hover:bg-yellow-400 transition-all duration-300 hover:scale-102 active:scale-98"
+           onClick={() => navigate("/admin/view-analytics")}
         >
           <Activity className="w-5 h-5 text-secondary dark:text-primary group-hover:text-secondary" />
           View Analytics
