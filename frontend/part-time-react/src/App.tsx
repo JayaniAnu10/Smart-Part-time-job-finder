@@ -22,6 +22,8 @@ import SeekerProfile from "./pages/EmployerDashboard/SeekerProfile";
 import JobSeekerDashboard from "./pages/JobseekerDashboard";
 import AboutPage from "./pages/AboutUs/AboutPage";
 
+import ContactPage from "./pages/Contact/ContactPage";
+
 const App: React.FC = () => {
   return (
     <Routes>
@@ -56,6 +58,7 @@ const App: React.FC = () => {
       <Route path="/dashboard" element={<JobSeekerDashboard />} />
       <Route path="/about" element={<AboutPage />} />
       
+      <Route path="/contact" element={<ContactPage />} />
 
       <Route path="*" element={<Navigate to="/" />} />
 
