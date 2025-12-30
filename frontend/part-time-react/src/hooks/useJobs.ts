@@ -3,7 +3,8 @@ import type { PageResponse } from "@/types/pageResponse";
 import type { Query } from "@/types/Query";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-interface Schedules {
+export interface Schedules {
+  id: string;
   startDatetime: Date;
   endDatetime: Date;
   requiredWorkers: number;

@@ -33,7 +33,7 @@ const App: React.FC = () => {
         <Route path="chatbot" element={<ChatBot />} />
         <Route path="nearby" element={<NearByJobPage />} />
         <Route path="find-your-job" element={<FindJob />} />
-        <Route path="jobs" element={<JobProfile />} />
+        <Route path="jobs/:id" element={<JobProfile />} />
       </Route>
 
       <Route path="/getstarted" element={<GetStarted />} />

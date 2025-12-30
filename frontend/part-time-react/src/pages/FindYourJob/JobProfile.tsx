@@ -8,30 +8,56 @@ import {
   Briefcase,
   Calendar,
   Users,
-  Star,
   ArrowLeft,
   Zap,
   Map,
   CalendarClock,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useJobDetails from "@/hooks/useJobDetails";
 import { getDaysLeft, getTimeAgo } from "@/utils/date";
 import { Spinner } from "@/components/ui/spinner";
 import useUserRate from "@/hooks/useUserRate";
-import { StarRating } from "@/components/common/StarRating";
+import { useState } from "react";
+import ScheduleDialog from "./ScheduleDialog";
+import useJobApply from "@/hooks/useJobApply";
+import toast from "react-hot-toast";
+import EmployerRating from "./EmployerRating";
 
 const JobProfile = () => {
-  const id = "5160b068-4477-4aaa-835c-670ef69ba27e";
+  const [open, setOpen] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  if (!id) return <p>Job not found.</p>;
 
-  const { data, isLoading, isError } = useJobDetails(id);
+  const { data, isLoading, isError } = useJobDetails(id!);
   const { data: rate } = useUserRate(data?.employerId);
+  const jobApplyMutation = useJobApply();
+
+  const currentUserId = "8e32f9cb-9108-4560-a6eb-8122b37c117e";
+
+  const handleApply = (scheduleId: string) => {
+    if (data?.id && scheduleId) {
+      jobApplyMutation.mutate(
+        { jobId: data?.id, jobseeker: currentUserId, scheduleId },
+        {
+          onSuccess: () => {
+            toast.success("Application submitted successfully!");
+            setOpen(false);
+          },
+        }
+      );
+    }
+  };
+
   const accommodations = data?.accommodation
     ? data.accommodation.split(",").map((a) => a.trim())
     : [];
 
   const requirements = data?.requirements
-    ? data.requirements.split(/\r?\n|,|\./).map((a) => a.trim())
+    ? data.requirements
+        .split(/\r?\n|,|\./)
+        .map((a) => a.trim())
+        .filter((a) => a.length > 0)
     : [];
 
   if (isLoading) {
@@ -72,18 +98,6 @@ const JobProfile = () => {
                   <h1 className="text-2xl md:text-4xl font-bold text-[#0f1f3d] dark:text-white mb-2">
                     {data?.title}{" "}
                   </h1>
-                  <Badge
-                    variant="secondary"
-                    className="text-md rounded-4xl bg-green-600 dark:text-black text-white mb-2 hover:bg-green-700"
-                  >
-                    {data?.category}
-                  </Badge>
-                  <Badge
-                    variant="secondary"
-                    className="text-md rounded-4xl dark:bg-gray-400 text-black/80  mb-2 dark:hover:bg-gray-400"
-                  >
-                    {data?.jobType}
-                  </Badge>
                 </div>
                 <p className="text-muted-foreground text-lg">
                   {data?.employer}
@@ -96,6 +110,18 @@ const JobProfile = () => {
                     Urgent
                   </Badge>
                 )}
+                <Badge
+                  variant="secondary"
+                  className="text-sm rounded-4xl bg-green-400 text-black   hover:bg-green-700"
+                >
+                  {data?.category}
+                </Badge>
+                <Badge
+                  variant="secondary"
+                  className="text-sm rounded-4xl dark:bg-gray-400 text-black/80   dark:hover:bg-gray-400"
+                >
+                  {data?.jobType}
+                </Badge>
                 <Badge className="bg-yellow-400 text-[#0f1f3d] text-sm">
                   {data?.status}
                 </Badge>
@@ -216,7 +242,7 @@ const JobProfile = () => {
                 variant="outline"
                 onClick={() =>
                   window.open(
-                    `https://www.google.com/maps/dir/?api=1&destination=${data?.latitude},${data?.longitude}`,
+                    `https://www.google.com/maps/search/?api=1&query=${data?.latitude},${data?.longitude}`,
                     "_blank"
                   )
                 }
@@ -226,9 +252,19 @@ const JobProfile = () => {
                 <span>View Location</span>
               </Button>
 
-              <Button className=" bg-yellow-400 flex-1 hover:bg-yellow-300 text-[#0f1f3d]">
+              <Button
+                onClick={() => setOpen(true)}
+                className=" bg-yellow-400 flex-1 hover:bg-yellow-300 text-[#0f1f3d]"
+              >
                 Apply Now
               </Button>
+              <ScheduleDialog
+                open={open}
+                setOpen={setOpen}
+                schedules={data?.jobSchedules || []}
+                isLoading={jobApplyMutation.isPending}
+                onApply={handleApply}
+              />
 
               {/*<SaveJobButton
                 jobId={jobId}
@@ -240,34 +276,10 @@ const JobProfile = () => {
             </div>
           </Card>
 
-          <Card className="mt-6 p-4 md:p-8 border hover:shadow-lg/10 shadow-yellow-400 shadow-none hover:scale-102 transition-transform duration-300">
-            <h3 className="text-lg md:text-2xl font-semibold mb-4 flex items-center gap-2">
-              <Star className="w-7 h-7 text-yellow-400" />
-              Employer Rating
-            </h3>
-            <div className="flex items-center gap-4">
-              <div className="text-3xl md:text-5xl font-bold text-yellow-400 ">
-                {rate?.averageRate}
-              </div>
-              <div>
-                <div className="flex gap-1 mb-1">
-                  {rate ? (
-                    <div className="flex gap-1 mb-1">
-                      <StarRating
-                        rating={rate.averageRate}
-                        className="text-yellow-400 "
-                      />
-                    </div>
-                  ) : (
-                    <Spinner />
-                  )}
-                </div>
-                <p className="text-md text-muted-foreground">
-                  Based on {rate?.reviews} reviews
-                </p>
-              </div>
-            </div>
-          </Card>
+          <EmployerRating
+            averageRate={rate.averageRate}
+            reviews={rate.reviews}
+          />
         </div>
       </div>
     </div>

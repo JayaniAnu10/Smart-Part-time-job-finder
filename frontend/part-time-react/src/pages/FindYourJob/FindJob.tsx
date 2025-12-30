@@ -367,14 +367,14 @@ const FindJob = () => {
                             {getTimeAgo(job.postedDate)}
                             {}
                           </span>
-                          <Link to={`/job-details/${job.id}`}>
-                            <Button
-                              size="sm"
-                              className="text-[#0f1f3d] bg-yellow-400 text-sm hover:bg-yellow-300 cursor-pointer"
-                            >
-                              View Details
-                            </Button>
-                          </Link>
+
+                          <Button
+                            asChild
+                            size="sm"
+                            className="text-[#0f1f3d] bg-yellow-400 text-sm hover:bg-yellow-300 cursor-pointer"
+                          >
+                            <Link to={`/jobs/${job.id}`}>View Details</Link>
+                          </Button>
                         </div>
                       </Card>
                     );

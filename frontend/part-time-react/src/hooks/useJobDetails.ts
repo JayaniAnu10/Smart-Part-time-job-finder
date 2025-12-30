@@ -2,6 +2,7 @@ import APIClient from "@/services/apiClient";
 import { useQuery } from "@tanstack/react-query";
 
 interface Schedules {
+  id: string;
   startDatetime: Date;
   endDatetime: Date;
   requiredWorkers: number;
