@@ -1,32 +1,35 @@
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+
 import StatsSection from "@/components/adminDashboard/StatsSection";
 import RecentActivities from "@/components/adminDashboard/RecentActivities";
-import QuickActions from "@/components/adminDashboard/QuickActions";
+import AdminSidebar from "@/components/adminDashboard/AdminSidebar";
 
 export default function AdminDashboardPage() {
   return (
-    <div className="relative pt-16 min-h-screen bg-background p-3 space-y-8">
+    <SidebarProvider>
+      <div className="flex min-h-screen bg-background">
       
-      {/* Header */}
-      <div className="px-16">
-        <h1 className="text-5xl font-bold text-secondary dark:text-primary">Admin Dashboard</h1>
-        <p className="text-secondary/80 dark:text-primary/80">
-          System overview and management
-        </p>
-      </div>
+        {/* Sidebar */}
+        <AdminSidebar />
 
-      <div className="px-16 space-y-8 pb-16">
-        {/* Stats section */}
-        <StatsSection />
+        {/* Main Content */}
+        <main className="ml-180 p-6 space-y-8">
+          <SidebarTrigger className="lg:hidden mb-4" />
 
-        {/* Bottom section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 lg:grid-cols-[1.3fr_1fr] gap-6">
-          
+          <div>
+            <h1 className="text-4xl font-bold text-secondary dark:text-primary">
+              Admin Dashboard
+            </h1>
+            <p className="text-secondary/80 dark:text-primary/80">
+              System overview and management
+            </p>
+          </div>
+
+          <StatsSection />
           <RecentActivities />
-          <QuickActions />
-        </div>
+        </main>
+        
       </div>
-     
-      
-    </div>
+    </SidebarProvider>
   );
 }
