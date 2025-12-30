@@ -37,7 +37,7 @@ public class JobResponseDto {
 
     private BigDecimal maxSalary;
 
-    private List<JobScheduleDto> jobSchedules;
+    private List<JobScheduleResponse> jobSchedules;
 
     private String requirements;
 
