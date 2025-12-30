@@ -28,6 +28,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { getDaysLeft, getTimeAgo } from "@/utils/date";
 
 const FindJob = () => {
   const [titleSearch, setTitleSearch] = useState("");
@@ -98,24 +99,6 @@ const FindJob = () => {
         return 0; // no sorting
     }
   });
-
-  const getDaysLeft = (deadline: string) => {
-    const now = new Date();
-    const end = new Date(deadline);
-    const diffTime = end.getTime() - now.getTime();
-    return diffTime > 0 ? Math.ceil(diffTime / (1000 * 60 * 60 * 24)) : 0;
-  };
-
-  const getTimeAgo = (postedDate: string) => {
-    const now = new Date();
-    const posted = new Date(postedDate);
-    const diffHours = Math.floor(
-      (now.getTime() - posted.getTime()) / (1000 * 60 * 60)
-    );
-    if (diffHours < 24) return `${diffHours} hours ago`;
-    const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays} days ago`;
-  };
 
   const shortenLocation = (location: string) => {
     return location.split(",")[0];
@@ -364,10 +347,7 @@ const FindJob = () => {
                             <div className="flex items-center gap-2">
                               <Calendar className="w-4 h-4 text-yellow-400 shrink-0" />
                               <span className="truncate">
-                                {getDaysLeft(job.deadline)}{" "}
-                                {getDaysLeft(job.deadline) === 1
-                                  ? "day left"
-                                  : "days left"}
+                                {getDaysLeft(job.deadline)}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -385,6 +365,7 @@ const FindJob = () => {
                         <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
                           <span className="text-xs text-muted-foreground">
                             {getTimeAgo(job.postedDate)}
+                            {}
                           </span>
                           <Link to={`/job-details/${job.id}`}>
                             <Button
