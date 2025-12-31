@@ -2,17 +2,17 @@ package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smartparttime.parttimebackend.common.Services.EmailService;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
 import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
-import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
+import com.smartparttime.parttimebackend.modules.Job.dto.*;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
@@ -61,6 +61,10 @@ public class JobServiceImpl implements JobService {
     private final NotificationService notificationService;
     @Autowired
     private JobCategoryMapper jobCategoryMapper;
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+
+    private EmailService emailService;
 
 
     @Transactional
@@ -140,28 +144,22 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public Page<JobResponseDto> filterJobsBySpecification(String location, String jobType, String title, String requirements, String category, String description, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary,String requiredGender, int page,int size) {
+    public JobListingResponse filterJobsBySpecification(String location, String jobType, String query,  String category, LocalDate date, BigDecimal minSalary, BigDecimal maxSalary, String requiredGender, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Specification<Job> spec = Specification.allOf();
 
-        if (location != null) {
+        if (location != null && !location.isBlank()) {
             spec = spec.and(JobSpec.hasLocation(location));
         }
-        if (jobType != null) {
+        if (jobType != null && !jobType.isBlank()) {
             spec = spec.and(JobSpec.hasJobType(jobType));
         }
-        if (title != null) {
-            spec = spec.and(JobSpec.hasTitle(title));
+        if (query != null) {
+            spec = spec.and(JobSpec.hasTitleRequirementsDescription(query));
         }
-        if (requirements != null) {
-            spec = spec.and(JobSpec.hasRequirements(requirements));
-        }
-        if (category != null) {
+        if (category != null && !category.equalsIgnoreCase("all") && !category.isBlank()) {
             spec = spec.and(JobSpec.hasCategory(category));
-        }
-        if (description != null) {
-            spec = spec.and(JobSpec.hasDescription(description));
         }
         if (date != null) {
             spec = spec.and(JobSpec.hasDate(date));
@@ -172,12 +170,21 @@ public class JobServiceImpl implements JobService {
         if (maxSalary != null) {
             spec =spec.and(JobSpec.hasMaxSalaryLessThanOrEqualTo(maxSalary));
         }
-        if (requiredGender != null) {
+        if (requiredGender != null && !requiredGender.isBlank()) {
             spec =spec.and(JobSpec.hasRequiredGender(requiredGender));
         }
 
+        spec = spec.and(JobSpec.notExpired());
+
         Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
-        return jobsPage.map(jobMapper::toDto);
+        Page<JobListingDetailsDto> jobDtosPage = jobsPage.map(jobMapper::toListing);
+        long totalJobs = jobRepo.count(JobSpec.notExpired());
+
+        JobListingResponse res=new JobListingResponse();
+        res.setJobs(jobDtosPage);
+        res.setTotalJobs(totalJobs);
+        return res;
+
     }
 
 
@@ -206,15 +213,31 @@ public class JobServiceImpl implements JobService {
     }
 
 
+    @Transactional
     @Override
     public void deleteJob(UUID jobId) {
         var job = jobRepo.findById(jobId).orElse(null);
         if (job == null) {
             throw new NotFoundException("Job not found");
         }
-        if(jobApplicationRepository.existsByJob_Id(jobId)) {
-            throw new BadRequestException("Cannot delete job. Applications already exist.");
-        }
+
+        var attendances = attendanceRepository.findByJob_Id(jobId);
+
+        var applicants=jobApplicationRepository.getJobApplicationsByJob_Id(jobId);
+
+        applicants.stream()
+                .filter(app -> app.getStatus() == ApplicationStatus.APPROVED)
+                .forEach(applicant -> emailService.sendJobDeletedEmail(
+                        applicant.getJobseeker().getEmail(),
+                        applicant.getJobseeker().getJobSeeker().getFirstName(),
+                        applicant.getJobseeker().getJobSeeker().getLastName(),
+                        job.getTitle()
+                ));
+
+
+        jobApplicationRepository.deleteAll(applicants);
+        attendanceRepository.deleteAll(attendances);
+
         jobRepo.deleteById(jobId);
     }
 

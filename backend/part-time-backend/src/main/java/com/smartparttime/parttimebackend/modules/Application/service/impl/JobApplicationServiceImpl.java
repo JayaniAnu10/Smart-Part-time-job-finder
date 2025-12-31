@@ -12,6 +12,7 @@ import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplication
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
 import com.smartparttime.parttimebackend.modules.Application.mapper.JobApplicationMapper;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
+import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationAsyncService;
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
 import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
@@ -27,6 +28,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,16 +39,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @Service
 public class JobApplicationServiceImpl implements JobApplicationService {
-    private final EmailService emailService;
     private final JobApplicationMapper jobApplicationMapper;
     private final JobApplicationRepository jobApplicationRepository;
     private final JobSeekerRepository jobSeekerRepository;
     private final JobRepo jobRepo;
     private final UserRepository userRepository;
     private final JobScheduleRepository jobScheduleRepository;
-    private final AttendanceRepository attendanceRepository;
-    private final AttendanceService attendanceService;
     private final NotificationService notificationService;
+    private final JobApplicationAsyncService asyncService;
 
 
 
@@ -145,9 +145,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         }
 
         var applicants = jobApplicationRepository.findApplicationsByJobId(jobId,pageable);
-        if (applicants.isEmpty()) {
-            throw new NotFoundException("Application not found");
-        }
+
         JobApplicantsResponse response = new JobApplicantsResponse();
         response.setTitle(job.getTitle());
         response.setApplicants(applicants);
@@ -166,8 +164,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         application.setStatus(status);
         jobApplicationRepository.save(application);
 
+        if(application.getJob().getAvailableVacancies()<=0){
+            throw new BadRequestException("Already vacancies are filled");
+        }
+
         if(status == ApplicationStatus.APPROVED) {
-            approveApplication(application);
+            asyncService.approveApplication(application);
 
         }
 
@@ -191,38 +193,5 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         jobApplicationRepository.delete(application);
     }
 
-    private void approveApplication(JobApplication application){
-        try{
-            var job= application.getJob();
-            job.setAvailableVacancies(job.getAvailableVacancies()-1);
-            jobRepo.save(job);
 
-            String qrToken=UUID.randomUUID() + "-" + System.currentTimeMillis();
-
-            Attendance attendance = new Attendance();
-            attendance.setJob(job);
-            attendance.setUser(application.getJobseeker());
-            attendance.setSchedule(application.getSchedule());
-            attendance.setQrCode(qrToken);
-            attendance.setStatus(AttendanceStatus.PENDING);
-
-            attendanceRepository.save(attendance);
-
-            byte[] qrCode =attendanceService.generateQr(qrToken);
-
-
-            String email = application.getJobseeker().getEmail();
-            String jobTitle = job.getTitle();
-            LocalDateTime scheduleStartDate = application.getSchedule().getStartDatetime();
-            LocalDateTime scheduleEndDate = application.getSchedule().getEndDatetime();
-
-            emailService.sendQrCodeEmail(email,  jobTitle, scheduleStartDate,scheduleEndDate, qrCode);
-
-
-        }catch(Exception e){
-            throw new RuntimeException("Failed  to process application approval", e);
-        }
-
-
-    }
 }

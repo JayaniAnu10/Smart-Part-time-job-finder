@@ -4,8 +4,10 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -103,5 +105,36 @@ public class EmailService {
                 throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
             }
         }
+
+    @Async
+    public void sendJobDeletedEmail(String to,
+                                    String firstName,
+                                    String lastName,
+                                    String jobTitle) {
+
+        String subject = "Job Update — Position Removed";
+        String message = """
+        Dear %s %s,
+
+        We’re really sorry to let you know that the job you applied for,
+        "%s", has been canceled by the employer.
+
+        We truly appreciate the time and effort you put into applying.
+
+        If you have any questions or need assistance, our team is here
+        to help — please feel free to contact us anytime.
+
+        Thank you for understanding,
+        DayBee.lk Team
+        """.formatted(firstName, lastName, jobTitle);
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(to);
+        email.setSubject(subject);
+        email.setText(message);
+
+        mailSender.send(email);
+    }
+
     }
 

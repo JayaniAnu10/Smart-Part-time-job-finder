@@ -10,9 +10,15 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-/* Dark mode calendar icon */
 input.dark-calendar[type="date"]::-webkit-calendar-picker-indicator,
 input.dark-calendar[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: none;
+}
+
+/* Dark mode */
+.dark input.dark-calendar[type="date"]::-webkit-calendar-picker-indicator,
+.dark
+  input.dark-calendar[type="datetime-local"]::-webkit-calendar-picker-indicator {
   filter: invert(1) brightness(2);
 }
 

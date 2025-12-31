@@ -173,8 +173,8 @@ public class EmployerService {
         Object result = jobApplicationRepository.countThisAndLastMonthApplications(id);
         Object[] counts = (Object[]) result;
 
-        long thisMonthCount = ((Number) counts[0]).longValue();
-        long lastMonthCount = ((Number) counts[1]).longValue();
+        long thisMonthCount = counts[0] != null ? ((Number) counts[0]).longValue() : 0L;
+        long lastMonthCount = counts[1] != null ? ((Number) counts[1]).longValue() : 0L;
 
         if (lastMonthCount == 0) {
             return thisMonthCount > 0 ? 100.0 : 0.0;

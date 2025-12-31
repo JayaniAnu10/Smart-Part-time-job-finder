@@ -29,7 +29,15 @@ import ViewAnalytics from "./pages/adminActions/ViewAnalytics";
 
 import AboutPage from "./pages/AboutUs/AboutPage";
 import PostJob from "./pages/PostJobs/PostJob";
+
 import FindJob from "./pages/FindJob/FindJobs";
+
+import JobProfile from "./pages/FindYourJob/JobProfile";
+
+import ContactPage from "./pages/Contact/ContactPage";
+
+import TermsPage from './pages/Terms/TermsPage';
+
 
 const App: React.FC = () => {
   return (
@@ -38,15 +46,17 @@ const App: React.FC = () => {
         <Route index element={<HomePage />} />
         <Route path="chatbot" element={<ChatBot />} />
         <Route path="nearby" element={<NearByJobPage />} />
-        <Route path="/find-your-job" element={<FindJob />} />
+        <Route path="find-your-job" element={<FindJob />} />
+        <Route path="jobs/:id" element={<JobProfile />} />
       </Route>
 
       <Route path="/getstarted" element={<GetStarted />} />
       <Route path="/auth" element={<Auth />} />
 
+      {/* Employer Dashboard Routes */}
       <Route path="/empDashboard" element={<EmployerDashboard />} />
-      <Route path="/applicants" element={<JobApplicants />} />
-      <Route path="/seekerProfile" element={<SeekerProfile />} />
+      <Route path="/:jobId/applicants" element={<JobApplicants />} />
+      <Route path="/seekerProfile/:id" element={<SeekerProfile />} />
 
       {/* Job Seeker Routes */}
       <Route path="/jobseeker/register/step1" element={<JobSeekerStep1 />} />
@@ -59,6 +69,7 @@ const App: React.FC = () => {
       {/* New Routes from GitHub */}
       <Route path="/find-jobs" element={<FindJobs />} />
       <Route path="/find-your-job" element={<FindJob />} />
+      <Route path="/job/:id" element={<JobDetails />} />
       <Route path="/job/:id" element={<JobDetails />} />
 
       {/* Post Job Routes */}
@@ -74,6 +85,8 @@ const App: React.FC = () => {
       <Route path="/admin/view-analytics" element={<ViewAnalytics />} />
 
       <Route path="/about" element={<AboutPage />} />
+
+      <Route path="/terms" element={<TermsPage />} />
 
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
