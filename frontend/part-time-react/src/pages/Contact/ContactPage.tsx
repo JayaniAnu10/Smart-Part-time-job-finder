@@ -3,12 +3,11 @@ import ContactForm from '../../components/Contact/ContactForm';
 import ContactDetails from '../../components/Contact/ContactDetails';
 import HelpCard from '../../components/Contact/HelpCard';
 
-
 const ContactPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-[#001d3d] mb-4">Get in Touch</h1>
+        <h1 className="text-4xl font-bold tracking-tight">Get in Touch</h1>
         <p className="text-gray-600">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
       </div>
 
@@ -24,6 +23,5 @@ const ContactPage: React.FC = () => {
     </div>
   );
 };
-
 
 export default ContactPage;

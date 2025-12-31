@@ -1,5 +1,6 @@
-import React, { ReactNode } from 'react';
-import { Mail, Phone, MapPin, Clock, LucideIcon } from 'lucide-react';
+import React from 'react';
+import type { ReactNode } from 'react';
+import { Mail, Phone, MapPin, Clock, type LucideIcon } from 'lucide-react';
 
 interface DetailItemProps {
   icon: LucideIcon;
