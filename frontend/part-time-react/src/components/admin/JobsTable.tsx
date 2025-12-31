@@ -1,4 +1,4 @@
-export default function UsersTable() {
+export default function JobsTable() {
   return (
     <div className="border rounded-xl overflow-hidden ">
       <table className="w-full text-sm">

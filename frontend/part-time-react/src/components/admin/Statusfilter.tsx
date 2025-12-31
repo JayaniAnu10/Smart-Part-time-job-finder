@@ -8,11 +8,10 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 
-export default function UserFilters() {
+export default function StatusFilters() {
   return (
     <div className="flex items-center gap-4 p-4 h-[100px] border rounded-xl bg-muted">
-      
-      {/* Search */}
+
       <div className="relative flex-1">
         <Search className="absolute left-3 top-3 h-6 w-4 text-secondary dark:text-primary" />
         <Input
@@ -21,7 +20,6 @@ export default function UserFilters() {
         />
       </div>
 
-      {/* Role dropdown */}
       <Select>
         <SelectTrigger className="h-12 w-[180px] text-secondary data-[placeholder]:text-secondary">
           <SelectValue placeholder="All Status"/>
