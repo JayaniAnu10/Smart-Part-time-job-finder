@@ -17,10 +17,11 @@ import {
   X,
 } from "lucide-react";
 import RecentJobs from "./RecentJobs";
+import { useParams } from "react-router-dom";
 
 const SeekerProfile = () => {
-  const id = "7e131240-c539-4379-9f05-1ae34f4b35af";
-  const { data, isLoading, isError } = useSeekerDetails(id);
+  const { id } = useParams<{ id: string }>();
+  const { data, isLoading, isError } = useSeekerDetails(id!);
 
   if (isLoading) <Spinner />;
   if (isError) <p>Error loading the profile</p>;
@@ -80,20 +81,6 @@ const SeekerProfile = () => {
                     {data?.profileDetails.rate.toPrecision(2)} Rating{" "}
                   </span>
                 </div>
-              </div>
-
-              <div className="flex gap-3 md:flex-row flex-col">
-                <Button className="bg-primary hover:bg-primary/80 text-[#0f1f3d] cursor-pointer">
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Approve Application
-                </Button>
-                <Button
-                  variant="destructive"
-                  className="cursor-pointer text-white"
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Reject Application
-                </Button>
               </div>
             </div>
           </div>

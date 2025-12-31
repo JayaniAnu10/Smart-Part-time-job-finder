@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export interface JobStats {
   applicants: number;
+  id: string;
   postedDate: string;
   status: string;
   title: string;

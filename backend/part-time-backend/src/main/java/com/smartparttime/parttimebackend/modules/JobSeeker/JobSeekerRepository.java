@@ -55,6 +55,7 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
     LEFT JOIN u.attendances a
     LEFT JOIN Rate r ON r.rateReceiver.id = u.id AND r.job.id = j.id
     WHERE u.id = :jobSeekerId
+    AND ja.status = 'APPROVED'
 """)
     List<JobSeekerCompletedJobDto> getJobSeekerJobs(UUID jobSeekerId);
 

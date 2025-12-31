@@ -13,15 +13,16 @@ import { Spinner } from "@/components/ui/spinner";
 import useApplicants from "@/hooks/useApplicants";
 import { ArrowLeft, ArrowRight, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 export const lowerCase = (s: string) => s.toLowerCase();
 
 const JobApplicants = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
-  const jobId = "0f8cde51-063a-40b1-89e0-d73942e3ea6e";
+  const { jobId } = useParams<{ jobId: string }>();
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useApplicants(jobId, { page });
+  const { data, isLoading, isError } = useApplicants(jobId!, { page });
   const applicants = data?.applicants.content ?? [];
   const totalPages = data?.applicants.totalPages ?? 1;
 
@@ -56,84 +57,95 @@ const JobApplicants = () => {
           {data?.title}
         </span>
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-between">
-        <div className="flex flex-wrap gap-3 sm:gap-5">
-          <Button
-            className="cursor-pointer"
-            variant={statusFilter === "all" ? "default" : "outline"}
-            onClick={() => setStatusFilter("all")}
-          >
-            All ({applicants.length})
-          </Button>
-          <Button
-            className="cursor-pointer"
-            variant={statusFilter === "pending" ? "default" : "outline"}
-            onClick={() => setStatusFilter("pending")}
-          >
-            Pending ({pendingCount})
-          </Button>
-          <Button
-            className="cursor-pointer"
-            variant={statusFilter === "approved" ? "default" : "outline"}
-            onClick={() => setStatusFilter("approved")}
-          >
-            Approved ({approvedCount})
-          </Button>
-          <Button
-            className="cursor-pointer"
-            variant={statusFilter === "rejected" ? "default" : "outline"}
-            onClick={() => setStatusFilter("rejected")}
-          >
-            Rejected ({rejectedCount})
-          </Button>
-        </div>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="outline"
-              className="cursor-pointer hover:bg-yellow-400"
-            >
-              <SlidersHorizontal className="h-4 w-4 mr-2 " />
-              Filter by Rating
-            </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Filter Applicants</SheetTitle>
-              <SheetDescription>
-                Filter applicants by their rating score
-              </SheetDescription>
-            </SheetHeader>
-            <div className="mt-6">
-              <RatingFilter
-                selectedRating={selectedRating}
-                onRatingChange={setSelectedRating}
-              />
+      {filteredApplicants.length > 0 ? (
+        <>
+          <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-between">
+            <div className="flex flex-wrap gap-3 sm:gap-5">
+              <Button
+                className="cursor-pointer"
+                variant={statusFilter === "all" ? "default" : "outline"}
+                onClick={() => setStatusFilter("all")}
+              >
+                All ({applicants.length})
+              </Button>
+              <Button
+                className="cursor-pointer"
+                variant={statusFilter === "pending" ? "default" : "outline"}
+                onClick={() => setStatusFilter("pending")}
+              >
+                Pending ({pendingCount})
+              </Button>
+              <Button
+                className="cursor-pointer"
+                variant={statusFilter === "approved" ? "default" : "outline"}
+                onClick={() => setStatusFilter("approved")}
+              >
+                Approved ({approvedCount})
+              </Button>
+              <Button
+                className="cursor-pointer"
+                variant={statusFilter === "rejected" ? "default" : "outline"}
+                onClick={() => setStatusFilter("rejected")}
+              >
+                Rejected ({rejectedCount})
+              </Button>
             </div>
-          </SheetContent>
-        </Sheet>
-      </div>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="cursor-pointer hover:bg-yellow-400 hover:text-[#0f1f3d]"
+                >
+                  <SlidersHorizontal className="h-4 w-4 mr-2 " />
+                  Filter by Rating
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Filter Applicants</SheetTitle>
+                  <SheetDescription>
+                    Filter applicants by their rating score
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="mt-6">
+                  <RatingFilter
+                    selectedRating={selectedRating}
+                    onRatingChange={setSelectedRating}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
 
-      <ApplicantCard applicants={filteredApplicants} />
+          <ApplicantCard applicants={filteredApplicants} />
 
-      <div className="flex flex-wrap gap-3 justify-center mt-6">
-        <Button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          size="lg"
-        >
-          <ArrowLeft />
-          Previous
-        </Button>
-        <Button
-          disabled={page === totalPages}
-          onClick={() => setPage(page + 1)}
-          size="lg"
-        >
-          Next
-          <ArrowRight />
-        </Button>
-      </div>
+          <div className="flex flex-wrap gap-3 justify-center mt-6">
+            <Button
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+              size="lg"
+            >
+              <ArrowLeft />
+              Previous
+            </Button>
+            <Button
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+              size="lg"
+            >
+              Next
+              <ArrowRight />
+            </Button>
+          </div>
+        </>
+      ) : (
+        <div className="border-2 p-6 rounded-xl text-center text-muted-foreground dark:text-gray-400">
+          <p className="text-xl font-medium">No applicants yet</p>
+          <p className="text-md mt-2">
+            Once someone applies, you'll see them here.
+          </p>
+        </div>
+      )}
     </div>
   );
 };

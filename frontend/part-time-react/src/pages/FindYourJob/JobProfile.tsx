@@ -105,7 +105,7 @@ const JobProfile = () => {
               </div>
               <div className="flex items-center gap-2 w-full md:w-auto">
                 {data?.isUrgent && (
-                  <Badge variant="destructive" className="text-xs">
+                  <Badge variant="destructive" className="text-sm">
                     <Zap className="w-3 h-3 mr-1" />
                     Urgent
                   </Badge>

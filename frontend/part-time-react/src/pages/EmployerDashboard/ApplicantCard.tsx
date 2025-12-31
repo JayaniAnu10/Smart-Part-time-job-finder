@@ -9,15 +9,60 @@ import { Badge } from "../../components/ui/badge";
 import { CheckCircle, MapPin, X } from "lucide-react";
 import { getDaysAgo } from "./EmpJobPost";
 import { Button } from "../../components/ui/button";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { StarRating } from "../../components/common/StarRating";
 import { lowerCase } from "@/pages/EmployerDashboard/JobApplicants";
+import useUpdateApplicationStatus from "@/hooks/useUpdateApplicationStatus";
+import toast from "react-hot-toast";
+import { Spinner } from "@/components/ui/spinner";
+import { useState } from "react";
 
 interface Props {
   applicants: Applicants[];
 }
 
 const ApplicantCard = ({ applicants }: Props) => {
+  const navigate = useNavigate();
+  const [updating, setUpdating] = useState<{
+    id: string;
+    action: "approve" | "reject";
+  } | null>(null);
+  const statusMutation = useUpdateApplicationStatus();
+
+  const handleApprove = async (id: string) => {
+    setUpdating({ id, action: "approve" });
+    try {
+      await toast.promise(
+        statusMutation.mutateAsync({ applicationId: id, status: "APPROVED" }),
+        {
+          loading: "Approving application...",
+          success: "Application approved successfully!",
+          error: "Failed to approve application",
+        },
+        { position: "top-center" }
+      );
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const handleReject = async (id: string) => {
+    setUpdating({ id, action: "reject" });
+    try {
+      await toast.promise(
+        statusMutation.mutateAsync({ applicationId: id, status: "REJECTED" }),
+        {
+          loading: "Rejecting application...",
+          success: "Application rejected successfully!",
+          error: "Failed to reject application",
+        },
+        { position: "top-center" }
+      );
+    } finally {
+      setUpdating(null);
+    }
+  };
+
   return (
     <div>
       {applicants.length === 0 ? (
@@ -88,26 +133,50 @@ const ApplicantCard = ({ applicants }: Props) => {
                 </div>
 
                 <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto flex-wrap ">
-                  <Link to="/applicant-details" className="w-full">
-                    <Button
-                      variant="outline"
-                      className="w-full md:w-auto cursor-pointer md:p-5"
-                    >
-                      View Profile
-                    </Button>
-                  </Link>
+                  <Button
+                    onClick={() =>
+                      navigate(`/seekerProfile/${applicant.jobSeekerId}`)
+                    }
+                    variant="outline"
+                    className="w-full md:w-auto cursor-pointer md:p-5"
+                  >
+                    View Profile
+                  </Button>
 
                   {lowerCase(applicant.status) === "pending" && (
                     <>
-                      <Button className="w-full md:w-auto bg-primary hover:bg-primary/80 text-[#0f1f3d] cursor-pointer md:p-5">
-                        <CheckCircle className="w-4 h-4 mr-2" />
+                      <Button
+                        onClick={() => handleApprove(applicant.applicationId)}
+                        className="cursor-pointer"
+                        disabled={
+                          updating?.id === applicant.applicationId &&
+                          updating?.action === "approve"
+                        }
+                      >
+                        {updating?.id === applicant.applicationId &&
+                        updating?.action === "approve" ? (
+                          <Spinner className="size-6 mr-2" />
+                        ) : (
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                        )}
                         Approve
                       </Button>
+
                       <Button
+                        onClick={() => handleReject(applicant.applicationId)}
                         variant="destructive"
-                        className="w-full md:w-auto text-white cursor-pointer md:p-5"
+                        className="text-white cursor-pointer"
+                        disabled={
+                          updating?.id === applicant.applicationId &&
+                          updating?.action === "reject"
+                        }
                       >
-                        <X className="w-4 h-4 mr-2" />
+                        {updating?.id === applicant.applicationId &&
+                        updating?.action === "reject" ? (
+                          <Spinner className="size-6 mr-2" />
+                        ) : (
+                          <X className="w-4 h-4 mr-2" />
+                        )}
                         Reject
                       </Button>
                     </>

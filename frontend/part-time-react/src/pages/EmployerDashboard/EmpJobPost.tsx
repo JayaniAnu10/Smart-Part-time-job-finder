@@ -3,9 +3,13 @@ import type { JobStats } from "@/hooks/useEmpStats";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Eye, Trash2, Users } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { useNavigate } from "react-router-dom";
+import useDelJob from "@/hooks/useDelJob";
+import toast from "react-hot-toast";
 
 interface Props {
   jobs?: JobStats[];
+  empId: string;
 }
 
 export const getDaysAgo = (date: string) => {
@@ -20,7 +24,45 @@ export const getDaysAgo = (date: string) => {
   return `${diffDays} days ago`;
 };
 
-const EmpJobPost = ({ jobs }: Props) => {
+const EmpJobPost = ({ jobs, empId }: Props) => {
+  const navigate = useNavigate();
+  const deleteMutation = useDelJob(empId);
+
+  const handleDelete = (id: string, jobTitle: string) => {
+    toast.custom(
+      (t) => (
+        <div
+          className={`bg-white border shadow-md rounded-lg p-5 px-8 flex flex-col gap-4 ${
+            t.visible ? "animate-enter" : "animate-leave"
+          }`}
+        >
+          <p className="font-semibold text-gray-800">Delete "{jobTitle}"?</p>
+          <p className="text-sm text-gray-600">This action cannot be undone.</p>
+          <div className="flex justify-end gap-2 mt-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => toast.dismiss(t.id)}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => {
+                deleteMutation.mutate(id);
+                toast.dismiss(t.id);
+              }}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      ),
+      { position: "top-center" }
+    );
+  };
+
   return (
     <div>
       <div className="border shadow-md rounded-xl p-7  ">
@@ -31,9 +73,9 @@ const EmpJobPost = ({ jobs }: Props) => {
           {jobs?.map((job, index) => (
             <div
               key={index}
-              className="flex  items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/90 transition-colors"
+              className="flex md:flex-row flex-col md:items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/90 transition-colors gap-5 md:gap-0"
             >
-              <div className="flex-1">
+              <div className="md:flex-1">
                 <h3 className="text-lg font-semibold text-[#0f1f3d] dark:text-white mb-2">
                   {job.title}
                 </h3>
@@ -56,6 +98,7 @@ const EmpJobPost = ({ jobs }: Props) => {
                     size="icon"
                     variant="ghost"
                     className="cursor-pointer"
+                    onClick={() => navigate(`/${job.id}/applicants`)}
                   >
                     <Eye className="w-4 h-4 text-foreground" />
                   </Button>
@@ -67,6 +110,8 @@ const EmpJobPost = ({ jobs }: Props) => {
                     <Edit className="w-4 h-4" />
                   </Button>
                   <Button
+                    onClick={() => handleDelete(job.id, job.title)}
+                    disabled={deleteMutation.isPending}
                     size="icon"
                     variant="ghost"
                     className="cursor-pointer"
