@@ -31,7 +31,7 @@ public class JobListingDetailsDto {
 
     private String accommodation;
 
-    private Long availableVacancies;
+    private Long totalVacancies;
 
     private String employer;
 

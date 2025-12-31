@@ -27,6 +27,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -145,9 +146,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         }
 
         var applicants = jobApplicationRepository.findApplicationsByJobId(jobId,pageable);
-        if (applicants.isEmpty()) {
-            throw new NotFoundException("Application not found");
-        }
+
         JobApplicantsResponse response = new JobApplicantsResponse();
         response.setTitle(job.getTitle());
         response.setApplicants(applicants);
@@ -191,7 +190,8 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         jobApplicationRepository.delete(application);
     }
 
-    private void approveApplication(JobApplication application){
+    @Async
+    public void approveApplication(JobApplication application){
         try{
             var job= application.getJob();
             job.setAvailableVacancies(job.getAvailableVacancies()-1);

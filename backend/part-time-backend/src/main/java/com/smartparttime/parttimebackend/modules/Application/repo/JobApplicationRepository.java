@@ -35,10 +35,10 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
     @Query("""
         SELECT 
-            SUM(CASE WHEN MONTH(ja.appliedDate) = MONTH(CURRENT_DATE) 
-                     AND YEAR(ja.appliedDate) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END) as thisMonthCount,
-            SUM(CASE WHEN MONTH(ja.appliedDate) = MONTH(CURRENT_DATE) - 1
-                     AND YEAR(ja.appliedDate) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END) as lastMonthCount
+            COALESCE(SUM(CASE WHEN MONTH(ja.appliedDate) = MONTH(CURRENT_DATE) 
+                     AND YEAR(ja.appliedDate) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END),0)  as thisMonthCount,
+            coalesce(SUM(CASE WHEN MONTH(ja.appliedDate) = MONTH(CURRENT_DATE) - 1
+                     AND YEAR(ja.appliedDate) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END),0)  as lastMonthCount
         FROM JobApplication ja
         WHERE ja.job.employer.id = :employerId
     """)
@@ -72,6 +72,5 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     Page<ApplicantsResponse> findApplicationsByJobId(@Param("jobId") UUID jobId, Pageable pageable);
 
 
-
-
+    List<JobApplication> getJobApplicationsByJob_Id(UUID jobId);
 }
