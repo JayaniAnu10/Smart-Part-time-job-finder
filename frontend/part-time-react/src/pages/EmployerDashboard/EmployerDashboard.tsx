@@ -20,8 +20,8 @@ const EmployerDashboard = () => {
     return <div className="text-2xl text-red-500">Error loading stats</div>;
 
   return (
-    <div className="mx-8 my-12 md:mx-20 flex flex-col gap-13">
-      <div className="flex justify-between">
+    <div className="mx-8 my-10 md:mx-20 flex flex-col gap-13">
+      <div className="flex justify-between md:flex-row flex-col">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl text-[#0f1f3d] font-bold dark:text-white ">
             Employer Dashboard
@@ -39,7 +39,7 @@ const EmployerDashboard = () => {
         </div>
       </div>
       <EmpStat data={data} />
-      <EmpJobPost jobs={data?.jobStats} />
+      <EmpJobPost jobs={data?.jobStats} empId={employerId} />
     </div>
   );
 };

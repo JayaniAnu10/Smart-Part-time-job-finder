@@ -11,6 +11,10 @@ class APIClient<T> {
     this.endpoint = endpoint;
   }
 
+  delete = () => {
+    return axiosInstance.delete(this.endpoint).then((res) => res.data);
+  };
+
   patch = (id: string, params?: Record<string, any>) => {
     return axiosInstance
       .patch(`${this.endpoint}/${id}`, null, { params })

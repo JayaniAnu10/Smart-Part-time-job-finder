@@ -259,7 +259,7 @@ const FindJob = () => {
                               {job.isUrgent && (
                                 <Badge
                                   variant="destructive"
-                                  className="text-xs"
+                                  className="text-sm"
                                 >
                                   <Zap className="w-3 h-3 mr-1" />
                                   Urgent
@@ -267,7 +267,7 @@ const FindJob = () => {
                               )}
                               <Badge
                                 variant="secondary"
-                                className="text-sm bg-green-700 dark:text-black text-white mb-2 hover:text-white hover:bg-green-700"
+                                className="text-sm bg-green-700 dark:text-black text-white  hover:text-white hover:bg-green-700"
                               >
                                 {job.category}
                               </Badge>
@@ -353,8 +353,8 @@ const FindJob = () => {
                             <div className="flex items-center gap-2">
                               <Users className="w-4 h-4 text-yellow-400 shrink-0" />
                               <span className="truncate">
-                                {job.availableVacancies}{" "}
-                                {job.availableVacancies === 1
+                                {job.totalVacancies}{" "}
+                                {job.totalVacancies === 1
                                   ? "vacancy"
                                   : "vacancies"}
                               </span>

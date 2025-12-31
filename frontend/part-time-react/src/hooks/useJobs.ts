@@ -21,7 +21,7 @@ interface Job {
   minSalary: number;
   jobSchedules: Schedules[];
   accommodation: string;
-  availableVacancies: number;
+  totalVacancies: number;
   employer: string;
   isUrgent: boolean;
 }
