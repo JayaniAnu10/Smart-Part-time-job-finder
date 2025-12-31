@@ -82,20 +82,6 @@ const SeekerProfile = () => {
                   </span>
                 </div>
               </div>
-
-              <div className="flex gap-3 md:flex-row flex-col">
-                <Button className="bg-primary hover:bg-primary/80 text-[#0f1f3d] cursor-pointer">
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Approve Application
-                </Button>
-                <Button
-                  variant="destructive"
-                  className="cursor-pointer text-white"
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Reject Application
-                </Button>
-              </div>
             </div>
           </div>
 
