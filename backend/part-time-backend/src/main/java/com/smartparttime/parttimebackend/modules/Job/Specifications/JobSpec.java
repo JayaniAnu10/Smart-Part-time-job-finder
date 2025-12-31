@@ -11,31 +11,40 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class JobSpec {
-    public static Specification<Job> hasTitle(String title) {
-        return (root, query, cb) ->  cb.like( cb.lower(root.get("title")),
-                "%" + title.toLowerCase() + "%");
+    public static Specification<Job> hasTitleRequirementsDescription(String keyword) {
+        return (root, query, cb) -> {
+            String pattern = "%" + keyword.toLowerCase() + "%";
+            return cb.or(
+                    cb.like(cb.lower(root.get("title")), pattern),
+                    cb.like(cb.lower(root.get("requirements")), pattern),
+                    cb.like(cb.lower(root.get("description")), pattern)
+            );
+        };
     }
 
-    public static Specification<Job> hasDescription(String description) {
+    /*public static Specification<Job> hasDescription(String description) {
         return (root, query, cb) ->  cb.like( cb.lower(root.get("description")),
                 "%" + description.toLowerCase() + "%");
+    }*/
+
+    public static Specification<Job> hasMinSalaryGreaterThanOrEqualTo(BigDecimal minSalary) {
+        return (root, query, cb) ->   cb.greaterThanOrEqualTo(root.get("minSalary"), minSalary );
     }
 
-    public static Specification<Job> hasSalaryGreaterThanOrEqualTo(BigDecimal salary) {
-        return (root, query, cb) ->   cb.greaterThanOrEqualTo(root.get("salary"), salary );
+    public static Specification<Job> hasMaxSalaryLessThanOrEqualTo(BigDecimal maxSalary) {
+        return (root, query, cb) ->  cb.lessThanOrEqualTo(root.get("maxSalary"), maxSalary);
     }
 
-    public static Specification<Job> hasSalaryLessThanOrEqualTo(BigDecimal salary) {
-        return (root, query, cb) ->  cb.lessThanOrEqualTo(root.get("salary"), salary);
-    }
-
-    public static Specification<Job> hasSkills(String skills) {
-        return  (root, query, cb) ->   cb.like( cb.lower(root.get("skills")),
-                "%" + skills.toLowerCase() + "%");
-    }
+    /*public static Specification<Job> hasRequirements(String requirements) {
+        return  (root, query, cb) ->   cb.like( cb.lower(root.get("requirements")),
+                "%" + requirements.toLowerCase() + "%");
+    }*/
 
     public static Specification<Job> hasCategory(String category) {
-        return (root, query, cb) ->   cb.like( cb.lower(root.get("category")), category.toLowerCase() );
+        return (root, query, cb) -> {
+            Join<Object, Object> join = root.join("category");
+            return cb.equal(cb.lower(join.get("category")), category.toLowerCase());
+        };
     }
 
     public static Specification<Job> hasDate(LocalDate date) {
@@ -50,10 +59,19 @@ public class JobSpec {
     }
 
     public static Specification<Job> hasLocation(String location) {
-        return (root, query, cb) -> cb.equal(root.get("location"), location);
+        return (root, query, cb) -> cb.like(cb.lower(root.get("location")),
+                "%" + location.toLowerCase() + "%");
     }
 
     public static Specification<Job> hasJobType(String jobType) {
-        return (root, query, cb) -> cb.equal(root.get("jobType"), jobType);
+        return (root, query, cb) -> cb.equal(cb.lower(root.get("jobType")), jobType.toLowerCase());
+    }
+
+    public static Specification<Job> hasRequiredGender(String requiredGender) {
+        return (root, query, cb) -> cb.equal(root.get("requiredGender"), requiredGender);
+    }
+
+    public static Specification<Job> notExpired() {
+        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("deadline"), LocalDateTime.now());
     }
 }

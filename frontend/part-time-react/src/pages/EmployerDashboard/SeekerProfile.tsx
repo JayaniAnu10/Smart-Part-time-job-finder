@@ -16,7 +16,7 @@ import {
   User,
   X,
 } from "lucide-react";
-import RecentJobs from "./RecentJObs";
+import RecentJobs from "./RecentJobs";
 
 const SeekerProfile = () => {
   const id = "7e131240-c539-4379-9f05-1ae34f4b35af";

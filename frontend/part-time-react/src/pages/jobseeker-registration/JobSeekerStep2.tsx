@@ -11,6 +11,7 @@ import Logo from "@/components/common/Logo";
 import { useJobSeekerStore } from "@/store/useJobSeekerStore";
 import toast from "react-hot-toast";
 import useAddJobSeeker from "@/hooks/useAddJobSeeker";
+import axios from "axios";
 
 export default function JobSeekerStep3() {
   const [photo, setPhoto] = useState<File | null>(null);
@@ -48,7 +49,7 @@ export default function JobSeekerStep3() {
       return;
     }
 
-    if (!data.skills) {
+    if (data.skills.length == 0) {
       toast.error("At least one skill is required.");
       return;
     }
@@ -62,6 +63,20 @@ export default function JobSeekerStep3() {
       onSuccess: () => {
         reset(); // clear zustand store
         navigate("/"); // navigate after success
+      },
+      onError: (error) => {
+        //Axios error handle
+        if (axios.isAxiosError(error)) {
+          //Get error from server
+          const msg =
+            error.response?.data.error ||
+            "Job Seeker signup failed. Please try again.";
+          toast.error(msg);
+        } else {
+          toast.error("Job Seeker signup failed. Please try again.");
+        }
+        reset();
+        setAgreeTerms(false);
       },
     });
   };

@@ -1,7 +1,6 @@
 import APIClient from "@/services/apiClient";
 import type { EmployerRegistrationData } from "@/store/useEmployerStore";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import toast from "react-hot-toast";
 
 const apiClient = new APIClient<EmployerRegistrationData>("/employer/register");
@@ -20,7 +19,7 @@ const useAddEmployer = () => {
         industry: data.industry,
         website: data.website,
         description: data.description,
-        userId: "49fe9b1f-06d6-4c66-8acd-454a83982362",
+        userId: "e05752c6-9f09-4c57-85e6-83494098f7f9",
       };
 
       formData.append(
@@ -39,18 +38,6 @@ const useAddEmployer = () => {
     },
     onSuccess: () => {
       toast.success("Signup successful!");
-    },
-    onError: (error) => {
-      //Axios error handle
-      if (axios.isAxiosError(error)) {
-        //Get error from server
-        const msg =
-          error.response?.data.error ||
-          "Employer signup failed. Please try again.";
-        toast.error(msg);
-      } else {
-        toast.error("Employer signup failed. Please try again.");
-      }
     },
   });
 };

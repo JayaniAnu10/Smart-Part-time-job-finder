@@ -1,11 +1,7 @@
 import APIClient from "@/services/apiClient";
 import type { PageResponse } from "@/types/pageResponse";
+import type { Query } from "@/types/Query";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-
-interface Query {
-  page: number;
-  pageSize?: number;
-}
 
 export interface Applicants {
   applicationId: string;

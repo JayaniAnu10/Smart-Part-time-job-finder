@@ -21,7 +21,7 @@ public class JobResponseDto {
 
     private String description;
 
-    private Integer category;
+    private String category;
 
     private String location;
 
@@ -33,21 +33,30 @@ public class JobResponseDto {
 
     private JobStatus status;
 
-    private BigDecimal salary;
+    private BigDecimal minSalary;
 
-    private List<JobScheduleDto> jobSchedules;
+    private BigDecimal maxSalary;
 
-    private Integer workingHours;
+    private List<JobScheduleResponse> jobSchedules;
 
-    private String skills;
+    private String requirements;
+
+    private String accommodation;
 
     private Long availableVacancies;
 
     private Long totalVacancies;
 
-    private UUID employer;
+    private String employer;
+
+    private String employerId;
 
     private Double latitude;
 
     private Double longitude;
+
+    private Boolean isUrgent;
+
+    private String requiredGender;
+
 }
