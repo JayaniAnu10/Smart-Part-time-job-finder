@@ -9,9 +9,11 @@ import { Badge } from "../../components/ui/badge";
 import { CheckCircle, MapPin, X } from "lucide-react";
 import { getDaysAgo } from "./EmpJobPost";
 import { Button } from "../../components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { StarRating } from "../../components/common/StarRating";
 import { lowerCase } from "@/pages/EmployerDashboard/JobApplicants";
+import useUpdateApplicationStatus from "@/hooks/useUpdateApplicationStatus";
+import toast from "react-hot-toast";
 
 interface Props {
   applicants: Applicants[];
@@ -19,6 +21,32 @@ interface Props {
 
 const ApplicantCard = ({ applicants }: Props) => {
   const navigate = useNavigate();
+  const statusMutation = useUpdateApplicationStatus();
+
+  const handleApprove = async (id: string) => {
+    await toast.promise(
+      statusMutation.mutateAsync({ applicationId: id, status: "APPROVED" }),
+      {
+        loading: "Approving application...",
+        success: "Application approved successfully!",
+        error: "Failed to approve application",
+      },
+      { position: "top-center" }
+    );
+  };
+
+  const handleReject = async (id: string) => {
+    await toast.promise(
+      statusMutation.mutateAsync({ applicationId: id, status: "REJECTED" }),
+      {
+        loading: "Rejecting application...",
+        success: "Application rejected successfully!",
+        error: "Failed to reject application",
+      },
+      { position: "top-center" }
+    );
+  };
+
   return (
     <div>
       {applicants.length === 0 ? (
@@ -101,11 +129,15 @@ const ApplicantCard = ({ applicants }: Props) => {
 
                   {lowerCase(applicant.status) === "pending" && (
                     <>
-                      <Button className="w-full md:w-auto bg-primary hover:bg-primary/80 text-[#0f1f3d] cursor-pointer md:p-5">
+                      <Button
+                        onClick={() => handleApprove(applicant.applicationId)}
+                        className="w-full md:w-auto bg-primary hover:bg-primary/80 text-[#0f1f3d] cursor-pointer md:p-5"
+                      >
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Approve
                       </Button>
                       <Button
+                        onClick={() => handleReject(applicant.applicationId)}
                         variant="destructive"
                         className="w-full md:w-auto text-white cursor-pointer md:p-5"
                       >

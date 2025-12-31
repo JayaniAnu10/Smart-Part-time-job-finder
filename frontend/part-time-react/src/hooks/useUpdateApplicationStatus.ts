@@ -10,20 +10,23 @@ const useUpdateApplicationStatus = () => {
 
   return useMutation<any, Error, { applicationId: string; status: Status }>({
     mutationFn: ({ applicationId, status }) => {
-      const apiClient = new APIClient(`/applications/${applicationId}`);
+      const apiClient = new APIClient("/applications");
       return apiClient.patch(applicationId, { status });
     },
     onSuccess: () => {
-      toast.success("Application status updated successfully!");
       // Invalidate all applicants queries
       queryClient.invalidateQueries({ queryKey: ["applicants"] });
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const msg = error.response?.data.error || "Failed to update status";
-        toast.error(msg);
+        toast.error(msg, {
+          position: "top-center",
+        });
       } else {
-        toast.error("Failed to update status");
+        toast.error("Failed to update status", {
+          position: "top-center",
+        });
       }
     },
   });
