@@ -112,7 +112,7 @@ export default function AddJobSchedules({
 
           {/* Remove button */}
           {fields.length > 1 && (
-            <div className="md:col-span-3 flex justify-end mt-2">
+            <div className="md:col-span-3 flex justify-end mt-2 text-white">
               <Button
                 variant="destructive"
                 onClick={() => remove(index)}
