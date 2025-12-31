@@ -16,7 +16,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/store?createDatabaseIfNotExist=true
     username: root
-    password: 
+    password: jayani@10
 
   jpa:
     show-sql: true

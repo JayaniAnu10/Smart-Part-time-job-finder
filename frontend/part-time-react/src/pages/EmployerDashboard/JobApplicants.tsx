@@ -92,7 +92,7 @@ const JobApplicants = () => {
           <SheetTrigger asChild>
             <Button
               variant="outline"
-              className="cursor-pointer hover:bg-yellow-400"
+              className="cursor-pointer hover:bg-yellow-400 hover:text-[#0f1f3d]"
             >
               <SlidersHorizontal className="h-4 w-4 mr-2 " />
               Filter by Rating

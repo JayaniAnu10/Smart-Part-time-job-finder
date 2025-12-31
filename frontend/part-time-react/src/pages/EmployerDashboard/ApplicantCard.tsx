@@ -14,6 +14,8 @@ import { StarRating } from "../../components/common/StarRating";
 import { lowerCase } from "@/pages/EmployerDashboard/JobApplicants";
 import useUpdateApplicationStatus from "@/hooks/useUpdateApplicationStatus";
 import toast from "react-hot-toast";
+import { Spinner } from "@/components/ui/spinner";
+import { useState } from "react";
 
 interface Props {
   applicants: Applicants[];
@@ -21,30 +23,44 @@ interface Props {
 
 const ApplicantCard = ({ applicants }: Props) => {
   const navigate = useNavigate();
+  const [updating, setUpdating] = useState<{
+    id: string;
+    action: "approve" | "reject";
+  } | null>(null);
   const statusMutation = useUpdateApplicationStatus();
 
   const handleApprove = async (id: string) => {
-    await toast.promise(
-      statusMutation.mutateAsync({ applicationId: id, status: "APPROVED" }),
-      {
-        loading: "Approving application...",
-        success: "Application approved successfully!",
-        error: "Failed to approve application",
-      },
-      { position: "top-center" }
-    );
+    setUpdating({ id, action: "approve" });
+    try {
+      await toast.promise(
+        statusMutation.mutateAsync({ applicationId: id, status: "APPROVED" }),
+        {
+          loading: "Approving application...",
+          success: "Application approved successfully!",
+          error: "Failed to approve application",
+        },
+        { position: "top-center" }
+      );
+    } finally {
+      setUpdating(null);
+    }
   };
 
   const handleReject = async (id: string) => {
-    await toast.promise(
-      statusMutation.mutateAsync({ applicationId: id, status: "REJECTED" }),
-      {
-        loading: "Rejecting application...",
-        success: "Application rejected successfully!",
-        error: "Failed to reject application",
-      },
-      { position: "top-center" }
-    );
+    setUpdating({ id, action: "reject" });
+    try {
+      await toast.promise(
+        statusMutation.mutateAsync({ applicationId: id, status: "REJECTED" }),
+        {
+          loading: "Rejecting application...",
+          success: "Application rejected successfully!",
+          error: "Failed to reject application",
+        },
+        { position: "top-center" }
+      );
+    } finally {
+      setUpdating(null);
+    }
   };
 
   return (
@@ -131,17 +147,36 @@ const ApplicantCard = ({ applicants }: Props) => {
                     <>
                       <Button
                         onClick={() => handleApprove(applicant.applicationId)}
-                        className="w-full md:w-auto bg-primary hover:bg-primary/80 text-[#0f1f3d] cursor-pointer md:p-5"
+                        className="cursor-pointer"
+                        disabled={
+                          updating?.id === applicant.applicationId &&
+                          updating?.action === "approve"
+                        }
                       >
-                        <CheckCircle className="w-4 h-4 mr-2" />
+                        {updating?.id === applicant.applicationId &&
+                        updating?.action === "approve" ? (
+                          <Spinner className="size-6 mr-2" />
+                        ) : (
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                        )}
                         Approve
                       </Button>
+
                       <Button
                         onClick={() => handleReject(applicant.applicationId)}
                         variant="destructive"
-                        className="w-full md:w-auto text-white cursor-pointer md:p-5"
+                        className="text-white cursor-pointer"
+                        disabled={
+                          updating?.id === applicant.applicationId &&
+                          updating?.action === "reject"
+                        }
                       >
-                        <X className="w-4 h-4 mr-2" />
+                        {updating?.id === applicant.applicationId &&
+                        updating?.action === "reject" ? (
+                          <Spinner className="size-6 mr-2" />
+                        ) : (
+                          <X className="w-4 h-4 mr-2" />
+                        )}
                         Reject
                       </Button>
                     </>
