@@ -24,6 +24,8 @@ import AboutPage from "./pages/AboutUs/AboutPage";
 
 import ContactPage from "./pages/Contact/ContactPage";
 
+import TermsPage from './pages/Terms/TermsPage';
+
 const App: React.FC = () => {
   return (
     <Routes>
@@ -59,6 +61,8 @@ const App: React.FC = () => {
       <Route path="/about" element={<AboutPage />} />
       
       <Route path="/contact" element={<ContactPage />} />
+
+      <Route path="/terms" element={<TermsPage />} />
 
       <Route path="*" element={<Navigate to="/" />} />
 
