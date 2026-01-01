@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Auth;
 
+import com.smartparttime.parttimebackend.common.configs.JwtConfig;
 import com.smartparttime.parttimebackend.modules.Auth.Dtos.JwtResponse;
 import com.smartparttime.parttimebackend.modules.Auth.Dtos.UserLoginRequest;
 import com.smartparttime.parttimebackend.modules.Auth.Services.JwtService;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final JwtConfig jwtConfig;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -47,7 +49,7 @@ public class AuthController {
         var cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
-        cookie.setMaxAge(604800);
+        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
         cookie.setSecure(true);
         response.addCookie(cookie);
 
