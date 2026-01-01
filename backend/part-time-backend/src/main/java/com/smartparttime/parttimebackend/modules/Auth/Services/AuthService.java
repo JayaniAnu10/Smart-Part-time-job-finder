@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.Auth;
+package com.smartparttime.parttimebackend.modules.Auth.Services;
 
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import lombok.AllArgsConstructor;

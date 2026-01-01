@@ -1,8 +1,11 @@
 package com.smartparttime.parttimebackend.modules.Auth;
 
+import com.smartparttime.parttimebackend.modules.Auth.Dtos.JwtResponse;
 import com.smartparttime.parttimebackend.modules.Auth.Dtos.UserLoginRequest;
+import com.smartparttime.parttimebackend.modules.Auth.Services.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,14 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class AuthController {
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @PostMapping("/login")
-    public void login(@Valid @RequestBody UserLoginRequest request) {
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody UserLoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
+    var token = jwtService.generateToken(request.getEmail());
+    return ResponseEntity.ok(new JwtResponse(token));
     }
 }
