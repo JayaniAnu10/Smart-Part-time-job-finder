@@ -20,14 +20,24 @@ import JobDetails from "./pages/JobDetails";
 import SeekerProfile from "./pages/EmployerDashboard/SeekerProfile";
 
 import JobSeekerDashboard from "./pages/JobseekerDashboard";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import ManageUsers from "./pages/adminActions/ManageUsers";
+import ModerateJobPosts from "./pages/adminActions/ModerateJobPosts";
+import ReviewReports from "./pages/adminActions/ReviewReports";
+import ViewAnalytics from "./pages/adminActions/ViewAnalytics";
+
+
 import AboutPage from "./pages/AboutUs/AboutPage";
 import PostJob from "./pages/PostJobs/PostJob";
-import FindJob from "./pages/FindYourJob/FindJob";
+
+import FindJob from "./pages/FindJob/FindJobs";
+
 import JobProfile from "./pages/FindYourJob/JobProfile";
 
 import ContactPage from "./pages/Contact/ContactPage";
 
 import TermsPage from './pages/Terms/TermsPage';
+
 
 const App: React.FC = () => {
   return (
@@ -67,6 +77,13 @@ const App: React.FC = () => {
       <Route path="/postJob" element={<PostJob />} />
 
       <Route path="/dashboard" element={<JobSeekerDashboard />} />
+
+      <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+      <Route path="/admin/manage-users" element={<ManageUsers />} />
+      <Route path="/admin/moderate-job-posts" element={<ModerateJobPosts />} />
+      <Route path="/admin/review-reports" element={<ReviewReports />} />
+      <Route path="/admin/view-analytics" element={<ViewAnalytics />} />
+
       <Route path="/about" element={<AboutPage />} />
 
       <Route path="/terms" element={<TermsPage />} />
