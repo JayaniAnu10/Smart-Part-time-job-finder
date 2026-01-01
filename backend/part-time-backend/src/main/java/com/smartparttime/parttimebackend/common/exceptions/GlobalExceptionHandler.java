@@ -3,6 +3,7 @@ package com.smartparttime.parttimebackend.common.exceptions;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,6 +54,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleInternalServer(InternalServerException e){
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", e.getMessage())) ;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String,String>> handleBadCredentialsException(Exception e){
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", e.getMessage())) ;
     }
 
