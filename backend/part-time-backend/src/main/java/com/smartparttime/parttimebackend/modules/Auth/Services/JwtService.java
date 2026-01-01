@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Auth.Services;
 
 import com.smartparttime.parttimebackend.common.configs.JwtConfig;
+import com.smartparttime.parttimebackend.modules.User.Role;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -30,6 +31,7 @@ public class JwtService {
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email", user.getEmail())
+                .claim("role", user.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
                 .signWith(jwtConfig.getSecretKey())
@@ -56,5 +58,9 @@ public class JwtService {
 
     public UUID getUserIdFromToken(String token){
         return UUID.fromString(getClaims(token).getSubject());
+    }
+
+    public Role getRoleFromToken(String token){
+        return Role.valueOf(getClaims(token).get("role", String.class));
     }
 }

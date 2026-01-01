@@ -35,6 +35,7 @@ public class UserService{
 
         var user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         user.setAverageRate(BigDecimal.valueOf(0.0));
         user.setTotalRatings(0);
         user.setCreatedAt(LocalDateTime.now());

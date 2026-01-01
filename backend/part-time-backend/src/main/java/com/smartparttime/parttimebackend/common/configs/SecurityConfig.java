@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.common.configs;
 
 import com.smartparttime.parttimebackend.modules.Auth.filters.JwtAuthenticationFilter;
+import com.smartparttime.parttimebackend.modules.User.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,7 +62,7 @@ public class SecurityConfig {
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c->c
-                        .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/refresh").permitAll()
                         .requestMatchers(HttpMethod.POST,"/user/*").permitAll()
