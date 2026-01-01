@@ -3,15 +3,12 @@ package com.smartparttime.parttimebackend.modules.User;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.ChangePasswordRequest;
-import com.smartparttime.parttimebackend.modules.User.UserDtos.UserLoginRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterRequest;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
 import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,17 +65,5 @@ public class UserService{
         userRepository.save(user);
     }
 
-    public void login( UserLoginRequest request){
-        var user= userRepository.findByEmail(request.getEmail());
-        if(user == null){
-            throw new NotFoundException("User not found");
-        }
-        if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
-            throw new PasswordMismatchException("Passwords do not match");
-        };
-
-        ResponseEntity.ok();
-
-    }
 
 }

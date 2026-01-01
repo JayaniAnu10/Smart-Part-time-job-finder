@@ -1,7 +1,6 @@
 package com.smartparttime.parttimebackend.modules.User;
 
 import com.smartparttime.parttimebackend.modules.User.UserDtos.*;
-import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -48,9 +47,5 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/login")
-    public void login(@Valid @RequestBody UserLoginRequest request) {
-        userService.login(request);
-    }
 
 }
