@@ -7,6 +7,8 @@ import com.smartparttime.parttimebackend.modules.User.UserDtos.UserDto;
 import com.smartparttime.parttimebackend.modules.User.UserMapper;
 import com.smartparttime.parttimebackend.modules.User.UserService;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,10 @@ public class AuthController {
     private final UserMapper userMapper;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@Valid @RequestBody UserLoginRequest request) {
+    public ResponseEntity<JwtResponse> login(
+            @Valid @RequestBody UserLoginRequest request,
+            HttpServletResponse response) {
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -36,8 +41,17 @@ public class AuthController {
         );
 
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        var token = jwtService.generateToken(user);
-        return ResponseEntity.ok(new JwtResponse(token));
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        var cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/refresh");
+        cookie.setMaxAge(604800);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
     @GetMapping("/me")
