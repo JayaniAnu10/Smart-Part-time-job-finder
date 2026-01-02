@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuthStore } from "@/store/AuthStore";
 import * as jwt_decode from "jwt-decode";
 import type { ReactNode } from "react";

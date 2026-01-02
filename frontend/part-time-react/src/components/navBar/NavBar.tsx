@@ -6,6 +6,12 @@ import ThemeToggle from "../navBar/ThemeToggle";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { Button } from "../ui/button";
 import { useAuthStore } from "@/store/AuthStore";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -28,7 +34,7 @@ const NavBar = () => {
 
     const buttons = [];
 
-    // Only show GetStarted if user has NO role at all
+    // Only show GetStarted if user has no role at all
     if (user && !user.isEmployer && !user.isJobseeker) {
       buttons.push({
         label: t("getStarted"),
@@ -39,7 +45,7 @@ const NavBar = () => {
 
     if (user?.isJobseeker) {
       buttons.push({
-        label: t("SeekerDashboard"),
+        label: t("seekerDashboard"),
         to: "/dashboard",
         variant: "default",
       });
@@ -87,40 +93,77 @@ const NavBar = () => {
         ))}
       </div>
 
-      {/* Desktop actions */}
       <div className="hidden lg:flex items-center gap-3">
         <LanguageSwitcher />
         <ThemeToggle />
-        {actionButtons.map((btn) =>
-          btn.to ? (
-            <Link key={btn.label} to={btn.to}>
+
+        {/* dashboard dropdown (desktop only) */}
+        {user && (user.isEmployer || user.isJobseeker) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-yellow-400 text-[#0f1f3d] hover:bg-yellow-300 text-md">
+                {t("dashboard")}
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="end"
+              className="flex flex-col gap-2 p-2  "
+            >
+              {user?.isJobseeker && (
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard">{t("seekerDashboard")}</Link>
+                </DropdownMenuItem>
+              )}
+
+              {user?.isEmployer && (
+                <DropdownMenuItem asChild>
+                  <Link to="/empDashboard">{t("employerDashboard")}</Link>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+
+        {/* Other action buttons (login / get started / logout) */}
+        {actionButtons
+          .filter(
+            (btn) =>
+              btn.label !== t("seekerDashboard") &&
+              btn.label !== t("employerDashboard")
+          )
+          .map((btn) =>
+            btn.to ? (
+              <Link key={btn.label} to={btn.to}>
+                <Button
+                  variant={btn.variant as any}
+                  className={`px-3 xl:px-4 ${
+                    btn.variant === "default"
+                      ? "bg-yellow-400 text-[#0f1f3d]"
+                      : ""
+                  }`}
+                >
+                  {btn.label}
+                </Button>
+              </Link>
+            ) : (
               <Button
+                key={btn.label}
                 variant={btn.variant as any}
                 className={`px-3 xl:px-4 ${
                   btn.variant === "default"
                     ? "bg-yellow-400 text-[#0f1f3d]"
                     : ""
                 }`}
+                onClick={btn.onClick}
               >
                 {btn.label}
               </Button>
-            </Link>
-          ) : (
-            <Button
-              key={btn.label}
-              variant={btn.variant as any}
-              className={`px-3 xl:px-4 ${
-                btn.variant === "default" ? "bg-yellow-400 text-[#0f1f3d]" : ""
-              }`}
-              onClick={btn.onClick}
-            >
-              {btn.label}
-            </Button>
-          )
-        )}
+            )
+          )}
       </div>
 
-      {/* Mobile left toggles + hamburger */}
+      {/* hamburger */}
       <div className="lg:hidden flex items-center gap-3">
         <LanguageSwitcher />
         <ThemeToggle />

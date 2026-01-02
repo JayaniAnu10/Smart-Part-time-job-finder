@@ -8,5 +8,7 @@
   "dashboard": "டாஷ்போர்டு",
   "login": "உள்நுழைய",
   "logout": "வெளியேறு",
-  "getStarted": "தொடங்கவும்"
+  "getStarted": "தொடங்கவும்",
+  "seekerDashboard": "வேலை தேடுபவரின் டேஷ்போர்டு",
+  "employerDashboard": "முதலாளியின் டாஷ்போர்டு"
 }
