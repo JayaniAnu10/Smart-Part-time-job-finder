@@ -5,16 +5,16 @@ interface AuthTabsProps {
 
 const AuthTabs = ({ activeTab, setActiveTab }: AuthTabsProps) => {
   return (
-    <div className="w-full max-w-sm bg-[#E7ECF7] p-1 rounded-xl flex shadow-sm">
+    <div className="w-full max-w-sm bg-[#E7ECF7] dark:bg-background p-1 rounded-xl flex shadow-sm">
       
       <button
         onClick={() => setActiveTab("login")}
         className={`
-          flex-1 py-2 text-[14px] font-medium rounded-lg transition-all duration-200
+          flex-1 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 cursor-pointer
           ${
             activeTab === "login"
-              ? "bg-white text-[#0F1F3D] shadow-sm"      
-              : "bg-transparent text-[#364D7D]"            
+              ? "bg-[#FAFAFA]/60 text-[#0F1F3D] shadow-sm"      
+              : "bg-transparent text-secondary/70 dark:text-primary/70"            
           }
         `}
       >
@@ -24,11 +24,11 @@ const AuthTabs = ({ activeTab, setActiveTab }: AuthTabsProps) => {
       <button
         onClick={() => setActiveTab("signup")}
         className={`
-          flex-1 py-2 text-[14px] font-medium rounded-lg transition-all duration-200
+          flex-1 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 cursor-pointer
           ${
             activeTab === "signup"
-              ? "bg-white text-[#0F1F3D] shadow-sm"       
-              : "bg-transparent text-[#364D7D]"            
+              ? "bg-[#FAFAFA]/70 text-[#0F1F3D] shadow-sm"       
+              : "bg-transparent text-secondary/70 dark:text-primary/70"            
           }
         `}
       >
