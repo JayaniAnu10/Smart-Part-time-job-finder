@@ -12,6 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { LogOut } from "lucide-react";
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -86,7 +87,7 @@ const NavBar = () => {
           <Button
             key={link.label}
             variant="ghost"
-            className="hover:bg-secondary/6 text-md xl:px-4"
+            className="hover:text-yellow-400 hover:bg-transparent text-md xl:px-4"
           >
             <Link to={link.to}>{link.label}</Link>
           </Button>
@@ -137,10 +138,10 @@ const NavBar = () => {
               <Link key={btn.label} to={btn.to}>
                 <Button
                   variant={btn.variant as any}
-                  className={`px-3 xl:px-4 ${
+                  className={`px-3 xl:px-4 text-md ${
                     btn.variant === "default"
-                      ? "bg-yellow-400 text-[#0f1f3d]"
-                      : ""
+                      ? "bg-yellow-400 text-[#0f1f3d] hover:bg-yellow-300"
+                      : "hover:bg-yellow-400 hover:text-[#0f1f3d]"
                   }`}
                 >
                   {btn.label}
@@ -153,10 +154,11 @@ const NavBar = () => {
                 className={`px-3 xl:px-4 ${
                   btn.variant === "default"
                     ? "bg-yellow-400 text-[#0f1f3d]"
-                    : ""
+                    : "hover:text-[#0f1f3d]"
                 }`}
                 onClick={btn.onClick}
               >
+                <LogOut />
                 {btn.label}
               </Button>
             )
@@ -201,23 +203,23 @@ const NavBar = () => {
           <Link key={link.label} to={link.to}>
             <Button
               variant="ghost"
-              className="w-full text-left hover:bg-secondary/10"
+              className="w-full text-left hover:bg-secondary/30"
             >
               {link.label}
             </Button>
           </Link>
         ))}
 
-        <div className="flex flex-col gap-2 pt-2 border-t border-secondary/20">
+        <div className="flex flex-col  gap-2 pt-2 border-t border-secondary/20">
           {actionButtons.map((btn) =>
             btn.to ? (
               <Link key={btn.label} to={btn.to}>
                 <Button
                   variant={btn.variant as any}
-                  className={`w-full ${
+                  className={`w-full text-md ${
                     btn.variant === "default"
-                      ? "bg-yellow-400 text-[#0f1f3d]"
-                      : ""
+                      ? "bg-yellow-400 text-[#0f1f3d] hover:bg-yellow-300"
+                      : "hover:bg-yellow-400 hover:text-[#0f1f3d]"
                   }`}
                 >
                   {btn.label}
@@ -230,10 +232,11 @@ const NavBar = () => {
                 className={`w-full ${
                   btn.variant === "default"
                     ? "bg-yellow-400 text-[#0f1f3d]"
-                    : ""
+                    : "hover:text-[#0f1f3d] "
                 }`}
                 onClick={btn.onClick}
               >
+                <LogOut size={16} />
                 {btn.label}
               </Button>
             )
