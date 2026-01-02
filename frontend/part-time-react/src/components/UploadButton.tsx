@@ -1,5 +1,5 @@
 import React from "react";
-import uploadIcon from "../assets/upload.svg"; 
+import { Upload } from "lucide-react";
 
 interface UploadButtonProps {
   label: string;
@@ -8,9 +8,11 @@ interface UploadButtonProps {
 
 const UploadButton: React.FC<UploadButtonProps> = ({ label, onChange }) => {
   return (
-    <label className="flex items-center gap-2 px-4 h-[38px] border rounded-[12px] cursor-pointer bg-[#FAFAFA] shadow-sm hover:bg-[#F7C01D] transition">
-      <img src={uploadIcon} alt="Upload" className="w-[16px] h-[16px]" />
-      <span className="text-[14px] text-[#0F1F3D] font-medium">{label}</span>
+    <label className="group flex items-center gap-2 px-4 h-[38px] rounded-[8px] cursor-pointer 
+                      bg-[#fafafa] dark:bg-background shadow-sm hover:bg-yellow-400 transition">
+
+     <Upload size={16} className="text-secondary dark:text-primary dark:group-hover:text-secondary" />
+      <span className="text-[14px] text-secondary dark:text-primary dark:hover:text-secondary font-medium">{label}</span>
 
       <input
         type="file"
