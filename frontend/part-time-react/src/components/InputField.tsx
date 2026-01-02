@@ -2,7 +2,7 @@ import React from "react";
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  icon?: string;
+  icon?: React.ReactNode; 
 }
 
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
@@ -24,11 +24,9 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 
         <div className="relative w-full h-10">
           {icon && (
-            <img
-              src={icon}
-              alt="icon"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-100"
-            />
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/50 dark:text-primary/50">
+              {icon}
+            </span>
           )}
 
           <input
