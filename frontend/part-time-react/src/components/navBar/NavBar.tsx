@@ -1,141 +1,200 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Logo from "../common/Logo";
 import ThemeToggle from "../navBar/ThemeToggle";
-import { Button } from "../ui/button";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Button } from "../ui/button";
+import { useAuthStore } from "@/store/AuthStore";
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
+
+  const user = useAuthStore((s) => s.user);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const clearAuth = useAuthStore((s) => s.clearAuth);
+
+  const handleLogout = useCallback(() => clearAuth(), [clearAuth]);
+
+  // Action buttons based on roles
+  const actionButtons = useMemo(() => {
+    if (!accessToken) {
+      return [
+        { label: t("login"), to: "/auth", variant: "ghost" },
+        { label: t("getStarted"), to: "/getstarted", variant: "default" },
+      ];
+    }
+
+    const buttons = [];
+
+    // Only show GetStarted if user has NO role at all
+    if (user && !user.isEmployer && !user.isJobseeker) {
+      buttons.push({
+        label: t("getStarted"),
+        to: "/getstarted",
+        variant: "default",
+      });
+    }
+
+    if (user?.isJobseeker) {
+      buttons.push({
+        label: t("SeekerDashboard"),
+        to: "/dashboard",
+        variant: "default",
+      });
+    }
+
+    if (user?.isEmployer) {
+      buttons.push({
+        label: t("employerDashboard"),
+        to: "/empDashboard",
+        variant: "default",
+      });
+    }
+
+    buttons.push({
+      label: t("logout"),
+      onClick: handleLogout,
+      variant: "ghost",
+    });
+
+    return buttons;
+  }, [accessToken, user, handleLogout, t]);
+
+  const navLinks = [
+    { label: t("findJobs"), to: "/find-your-job" },
+    { label: t("postJobs"), to: "/postJob" },
+    { label: t("nearbyMap"), to: "/nearBy" },
+    { label: t("contact"), to: "/" },
+    { label: t("about"), to: "/about" },
+  ];
+
   return (
-    <nav className="fixed flex px-4 lg:px-6 top-0 right-0 left-0 bg-background/75 backdrop-blur-lg min-h-16 z-50 w-full">
-      <div className="flex justify-between w-full items-center gap-2 flex-wrap lg:flex-nowrap">
-        <Logo />
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/75 backdrop-blur-lg w-full px-4 lg:px-6 min-h-16 flex items-center justify-between flex-wrap lg:flex-nowrap">
+      <Logo />
 
-        <div className="tab:flex hidden lg:flex items-center  xl:gap-3 flex-1 justify-center">
+      {/* Desktop nav links */}
+      <div className="hidden lg:flex flex-1 justify-center gap-3">
+        {navLinks.map((link) => (
           <Button
+            key={link.label}
             variant="ghost"
-            className="font-medium  text-md  hover:bg-secondary/6 
-            dark:hover:text-yellow-400
-            cursor-pointer  xl:px-4"
+            className="hover:bg-secondary/6 text-md xl:px-4"
           >
-            <Link to={"/find-your-job"}>{t("findJobs")}</Link>
+            <Link to={link.to}>{link.label}</Link>
           </Button>
-          <Button
-            variant="ghost"
-            asChild
-            className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer  xl:px-4"
-          >
-            <Link to={"/postJob"}>{t("postJobs")}</Link>
-          </Button>
-          <Button
-            asChild
-            variant="ghost"
-            className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer whitespace-nowrap  xl:px-4"
-          >
-            <Link to={"/nearBy"}>{t("nearbyMap")}</Link>
-          </Button>
-          <Button
-            variant="ghost"
-            className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer whitespace-nowrap px-2 xl:px-4"
-          >
-            {t("about")}
-          </Button>
-          <Button
-            variant="ghost"
-            className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-300 cursor-pointer whitespace-nowrap px-2 xl:px-4"
-          >
-            {t("contact")}
-          </Button>
-        </div>
+        ))}
+      </div>
 
-        <div className="flex gap-1 xl:gap-3 items-center">
-          <LanguageSwitcher />
-          <div>
-            <ThemeToggle />
-          </div>
-          <div className="tab:flex lg:flex hidden gap-2 xl:gap-3">
-            <Link to="/auth">
+      {/* Desktop actions */}
+      <div className="hidden lg:flex items-center gap-3">
+        <LanguageSwitcher />
+        <ThemeToggle />
+        {actionButtons.map((btn) =>
+          btn.to ? (
+            <Link key={btn.label} to={btn.to}>
               <Button
-                variant="ghost"
-                className="hover:bg-yellow-400 text-md  cursor-pointer dark:hover:text-[#0f1f3d] whitespace-nowrap px-3 xl:px-4"
+                variant={btn.variant as any}
+                className={`px-3 xl:px-4 ${
+                  btn.variant === "default"
+                    ? "bg-yellow-400 text-[#0f1f3d]"
+                    : ""
+                }`}
               >
-                {t("login")}
+                {btn.label}
               </Button>
             </Link>
-            <Link to="/getstarted">
-              <Button
-                variant="default"
-                className="bg-yellow-400 shadow-none cursor-pointer text-[#0f1f3d] hover:scale-105 dark:hover:bg-yellow-400 text-md  transition-transform duration-300 hover:shadow-lg hover:shadow-yellow-300/25  px-3 xl:px-4"
-              >
-                {t("getStarted")}
-              </Button>
-            </Link>
-          </div>
-
-          {/*Mobile design of nav bar */}
-          <div
-            className="lg:hidden cursor-pointer my-auto block"
-            onClick={() => setMenuOpen(!isMenuOpen)}
-          >
-            <div
-              className={`bg-yellow-400 w-7 rounded-full h-1 ${
-                isMenuOpen ? "rotate-45 top-2" : ""
-              } relative transition-all`}
-            ></div>
-            <div
-              className={`bg-yellow-400 w-7 rounded-full h-1 mt-1 ${
-                isMenuOpen ? "opacity-0" : "opacity-100"
+          ) : (
+            <Button
+              key={btn.label}
+              variant={btn.variant as any}
+              className={`px-3 xl:px-4 ${
+                btn.variant === "default" ? "bg-yellow-400 text-[#0f1f3d]" : ""
               }`}
-            ></div>
-            <div
-              className={`bg-yellow-400 w-7 rounded-full h-1 mt-1 ${
-                isMenuOpen ? "-rotate-45 -top-2" : ""
-              } relative transition-all`}
-            ></div>
-          </div>
-        </div>
+              onClick={btn.onClick}
+            >
+              {btn.label}
+            </Button>
+          )
+        )}
+      </div>
 
+      {/* Mobile left toggles + hamburger */}
+      <div className="lg:hidden flex items-center gap-3">
+        <LanguageSwitcher />
+        <ThemeToggle />
         <div
-          className={`lg:hidden absolute top-20 bg-white/95 dark:bg-background/95 dark:text-primary flex flex-col w-full font-semibold text-base text-secondary transform transition-all left-0 shadow-lg ${
-            isMenuOpen
-              ? "opacity-100 visible translate-y-0"
-              : "opacity-0 invisible -translate-y-4"
-          }`}
+          className="cursor-pointer"
+          onClick={() => setMenuOpen(!isMenuOpen)}
         >
-          <ul className="text-left w-full p-4 space-y-1">
-            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              <Link to={"/find-your-job"}>{t("findJobs")}</Link>
-            </li>
-            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              <Link to={"/postJob"}>{t("postJobs")}</Link>
-            </li>
-            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              <Link to={"/nearBy"}>{t("nearbyMap")}</Link>
-            </li>
-            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              {t("contact")}
-            </li>
-            <li className="dark:hover:text-yellow-400 transition-all cursor-pointer py-2 px-2 rounded hover:bg-secondary/10">
-              {t("about")}
-            </li>
-            <li className="border-t border-secondary/20 mt-3 pt-3 flex gap-2">
+          <div
+            className={`bg-yellow-400 w-7 h-1 rounded-full relative transition-all ${
+              isMenuOpen ? "rotate-45 top-2" : ""
+            }`}
+          ></div>
+          <div
+            className={`bg-yellow-400 w-7 h-1 rounded-full mt-1 transition-all ${
+              isMenuOpen ? "opacity-0" : "opacity-100"
+            }`}
+          ></div>
+          <div
+            className={`bg-yellow-400 w-7 h-1 rounded-full mt-1 relative transition-all ${
+              isMenuOpen ? "-rotate-45 -top-2" : ""
+            }`}
+          ></div>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      <div
+        className={`lg:hidden absolute top-16 left-0 w-full bg-white/95 dark:bg-background/95 dark:text-primary flex flex-col p-4 gap-2 font-semibold text-base text-secondary transition-all shadow-lg ${
+          isMenuOpen
+            ? "opacity-100 visible translate-y-0"
+            : "opacity-0 invisible -translate-y-4"
+        }`}
+      >
+        {navLinks.map((link) => (
+          <Link key={link.label} to={link.to}>
+            <Button
+              variant="ghost"
+              className="w-full text-left hover:bg-secondary/10"
+            >
+              {link.label}
+            </Button>
+          </Link>
+        ))}
+
+        <div className="flex flex-col gap-2 pt-2 border-t border-secondary/20">
+          {actionButtons.map((btn) =>
+            btn.to ? (
+              <Link key={btn.label} to={btn.to}>
+                <Button
+                  variant={btn.variant as any}
+                  className={`w-full ${
+                    btn.variant === "default"
+                      ? "bg-yellow-400 text-[#0f1f3d]"
+                      : ""
+                  }`}
+                >
+                  {btn.label}
+                </Button>
+              </Link>
+            ) : (
               <Button
-                variant="ghost"
-                className="flex-1 hover:bg-yellow-400 cursor-pointer dark:hover:text-[#0f1f3d]"
+                key={btn.label}
+                variant={btn.variant as any}
+                className={`w-full ${
+                  btn.variant === "default"
+                    ? "bg-yellow-400 text-[#0f1f3d]"
+                    : ""
+                }`}
+                onClick={btn.onClick}
               >
-                {t("login")}
+                {btn.label}
               </Button>
-              <Button
-                variant="default"
-                className="flex-1 bg-yellow-400 cursor-pointer text-[#0f1f3d] hover:bg-yellow-500"
-              >
-                {t("getStarted")}
-              </Button>
-            </li>
-          </ul>
+            )
+          )}
         </div>
       </div>
     </nav>
