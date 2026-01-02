@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.User.UserDtos;
+package com.smartparttime.parttimebackend.modules.Auth.Dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,8 +7,9 @@ import lombok.Data;
 @Data
 public class UserLoginRequest {
     @Email
+    @NotBlank(message = "Email is required")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Password is required")
     private String password;
 }

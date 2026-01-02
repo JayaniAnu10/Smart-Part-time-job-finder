@@ -7,6 +7,7 @@ import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.Notification.entity.Notification;
 import com.smartparttime.parttimebackend.modules.Payment.Payment;
 import com.smartparttime.parttimebackend.modules.Rating.Rate;
+import com.smartparttime.parttimebackend.modules.User.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +49,10 @@ public class User {
 
     @Column(name = "contact")
     private String contact;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     private Set<Attendance> attendances = new HashSet<>();

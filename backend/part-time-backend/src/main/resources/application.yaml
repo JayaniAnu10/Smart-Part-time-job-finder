@@ -39,6 +39,13 @@ spring:
         options:
           model: text-embedding-3-small
 
+  jwt:
+    secret: ${JWT_SECRET}
+    accessTokenExpiration: 3600 # 1 hr
+    refreshTokenExpiration: 604800 # 7d
+
 server:
   port: 8080
+
+
 
