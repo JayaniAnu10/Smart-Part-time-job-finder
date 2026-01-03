@@ -13,12 +13,13 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { LogOut } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
 
-  const user = useAuthStore((s) => s.user);
+  const { data: user } = useAuth();
   const accessToken = useAuthStore((s) => s.accessToken);
   const clearAuth = useAuthStore((s) => s.clearAuth);
 
