@@ -23,7 +23,7 @@ const Auth = () => {
 
   const handleLogin = useUserLogin(() => {
     reset();
-    navigate(from, { replace: true });
+    navigate(from && from !== "/auth" ? from : "/", { replace: true });
   });
 
   const handleSignup = useAddUser(() => {

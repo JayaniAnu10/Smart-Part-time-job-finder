@@ -14,11 +14,9 @@ const useUserLogin = (onLog: () => void) => {
     mutationFn: apiClient.post,
     onSuccess: async (data) => {
       const accessToken = data.token;
+      setAuth(accessToken, null as any);
 
-      const me = await axiosInstance.get("/auth/me", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-
+      const me = await axiosInstance.get("/auth/me");
       setAuth(accessToken, me.data);
 
       toast.success("Login successful!");
