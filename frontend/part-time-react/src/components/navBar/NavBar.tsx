@@ -100,7 +100,7 @@ const NavBar = () => {
         <ThemeToggle />
 
         {/* dashboard dropdown (desktop only) */}
-        {user && (user.isEmployer || user.isJobseeker) && (
+        {accessToken && user && (user.isEmployer || user.isJobseeker) && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="bg-yellow-400 text-[#0f1f3d] hover:bg-yellow-300 text-md">
