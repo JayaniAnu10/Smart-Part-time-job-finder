@@ -7,16 +7,16 @@ import Logo from "@/components/common/Logo";
 
 const GetStarted = () => {
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center pt-10 pb-20 font-sans">
+    <div className="min-h-screen bg-background flex flex-col items-center pt-10 pb-20 font-sans">
       <div className="flex items-center gap-2 mt-4 mb-2">
         <Logo />
       </div>
 
-      <h1 className="text-[30px] font-bold text-[#0F1F3D] mt-4 mb-2">
+      <h1 className="text-[30px] font-bold text-secondary dark:text-primary mt-4 mb-2">
         Join DayBee.lk
       </h1>
 
-      <p className="text-[#515980] text-[18px] mb-10 text-center px-4 md:px-0">
+      <p className="text-secondary/70 dark:text-primary/70 text-[18px] mb-10 text-center px-4 md:px-0">
         Select how you want to use our platform
       </p>
 
@@ -49,16 +49,16 @@ const GetStarted = () => {
       </div>
 
       <div className="text-center mt-10">
-        <p className="text-[16px] text-[#365186]">
+        <p className="text-[16px] text-secondary/70 dark:text-primary/70">
           Already have an account?{" "}
-          <Link to="/auth" className="text-[#F7C01D] font-semibold">
+          <Link to="/auth" className="text-yellow-400 font-medium">
             Sign in
           </Link>
         </p>
 
         <Link
           to="/"
-          className="text-[14px] text-[#365186] mt-2 inline-block hover:underline"
+          className="text-[14px] text-secondary/70 dark:text-primary/70 mt-2 inline-block hover:underline"
         >
           ← Back to Home
         </Link>

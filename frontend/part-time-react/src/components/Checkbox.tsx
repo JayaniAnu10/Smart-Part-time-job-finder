@@ -13,7 +13,7 @@ export default function Checkbox({ label, checked, onChange }: CheckboxProps) {
         onChange={onChange}
         className="w-[13px] h-[13px] accent-[#FACC15]"
       />
-      <span className="text-[14px] text-[#0F1F3D] dark:text-white ">
+      <span className="text-[14px] text-secondary dark:text-primary">
         {label}
       </span>
     </label>
