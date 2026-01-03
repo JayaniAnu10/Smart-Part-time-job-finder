@@ -93,19 +93,19 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
                 >
                   {job.status}
                 </Badge>
-                <div className="flex gap-2">
+                <div className="flex gap-2 ">
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="cursor-pointer"
+                    className="cursor-pointer dark:hover:text-[#0f1f3d]"
                     onClick={() => navigate(`/${job.id}/applicants`)}
                   >
-                    <Eye className="w-4 h-4 text-foreground" />
+                    <Eye className="w-4 h-4 " />
                   </Button>
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="cursor-pointer"
+                    className="cursor-pointer dark:hover:text-[#0f1f3d]"
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
@@ -114,7 +114,7 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
                     disabled={deleteMutation.isPending}
                     size="icon"
                     variant="ghost"
-                    className="cursor-pointer"
+                    className="cursor-pointer dark:hover:text-[#0f1f3d]"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
