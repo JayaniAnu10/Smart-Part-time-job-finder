@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type User = {
+export type User = {
   id: string;
   email: string;
   isEmployer: boolean;
@@ -14,19 +14,9 @@ type AuthState = {
   clearAuth: () => void;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>()((set) => ({
   accessToken: null,
   user: null,
-
-  setAuth: (token, user) =>
-    set(() => ({
-      accessToken: token,
-      user,
-    })),
-
-  clearAuth: () =>
-    set(() => ({
-      accessToken: null,
-      user: null,
-    })),
+  setAuth: (token, user) => set({ accessToken: token, user }),
+  clearAuth: () => set({ accessToken: null, user: null }),
 }));

@@ -1,58 +1,116 @@
 import { useAuthStore } from "@/store/AuthStore";
 import axios from "axios";
 
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+  failedQueue = [];
+};
+
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:8080",
   withCredentials: true,
 });
 
-// Attach access token to every request
+// Separate axios instance for refresh calls to avoid interceptor loops
+const refreshClient = axios.create({
+  baseURL: "http://localhost:8080",
+  withCredentials: true,
+  timeout: 2000,
+});
+
+// 1. Request Interceptor: Attach Access Token
 axiosInstance.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
-
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
-//Refresh token automatically when 401 happens
+// 2. Response Interceptor: Handle Token Refresh
 axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
-    const original = error.config;
+    console.log(
+      "INTERCEPTOR HIT:",
+      error?.response?.status,
+      error?.config?.url
+    );
+    const originalRequest = error.config;
 
-    // If access token expired and we haven't retried yet
-    if (error.response?.status === 401 && !original._retry) {
-      original._retry = true;
-
-      try {
-        // Refresh automatically — cookie is sent by browser
-        const res = await axiosInstance.post("/auth/refresh");
-
-        const newAccess = res.data.token;
-
-        const { user, setAuth } = useAuthStore.getState();
-        setAuth(newAccess, user!);
-
-        // retry original request with new token
-        original.headers.Authorization = `Bearer ${newAccess}`;
-        return axiosInstance(original);
-      } catch (err) {
-        // refresh also failed - force logout
-        useAuthStore.getState().clearAuth();
+    // Handle 401 (Unauthorized)
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = "Bearer " + token;
+            return axiosInstance(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
       }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      // We return the refresh attempt promise
+      return new Promise((resolve, reject) => {
+        refreshClient
+          .post("/auth/refresh")
+          .then((res) => {
+            console.log("REFRESH RESPONSE:", res.status, res.data);
+            const newAccess = res.data.token;
+            const { user, setAuth } = useAuthStore.getState();
+
+            // Update Store
+            setAuth(newAccess, user!);
+
+            // Update current request header
+            originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
+
+            processQueue(null, newAccess);
+            resolve(axiosInstance(originalRequest));
+          })
+          .catch((err) => {
+            // --- THIS IS THE CRITICAL CATCH BLOCK ---
+            // If /auth/refresh fails (401), the Refresh Token is dead
+            processQueue(err, null);
+            console.error("Session expired. Logging out...");
+
+            useAuthStore.getState().clearAuth();
+
+            reject(err);
+          })
+          .finally(() => {
+            isRefreshing = false;
+          });
+      });
     }
 
     return Promise.reject(error);
   }
 );
 
+/**
+ * Generic API Client Class
+ */
 class APIClient<T> {
   endpoint: string;
 
   constructor(endpoint: string) {
     this.endpoint = endpoint;
   }
+
+  get = () => {
+    return axiosInstance.get<T>(this.endpoint).then((res) => res.data);
+  };
 
   delete = () => {
     return axiosInstance.delete(this.endpoint).then((res) => res.data);
