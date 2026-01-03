@@ -41,7 +41,8 @@ const NavBar = () => {
             variant="ghost"
             className="font-medium text-md hover:bg-secondary/6 dark:hover:text-yellow-400 cursor-pointer whitespace-nowrap px-2 xl:px-4"
           >
-            {t("about")}
+            <Link to={"/about"}>{t("about")}</Link>
+            
           </Button>
           <Button
             variant="ghost"
