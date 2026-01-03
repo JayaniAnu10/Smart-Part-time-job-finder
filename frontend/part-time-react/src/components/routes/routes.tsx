@@ -20,6 +20,7 @@ import EmployerStep2 from "@/pages/employer-registration/EmployerStep1";
 import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
 import TermsPage from "@/pages/Terms/TermsPage";
 import JobseekerDashboard from "@/pages/JobseekerDashboard";
+import ContactPage from "@/pages/Contact/ContactPage";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
       { path: "chatbot", element: <ChatBot /> },
       { path: "about", element: <AboutPage /> },
       { path: "terms", element: <TermsPage /> },
+      { path: "contact", element: <ContactPage /> },
       { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
       { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
       { path: "employer/register/step1", element: <EmployerStep1 /> },
