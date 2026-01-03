@@ -10,6 +10,8 @@ public class UserDto {
     private UUID id;
     private String email;
     private String role;
+    private Boolean isEmployer ;
+    private Boolean isJobseeker ;
     private String contact;
     private Integer trustScore;
     private Boolean isVerified;
