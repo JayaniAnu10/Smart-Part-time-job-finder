@@ -51,7 +51,7 @@ public class AuthController {
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
@@ -85,4 +85,19 @@ public class AuthController {
         var userDto = userMapper.toDto(user);
         return ResponseEntity.ok(userDto);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/refresh");
+        cookie.setMaxAge(0);               // delete cookie
+        cookie.setSecure(false);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
