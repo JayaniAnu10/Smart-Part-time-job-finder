@@ -48,7 +48,8 @@ const NavBar = () => {
             variant="ghost"
             className="font-medium text-md  hover:bg-secondary/6 dark:hover:text-yellow-300 cursor-pointer whitespace-nowrap px-2 xl:px-4"
           >
-            {t("contact")}
+            <Link to="/contact">{t("contact")}</Link>
+            
           </Button>
         </div>
 
