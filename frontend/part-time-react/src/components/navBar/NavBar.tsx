@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Logo from "../common/Logo";
 import ThemeToggle from "../navBar/ThemeToggle";
@@ -14,16 +14,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
+import useLogout from "@/hooks/useLogout";
 
 const NavBar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
+  const navigate = useNavigate();
 
   const { data: user } = useAuth();
   const accessToken = useAuthStore((s) => s.accessToken);
-  const clearAuth = useAuthStore((s) => s.clearAuth);
+  const logout = useLogout();
 
-  const handleLogout = useCallback(() => clearAuth(), [clearAuth]);
+  const handleLogout = useCallback(async () => {
+    await logout();
+    navigate("/");
+  }, [logout, navigate]);
 
   // Action buttons based on roles
   const actionButtons = useMemo(() => {

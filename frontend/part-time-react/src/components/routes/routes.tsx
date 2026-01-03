@@ -11,6 +11,15 @@ import NearByJobPage from "@/pages/NearByJobPage";
 import ChatBot from "../chat/ChatBot";
 import PostJob from "@/pages/PostJobs/PostJob";
 import AuthLayout from "@/Layouts/AuthLayout";
+import JobProfile from "@/pages/FindYourJob/JobProfile";
+import JobApplicants from "@/pages/EmployerDashboard/JobApplicants";
+import SeekerProfile from "@/pages/EmployerDashboard/SeekerProfile";
+import JobSeekerStep1 from "@/pages/jobseeker-registration/JobSeekerStep1";
+import JobSeekerStep2 from "@/pages/jobseeker-registration/JobSeekerStep1";
+import EmployerStep2 from "@/pages/employer-registration/EmployerStep1";
+import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
+import TermsPage from "@/pages/Terms/TermsPage";
+import JobseekerDashboard from "@/pages/JobseekerDashboard";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +39,12 @@ const router = createBrowserRouter([
       { path: "nearby", element: <NearByJobPage /> },
       { path: "chatbot", element: <ChatBot /> },
       { path: "about", element: <AboutPage /> },
+      { path: "terms", element: <TermsPage /> },
+      { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
+      { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
+      { path: "employer/register/step1", element: <EmployerStep1 /> },
+      { path: "employer/register/step2", element: <EmployerStep2 /> },
+      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
       {
         path: "empDashboard",
         element: (
@@ -39,10 +54,34 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: ":jobId/applicants",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <JobApplicants />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "seekerProfile/:id",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <SeekerProfile />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: "postJob",
         element: (
           <PrivateRoute requiredRole="employer">
             <PostJob />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "jobs/:id",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobProfile />
           </PrivateRoute>
         ),
       },

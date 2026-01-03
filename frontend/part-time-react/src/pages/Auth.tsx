@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAddUser from "@/hooks/useAddUser";
 import useUserLogin from "@/hooks/useUserLogin";
-import { useLocation, useNavigate } from "react-router-dom";
 
 export type AuthFormData = {
   email: string;
@@ -16,14 +15,10 @@ export type AuthFormData = {
 };
 
 const Auth = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
-  const from = (location.state as any)?.from?.pathname || "/";
 
   const handleLogin = useUserLogin(() => {
     reset();
-    navigate(from && from !== "/auth" ? from : "/", { replace: true });
   });
 
   const handleSignup = useAddUser(() => {
