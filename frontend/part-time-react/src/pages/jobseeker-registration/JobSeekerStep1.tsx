@@ -3,11 +3,8 @@ import SelectField from "../../components/SelectField";
 import StepIndicator from "../../components/StepIndicator";
 import RegistrationCard from "../../components/RegistrationCard";
 import { Link, useNavigate } from "react-router-dom";
-import calendarIcon from "../../assets/calendar.svg";
-import locationIcon from "../../assets/location.svg";
-import nicIcon from "../../assets/nic.svg";
-import arrowBack from "../../assets/arrow-back.svg";
-import arrowForward from "../../assets/arrow-forward.svg";
+import { Calendar, MapPin, IdCard, ArrowLeft, ArrowRight, } from "lucide-react";
+
 import Logo from "@/components/common/Logo";
 import { useJobSeekerStore } from "@/store/useJobSeekerStore";
 import toast from "react-hot-toast";
@@ -48,16 +45,16 @@ export default function JobSeekerStep2() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center py-10">
+    <div className="min-h-screen bg-background flex flex-col items-center py-10">
       <div className="flex items-center gap-2 mt-4 mb-2">
         <Logo />
       </div>
 
-      <h2 className="text-[30px] font-extrabold mt-2 text-[#0F1F3D]">
+      <h2 className="text-[30px] font-extrabold mt-2 text-secondary dark:text-primary">
         Job Seeker Registration
       </h2>
 
-      <p className="text-[#364D7D] text-[16px] mt-1">
+      <p className="text-secondary/70 dark:text-primary/70 text-[16px] mt-1">
         Create your profile to find part-time jobs
       </p>
 
@@ -102,8 +99,8 @@ export default function JobSeekerStep2() {
 
             <InputField
               label="Date of Birth"
-              icon={calendarIcon}
               type="date"
+              icon={<Calendar className="w-4 h-4" />}
               value={data.dob ? data.dob.toISOString().split("T")[0] : ""}
               onChange={(e) =>
                 setData({
@@ -116,7 +113,7 @@ export default function JobSeekerStep2() {
           <InputField
             label="NIC Number *"
             placeholder="123456789V or 200012345678"
-            icon={nicIcon}
+            icon={<IdCard className="w-4 h-4" />}
             value={data.nic}
             onChange={(e) => setData({ nic: e.target.value })}
           />
@@ -124,15 +121,15 @@ export default function JobSeekerStep2() {
           <InputField
             label="Address"
             placeholder="Your address"
-            icon={locationIcon}
+            icon={<MapPin className="w-4 h-4" />}
             value={data.address}
             onChange={(e) => setData({ address: e.target.value })}
           />
 
           <div className="flex justify-between mt-6">
             <Link to="/getstarted">
-              <button className="px-6 h-10 rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] hover:text-[#0F1F3D] transition-colors duration-200">
-                <img src={arrowBack} alt="back arrow" className="w-4 h-4" />
+              <button className="px-6 h-10 rounded-[12px] border border-border bg-[#FAFAFA] dark:bg-background text-secondary dark:text-primary text-[14px] flex items-center gap-2 hover:bg-yellow-400 hover:text-secondary transition-colors duration-200">
+                <ArrowLeft className="w-4 h-4" />
                 Back
               </button>
             </Link>
@@ -142,15 +139,15 @@ export default function JobSeekerStep2() {
               onClick={handleNext}
             >
               Next
-              <img src={arrowForward} alt="forward arrow" className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </RegistrationCard>
 
-      <p className="mt-6 text-[#364D7D] text-[14px]">
+      <p className="mt-6 text-secondary/70 dark:text-primary/70 text-[14px]">
         Already have an account?{" "}
-        <Link to="/auth" className="text-[#F7C01D] text-[14px]">
+        <Link to="/auth" className="text-yellow-400 text-[14px]">
           Sign in
         </Link>
       </p>

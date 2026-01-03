@@ -46,21 +46,20 @@ const Auth = () => {
   };
 
   return (
-    <div
-      className="min-h-screen w-full flex flex-col items-center justify-center 
-      bg-linear-to-br from-[#FFFFFF] via-[#FAF5E8] to-[#FCF5DE] p-6"
-    >
+    <div className="min-h-screen w-full flex flex-col items-center justify-center 
+                    bg-linear-to-br from-yellow-400/20 via-background to-yellow-400/20 
+                    dark:from-blue-300/20 dark:via-background dark:to-blue-300/20 p-6">
       <div className="flex items-center gap-2 mt-4 mb-2">
         <Logo />
       </div>
 
       <div className="text-center mb-4">
-        <p className="text-[#364D7D] mt-1 font-roboto text-[16px]">
+        <p className="text-secondary/70 dark:text-primary/70 mt-1 font-roboto text-[16px]">
           {activeTab === "login" ? "Welcome back!" : "Create your account"}
         </p>
       </div>
 
-      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg ">
+      <div className="bg-card w-full max-w-md p-8 rounded-2xl shadow-lg ">
         <AuthTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {activeTab === "login" ? (
@@ -91,8 +90,9 @@ const Auth = () => {
             )}
 
             <button
-              className="w-full h-10 bg-[#FACC15] text-[#0f1f3d]
-              rounded-lg font-medium font-roboto hover:bg-[#E5B80C] transition"
+              className="w-full h-10 bg-yellow-400 text-secondary 
+                         rounded-lg font-medium font-roboto transition-all duration-300
+                         hover:scale-102 active:scale-98 transition cursor-pointer"
             >
               Login
             </button>
@@ -161,7 +161,8 @@ const Auth = () => {
             <button
               disabled={handleSignup.isPending}
               className="w-full h-10 bg-[#FACC15] text-[#0f1f3d]
-              rounded-lg font-medium font-roboto hover:bg-[#E5B80C] transition cursor-pointer"
+                         rounded-lg font-medium font-roboto transition-all duration-300
+                         hover:scale-102 active:scale-98 transition cursor-pointer"
             >
               {handleSignup.isPending ? "Signing up..." : "Sign Up"}
             </button>
@@ -169,9 +170,9 @@ const Auth = () => {
         )}
       </div>
 
-      <p className="text-center mt-6 text-[14px] text-[#364D7D]">
+      <p className="text-center mt-6 text-[14px] text-secondary/70 dark:text-primary/70">
         By continuing, you agree to our{" "}
-        <span className="text-[#FACC15] cursor-pointer">Terms of Service</span>
+        <span className="text-yellow-400 cursor-pointer">Terms of Service</span>
       </p>
     </div>
   );

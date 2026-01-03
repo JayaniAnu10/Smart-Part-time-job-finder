@@ -6,10 +6,11 @@ import StepIndicator from "../../components/StepIndicator";
 import InputField from "../../components/InputField";
 import UploadButton from "../../components/UploadButton";
 import Checkbox from "../../components/Checkbox";
+import SelectField from "@/components/SelectField";
 import Log from "../../assets/briefcase.svg";
-import webSite from "../../assets/link.svg";
-import arrowBack from "../../assets/arrow-back.svg";
-import downArrow from "../../assets/arrow-down.svg";
+import { Globe } from "lucide-react";
+
+import { ArrowLeft } from "lucide-react";
 import { useEmployerStore } from "@/store/useEmployerStore";
 import toast from "react-hot-toast";
 import useAddEmployer from "@/hooks/useAddEmployer";
@@ -62,16 +63,16 @@ export default function EmployerStep3() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center py-10 px-4">
+    <div className="min-h-screen bg-background flex flex-col items-center py-10 px-4">
       <div className="flex items-center gap-2 mt-2 mb-4">
         <Logo />
       </div>
 
-      <h2 className="text-[30px] font-extrabold text-[#0F1F3D] mt-2">
+      <h2 className="text-[30px] font-extrabold text-secondary dark:text-primary mt-2">
         Employer Registration
       </h2>
 
-      <p className="text-[16px] text-[#364D7D] mt-1">
+      <p className="text-[16px] text-secondary/70 dark:text-primary/70 mt-1">
         Create your company profile
       </p>
 
@@ -80,7 +81,7 @@ export default function EmployerStep3() {
       <RegistrationCard title="Additional Details">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
-            <p className="text-[14px] text-[#0F1F3D] mb-1">Company Logo</p>
+            <p className="text-[14px] text-secondary dark:text-primary mb-1">Company Logo</p>
             <div className="flex items-center gap-6">
               <div className="w-20 h-20 bg-[#E0E7F5] rounded-[15px] flex items-center justify-center overflow-hidden">
                 {companyLogo ? (
@@ -107,57 +108,48 @@ export default function EmployerStep3() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <p className="text-[14px] text-[#0F1F3D] mb-2">Industry *</p>
-            <div className="relative w-full">
-              <select
-                className="w-full border border-[#A5A8AD] rounded-[12px] px-4 py-3 bg-[#FAFAFA] text-[#0F1F3D] appearance-none"
-                value={data.industry}
-                onChange={(e) => setData({ industry: e.target.value })}
-              >
-                <option disabled selected>
-                  Select industry
-                </option>
-                <option>Retail</option>
-                <option>Hospitality</option>
-                <option>Food & Beverage</option>
-                <option>Healthcare</option>
-                <option>Education</option>
-                <option>IT & Software</option>
-                <option>Construction</option>
-                <option>Manufacturing</option>
-                <option>Logistic</option>
-                <option>Finance</option>
-                <option>Entertainment</option>
-                <option>Real Estate</option>
-                <option>Agriculture</option>
-                <option>Other</option>
-              </select>
-
-              <img
-                src={downArrow}
-                className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
-              />
-            </div>
-          </div>
+          <SelectField
+            label="Industry *"
+            option="Select industry"
+            value={data.industry}
+            onChange={(value) => setData({ industry: value })}
+            options={[
+              { value: "Retail", label: "Retail" },
+              { value: "Hospitality", label: "Hospitality" },
+              { value: "Food & Beverage", label: "Food & Beverage" },
+              { value: "Healthcare", label: "Healthcare" },
+              { value: "Education", label: "Education" },
+              { value: "IT & Software", label: "IT & Software" },
+              { value: "Construction", label: "Construction" },
+              { value: "Manufacturing", label: "Manufacturing" },
+              { value: "Logistic", label: "Logistic" },
+              { value: "Finance", label: "Finance" },
+              { value: "Entertainment", label: "Entertainment" },
+              { value: "Real Estate", label: "Real Estate" },
+              { value: "Agriculture", label: "Agriculture" },
+              { value: "Other", label: "Other" },
+            ]}
+          />
 
           <InputField
             label="Website"
             placeholder="https://www.example.com"
-            icon={webSite}
+            icon={<Globe size={16} />}
             value={data.website}
             onChange={(e) => setData({ website: e.target.value })}
           />
 
           <div className="flex flex-col gap-3">
-            <p className="text-[14px] text-[#0F1F3D] mb-2">
+            <p className="text-[14px] text-secondary dark:text-primary mb-2">
               Company Description
             </p>
             <textarea
               value={data.description}
               onChange={(e) => setData({ description: e.target.value })}
               placeholder="Tell job seekers about your company..."
-              className="w-full h-22.5 border border-[#A5A8AD] rounded-[12px] p-3 text-[#364D7D] bg-[#FAFAFA] placeholder:text-[#364D7D] focus:outline-none"
+              className="w-full h-22 border border-border rounded-[12px] p-3 text-secondary 
+                         dark:text-primary bg-[#FAFAFA] dark:bg-background placeholder:text-secondary/50 
+                         dark:placeholder:text-primary/50 outline-none focus:ring-1 focus:ring-yellow-400"
             />
           </div>
 
@@ -166,13 +158,13 @@ export default function EmployerStep3() {
               checked={agreeTerms}
               onChange={() => setAgreeTerms(!agreeTerms)}
               label={
-                <span className="text-[#0F1F3D] text-[14px]">
+                <span className="text-secondary dark:text-primary text-[14px]">
                   I agree to the{" "}
-                  <Link to="/terms" className="text-[#FACC15]">
+                  <Link to="/terms" className="text-yellow-400">
                     Terms & Conditions
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy" className="text-[#FACC15]">
+                  <Link to="/privacy" className="text-yellow-400">
                     Privacy Policy
                   </Link>
                 </span>
@@ -184,15 +176,17 @@ export default function EmployerStep3() {
         <div className="flex justify-between mt-6">
           <button
             onClick={() => navigate("/employer/register/step1")}
-            className="px-6 h-10 rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#FACC15] transition"
+            className="px-6 h-10 rounded-[12px] border border-border bg-[#FAFAFA] dark:bg-background text-secondary 
+                       dark:text-primary dark:hover:text-secondary text-[14px] flex items-center gap-2 hover:bg-yellow-400 transition cursor-pointer"
           >
-            <img src={arrowBack} alt="back arrow" className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4" />
             Back
           </button>
 
           <button
             disabled={addEmployerMutation.isPending}
-            className="px-6 h-10 rounded-[12px] bg-[#FACC15] text-[#0F1F3D] text-[14px] font-semibold transition-transform duration-150 active:scale-105"
+            className="px-6 h-10 font-medium rounded-[12px] bg-yellow-400 text-secondary text-[14px] 
+                       transition-transform duration-150 active:scale-105 cursor-pointer "
             onClick={handleSubmit}
           >
             Create Account
@@ -200,9 +194,9 @@ export default function EmployerStep3() {
         </div>
       </RegistrationCard>
 
-      <p className="mt-8 text-[14px] text-[#364D7D] mb-6">
+      <p className="mt-8 text-[14px] text-secondary/70 dark:text-primary/70 mb-6">
         Already have an account?{" "}
-        <Link to="/auth" className="text-[#FACC15] font-medium">
+        <Link to="/auth" className="text-yellow-400">
           Sign in
         </Link>
       </p>

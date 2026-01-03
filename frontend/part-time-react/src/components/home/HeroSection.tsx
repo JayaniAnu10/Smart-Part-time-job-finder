@@ -28,7 +28,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
   return (
     <section
-      className="relative min-h-[90vh] md:min-h-screen bg-cover bg-center pt-24"
+      className="relative min-h-[90vh] md:min-h-screen bg-cover bg-center pt-12"
       style={{ backgroundImage: `url(${heroBackground})` }}
     >
    
@@ -36,7 +36,7 @@ const HeroSection = () => {
 
       <div className="relative z-30 flex items-center justify-center px-6 text-center">
         <div className="max-w-5xl">
-          <h1 className="text-6xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
+          <h1 className="text-7xl sm:text-6xl md:text-7xl lg:text-7xl font-extrabold leading-tight">
             <span className="whitespace-nowrap">
 
               <span className="text-secondary dark:text-primary">
@@ -64,7 +64,8 @@ const HeroSection = () => {
             <Button
               size="lg"
               onClick={() => navigate('/find-jobs')}
-              className="bg-primary dark:bg-yellow-400 text-secondary px-8 transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-primary dark:hover:bg-yellow-400 hover:text-secondary dark:hover:text-secondary"
+              className="h-14 px-8 py-6 bg-primary dark:bg-yellow-400 text-[18px] text-secondary transition-all duration-300 hover:scale-105 active:scale-95 
+                         hover:bg-primary dark:hover:bg-yellow-400 hover:text-secondary dark:hover:text-secondary cursor-pointer"
             >
               <img src={SearchIcon} alt="Search jobs" className="mr-2 h-5 w-5" />
               Find Jobs Now
@@ -73,8 +74,10 @@ const HeroSection = () => {
             <Button
               size="lg"
               onClick={() => navigate('/post-job')}
-              className="border border-secondary bg-primary-foreground/40 dark:bg-secondary/50
-                         backdrop-blur-sm text-secondary dark:text-secondary-foreground px-8 transition-all duration-300 active:scale-95 hover:bg-primary-foreground/40 dark:hover:bg-secondary/50 hover:text-secondary dark:hover:text-secondary-foreground"
+              className="h-14 px-8 py-6 border border-secondary bg-primary-foreground/40 dark:bg-secondary/50
+                         backdrop-blur-sm text-[18px] text-secondary dark:text-secondary-foreground transition-all 
+                         duration-300 active:scale-95 hover:bg-primary-foreground/40 dark:hover:bg-secondary/50 
+                         hover:text-secondary dark:hover:text-secondary-foreground cursor-pointer"
             >
               <img
                 src={PostJobButtonIcon}

@@ -5,8 +5,7 @@ import RegistrationCard from "../../components/RegistrationCard";
 import StepIndicator from "../../components/StepIndicator";
 import Checkbox from "../../components/Checkbox";
 import { Link, useNavigate } from "react-router-dom";
-import profileIcon from "../../assets/person.svg";
-import arrowBack from "../../assets/arrow-back.svg";
+import { User, ArrowLeft } from "lucide-react";
 import Logo from "@/components/common/Logo";
 import { useJobSeekerStore } from "@/store/useJobSeekerStore";
 import toast from "react-hot-toast";
@@ -82,24 +81,24 @@ export default function JobSeekerStep3() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center py-10 px-4">
+    <div className="min-h-screen bg-background flex flex-col items-center py-10 px-4">
       <div className="flex items-center gap-2 mt-4 mb-2">
         <Logo />
       </div>
 
-      <h2 className="text-[30px] font-extrabold text-[#0F1F3D] mt-2">
+      <h2 className="text-[30px] font-extrabold text-secondary dark:text-primary mt-2">
         Job Seeker Registration
       </h2>
 
-      <p className="text-[16px] text-[#364D7D] mt-1">
+      <p className="text-[16px] text-secondary/70 dark:text-primary/70 mt-1">
         Create your profile to find part-time jobs
       </p>
 
       <StepIndicator currentStep={2} />
 
       <RegistrationCard title="Profile Details">
-        <div className="mb-4">
-          <p className="text-[14px] text-[#0F1F3D] mb-1">Profile Picture</p>
+        <div className="mb-2">
+          <p className="text-[14px] text-secondary dark:text-primary mb-3">Profile Picture</p>
 
           <div className="flex items-center gap-6">
             <div className="w-20 h-20 bg-[#E0E7F5] rounded-full flex items-center justify-center overflow-hidden">
@@ -110,11 +109,7 @@ export default function JobSeekerStep3() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <img
-                  src={profileIcon}
-                  alt="Profile icon"
-                  className="w-12 h-12 opacity-80"
-                />
+                <User className="w-12 h-12 text-[#364d7d]" />
               )}
             </div>
 
@@ -128,25 +123,27 @@ export default function JobSeekerStep3() {
         </div>
 
         <div className="mt-6">
-          <p className="text-[14px] text-[#0F1F3D] mb-2">Bio</p>
+          <p className="text-[14px] text-secondary dark:text-primary mb-2">Bio</p>
 
           <textarea
             placeholder="Tell employers about yourself..."
             value={data.bio}
             onChange={(e) => setData({ bio: e.target.value })}
-            className="w-full h-22.5 border border-[#A5A8AD] rounded-lg p-3 text-[#364D7D] placeholder:text-[#364D7D] bg-[#FAFAFA] "
+            className="w-full h-22 border border-border rounded-lg p-3 text-secondary dark:text-primary 
+                       placeholder:text-secondary/50 dark:placeholder:text-primary/50 bg-[#fafafa] 
+                       dark:bg-background outline-none focus:ring-1 focus:ring-yellow-400"
           ></textarea>
         </div>
 
         <div className="mt-6">
-          <p className="text-[14px] text-[#0F1F3D] mb-3">
-            Skills <span className="text-[#0F1F3D]">*</span>{" "}
-            <span className="text-[14px] text-[#0F1F3D]">
+          <p className="text-[14px] text-secondary dark:text-primary mb-3">
+            Skills <span className="text-secondary dark:text-primary">*</span>{" "}
+            <span className="text-[14px] text-secondary dark:text-primary">
               (Select at least one)
             </span>
           </p>
 
-          <div className="border border-[#A5A8AD] rounded-lg p-4 flex flex-wrap gap-1 bg-[#FAFAFA]">
+          <div className="border border-border rounded-lg p-4 flex flex-wrap gap-1 bg-[#fafafa] dark:bg-background">
             {skillOptions.map((skill) => (
               <SkillTag
                 key={skill}
@@ -170,13 +167,13 @@ export default function JobSeekerStep3() {
               checked={agreeTerms}
               onChange={() => setAgreeTerms(!agreeTerms)}
               label={
-                <span className="text-[#0F1F3D] text-[14px]">
+                <span className="text-secondary dark:text-primary text-[14px]">
                   I agree to the{" "}
-                  <Link to="/terms" className="text-[#F7C01D] ">
+                  <Link to="/terms" className="text-yellow-400">
                     Terms & Conditions
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy" className="text-[#F7C01D] ">
+                  <Link to="/privacy" className="text-yellow-400">
                     Privacy Policy
                   </Link>
                 </span>
@@ -187,8 +184,9 @@ export default function JobSeekerStep3() {
 
         <div className="flex justify-between mt-6">
           <Link to="/jobseeker/register/step1">
-            <button className="px-6 h-10 rounded-[12px] border border-[#CCD7E9] bg-[#FAFAFA] text-[#0F1F3D] text-[14px] flex items-center gap-2 hover:bg-[#F7C01D] transition cursor-pointer">
-              <img src={arrowBack} alt="left arrow" className="w-4 h-4" />
+            <button className="px-6 h-10 rounded-[12px] border border-border bg-[#fafafa] dark:bg-background text-secondary 
+                               dark:text-primary  dark:hover:text-secondary text-[14px] flex items-center gap-2 hover:bg-yellow-400 transition cursor-pointer">
+              <ArrowLeft className="w-4 h-4" />
               Back
             </button>
           </Link>
@@ -203,9 +201,9 @@ export default function JobSeekerStep3() {
         </div>
       </RegistrationCard>
 
-      <p className="mt-6 text-[#364D7D] text-[14px]">
+      <p className="mt-6 text-secondary/70 dark:text-primary/70 text-[14px]">
         Already have an account?{" "}
-        <Link to="/auth" className="text-[#F7C01D] text-[14px]">
+        <Link to="/auth" className="text-yellow-400 text-[14px]">
           Sign in
         </Link>
       </p>
