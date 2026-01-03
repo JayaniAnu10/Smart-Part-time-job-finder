@@ -8,5 +8,7 @@
   "dashboard": "Dashboard",
   "login": "Login",
   "logout": "Logout",
-  "getStarted": "Get Started"
+  "getStarted": "Get Started",
+  "seekerDashboard": "Seeker Dashboard",
+  "employerDashboard": "Employer Dashboard"
 }

@@ -5,8 +5,10 @@
   "about": "අප ගැන",
   "contact": "සම්බන්ධ වන්න",
   "savedJobs": "සුරක්ෂිත රැකියා",
-  "dashboard": "ඩැෂ්බෝඩ්",
+  "dashboard": "උපකරණ පුවරුව",
   "login": "පිවිසෙන්න",
   "logout": "පිටවීම",
-  "getStarted": "ආරම්භ කරන්න"
+  "getStarted": "ආරම්භ කරන්න",
+  "seekerDashboard": "රැකියා සොයන්නාගේ උපකරණ පුවරුව",
+  "employerDashboard": "සේවායෝජකයාගේ උපකරණ පුවරුව"
 }

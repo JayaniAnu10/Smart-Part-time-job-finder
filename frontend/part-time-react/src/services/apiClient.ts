@@ -1,15 +1,116 @@
+import { useAuthStore } from "@/store/AuthStore";
 import axios from "axios";
 
-const axiosInstance = axios.create({
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+  failedQueue = [];
+};
+
+export const axiosInstance = axios.create({
   baseURL: "http://localhost:8080",
+  withCredentials: true,
 });
 
+// Separate axios instance for refresh calls to avoid interceptor loops
+const refreshClient = axios.create({
+  baseURL: "http://localhost:8080",
+  withCredentials: true,
+  timeout: 2000,
+});
+
+// 1. Request Interceptor: Attach Access Token
+axiosInstance.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// 2. Response Interceptor: Handle Token Refresh
+axiosInstance.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    console.log(
+      "INTERCEPTOR HIT:",
+      error?.response?.status,
+      error?.config?.url
+    );
+    const originalRequest = error.config;
+
+    // Handle 401 (Unauthorized)
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = "Bearer " + token;
+            return axiosInstance(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      // We return the refresh attempt promise
+      return new Promise((resolve, reject) => {
+        refreshClient
+          .post("/auth/refresh")
+          .then((res) => {
+            console.log("REFRESH RESPONSE:", res.status, res.data);
+            const newAccess = res.data.token;
+            const { user, setAuth } = useAuthStore.getState();
+
+            // Update Store
+            setAuth(newAccess, user!);
+
+            // Update current request header
+            originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
+
+            processQueue(null, newAccess);
+            resolve(axiosInstance(originalRequest));
+          })
+          .catch((err) => {
+            // --- THIS IS THE CRITICAL CATCH BLOCK ---
+            // If /auth/refresh fails (401), the Refresh Token is dead
+            processQueue(err, null);
+            console.error("Session expired. Logging out...");
+
+            useAuthStore.getState().clearAuth();
+
+            reject(err);
+          })
+          .finally(() => {
+            isRefreshing = false;
+          });
+      });
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+/**
+ * Generic API Client Class
+ */
 class APIClient<T> {
   endpoint: string;
 
   constructor(endpoint: string) {
     this.endpoint = endpoint;
   }
+
+  get = () => {
+    return axiosInstance.get<T>(this.endpoint).then((res) => res.data);
+  };
 
   delete = () => {
     return axiosInstance.delete(this.endpoint).then((res) => res.data);

@@ -19,6 +19,7 @@ import { useForm, Controller } from "react-hook-form";
 import useCategory from "@/hooks/useCategory";
 import { useState } from "react";
 import Checkbox from "@/components/Checkbox";
+import { Switch } from "@/components/ui/switch";
 
 const benefitOptions = [
   "Transport",
@@ -370,12 +371,14 @@ const PostJob = () => {
               )}
             </div>
 
-            <div>
-              <Checkbox
-                label="Urgent Job Post"
-                checked={isUrgent}
-                onChange={() => setIsUrgent(!isUrgent)}
-              />
+            <div className="flex items-center justify-between p-4 border border-border rounded-lg">
+              <div>
+                <Label>Urgent Hiring</Label>
+                <p className="text-sm text-muted-foreground">
+                  Mark this job as urgent
+                </p>
+              </div>
+              <Switch checked={isUrgent} onCheckedChange={setIsUrgent} />
             </div>
 
             {/* Buttons */}
