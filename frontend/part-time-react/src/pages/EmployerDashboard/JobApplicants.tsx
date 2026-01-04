@@ -48,21 +48,21 @@ const JobApplicants = () => {
   ).length;
 
   return (
-    <div className="mx-4 sm:mx-6 md:mx-20 my-12 flex flex-col gap-8">
+    <div className="mx-3 sm:mx-6 md:mx-20 my-12 flex flex-col gap-8 ">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#0f1f3d] dark:text-white">
+        <span className="text-4xl sm:text-4xl font-bold text-[#0f1f3d] dark:text-white">
           Job Applicants
-        </h1>
+        </span>
         <span className="text-muted-foreground/90 text-lg sm:text-xl">
           {data?.title}
         </span>
       </div>
-      {filteredApplicants.length > 0 ? (
-        <>
-          <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-between">
-            <div className="flex flex-wrap gap-3 sm:gap-5">
+      <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-between">
+        {filteredApplicants.length > 0 && (
+          <>
+            <div className="flex flex-wrap gap-3 sm:gap-5 ">
               <Button
-                className="cursor-pointer"
+                className="cursor-pointer "
                 variant={statusFilter === "all" ? "default" : "outline"}
                 onClick={() => setStatusFilter("all")}
               >
@@ -90,33 +90,36 @@ const JobApplicants = () => {
                 Rejected ({rejectedCount})
               </Button>
             </div>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="cursor-pointer hover:bg-yellow-400 hover:text-[#0f1f3d]"
-                >
-                  <SlidersHorizontal className="h-4 w-4 mr-2 " />
-                  Filter by Rating
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Filter Applicants</SheetTitle>
-                  <SheetDescription>
-                    Filter applicants by their rating score
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="mt-6">
-                  <RatingFilter
-                    selectedRating={selectedRating}
-                    onRatingChange={setSelectedRating}
-                  />
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-
+          </>
+        )}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              className="cursor-pointer hover:bg-yellow-400 hover:text-[#0f1f3d]"
+            >
+              <SlidersHorizontal className="h-4 w-4 mr-2 " />
+              Filter by Rating
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Filter Applicants</SheetTitle>
+              <SheetDescription>
+                Filter applicants by their rating score
+              </SheetDescription>
+            </SheetHeader>
+            <div className="mt-6">
+              <RatingFilter
+                selectedRating={selectedRating}
+                onRatingChange={setSelectedRating}
+              />
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+      {filteredApplicants.length > 0 ? (
+        <>
           <ApplicantCard applicants={filteredApplicants} />
 
           <div className="flex flex-wrap gap-3 justify-center mt-6">

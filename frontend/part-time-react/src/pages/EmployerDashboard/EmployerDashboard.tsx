@@ -5,10 +5,12 @@ import { Spinner } from "@/components/ui/spinner";
 import useEmpStats from "@/hooks/useEmpStats";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "@/store/AuthStore";
 
 const EmployerDashboard = () => {
-  const employerId = "511e9a6c-3ce6-494b-bf39-80e1afce4d5e";
-  const { data, isLoading, isError } = useEmpStats(employerId);
+  const { user } = useAuthStore();
+  const employerId = user?.id;
+  const { data, isLoading, isError } = useEmpStats(employerId!);
 
   if (isLoading)
     return (
@@ -20,7 +22,7 @@ const EmployerDashboard = () => {
     return <div className="text-2xl text-red-500">Error loading stats</div>;
 
   return (
-    <div className="mx-8 my-10 md:mx-20 flex flex-col gap-13">
+    <div className="mx-8 my-10 md:mx-20 flex flex-col gap-13 ">
       <div className="flex justify-between md:flex-row flex-col">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl text-[#0f1f3d] font-bold dark:text-white ">
@@ -39,7 +41,7 @@ const EmployerDashboard = () => {
         </div>
       </div>
       <EmpStat data={data} />
-      <EmpJobPost jobs={data?.jobStats} empId={employerId} />
+      <EmpJobPost jobs={data?.jobStats} empId={employerId!} />
     </div>
   );
 };
