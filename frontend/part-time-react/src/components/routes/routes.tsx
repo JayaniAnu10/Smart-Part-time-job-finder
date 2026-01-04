@@ -21,6 +21,7 @@ import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
 import TermsPage from "@/pages/Terms/TermsPage";
 import JobseekerDashboard from "@/pages/JobseekerDashboard";
 import ContactPage from "@/pages/Contact/ContactPage";
+import JobHistory from "@/pages/JobHistory/JobHistory";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,14 @@ const router = createBrowserRouter([
             <JobApplicants />
           </PrivateRoute>
         ),
+      },
+      { 
+        path: "job-history", 
+        element: (
+          //<PrivateRoute requiredRole="jobseeker">
+            <JobHistory />
+          //</PrivateRoute>
+        ) 
       },
       {
         path: "seekerProfile/:id",
