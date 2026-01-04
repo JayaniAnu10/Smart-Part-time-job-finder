@@ -79,7 +79,7 @@ const NavBar = () => {
     { label: t("findJobs"), to: "/find-your-job" },
     { label: t("postJobs"), to: "/postJob" },
     { label: t("nearbyMap"), to: "/nearBy" },
-    { label: t("contact"), to: "/" },
+    { label: t("contact"), to: "/contact" },
     { label: t("about"), to: "/about" },
   ];
 
