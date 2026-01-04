@@ -63,7 +63,7 @@ const HeroSection = () => {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
               size="lg"
-              onClick={() => navigate('/find-jobs')}
+              onClick={() => navigate('/find-your-job')}
               className="h-14 px-8 py-6 bg-primary dark:bg-yellow-400 text-[18px] text-secondary transition-all duration-300 hover:scale-105 active:scale-95 
                          hover:bg-primary dark:hover:bg-yellow-400 hover:text-secondary dark:hover:text-secondary cursor-pointer"
             >
