@@ -73,7 +73,7 @@ const HeroSection = () => {
 
             <Button
               size="lg"
-              onClick={() => navigate('/post-job')}
+              onClick={() => navigate('/postJob')}
               className="h-14 px-8 py-6 border border-secondary bg-primary-foreground/40 dark:bg-secondary/50
                          backdrop-blur-sm text-[18px] text-secondary dark:text-secondary-foreground transition-all 
                          duration-300 active:scale-95 hover:bg-primary-foreground/40 dark:hover:bg-secondary/50 
