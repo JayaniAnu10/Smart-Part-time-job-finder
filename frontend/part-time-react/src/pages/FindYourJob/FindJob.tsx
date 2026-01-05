@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { getDaysLeft, getTimeAgo } from "@/utils/date";
+import AIButton from "./AIButton";
 
 const FindJob = () => {
   const [titleSearch, setTitleSearch] = useState("");
@@ -405,6 +406,7 @@ const FindJob = () => {
           </div>
         </div>
       </Card>
+      <AIButton />
     </div>
   );
 };

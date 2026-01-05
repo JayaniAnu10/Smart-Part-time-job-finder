@@ -2,20 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import RegistrationCard from "../../components/RegistrationCard";
 import StepIndicator from "../../components/StepIndicator";
 import InputField from "../../components/InputField";
-import {
-  Building2,
-  IdCard,
-  User,
-  Phone,
-  MapPin,
-} from "lucide-react";
+import { Building2, IdCard, User, Phone, MapPin } from "lucide-react";
 
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import Logo from "@/components/common/Logo";
 import { useEmployerStore } from "@/store/useEmployerStore";
 import toast from "react-hot-toast";
 
-export default function EmployerStep2() {
+export default function EmployerStep1() {
   const navigate = useNavigate();
   const { data, setData } = useEmployerStore();
 
@@ -68,7 +62,7 @@ export default function EmployerStep2() {
           <InputField
             label="Business Registration ID / NIC *"
             placeholder="e.g., PV12345678"
-             icon={<IdCard size={16} />}
+            icon={<IdCard size={16} />}
             value={data.registrationID}
             onChange={(e) => setData({ registrationID: e.target.value })}
           />
