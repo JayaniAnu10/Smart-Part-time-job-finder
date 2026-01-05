@@ -92,7 +92,7 @@ const PostJob = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background md:py-12 py-2">
+    <div className="min-h-screen bg-background md:py-12 py-2 mt-9">
       <div className="container md:mx-auto md:px-4 max-w-4xl px-2">
         <Card className="md:p-8 border dark:border-0 p-5">
           <h1 className="text-4xl font-bold text-[#0f1f3d] dark:text-white mb-2">
