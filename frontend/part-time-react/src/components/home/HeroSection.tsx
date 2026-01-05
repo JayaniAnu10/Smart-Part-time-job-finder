@@ -28,15 +28,15 @@ const HeroSection = () => {
   const navigate = useNavigate();
   return (
     <section
-      className="relative min-h-[90vh] md:min-h-screen bg-cover bg-center pt-12"
+      className="relative min-h-[85vh] md:min-h-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${heroBackground})` }}
     >
    
       <div className="absolute inset-0 bg-linear-to-b from-background/50 via-background/35 to-background/20 z-10" />
 
-      <div className="relative z-30 flex items-center justify-center px-6 text-center">
+      <div className="relative z-20 flex items-center justify-center px-4 sm:px-6 text-center pt-12 sm:pt-24">
         <div className="max-w-5xl">
-          <h1 className="text-7xl sm:text-6xl md:text-7xl lg:text-7xl font-extrabold leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
             <span className="whitespace-nowrap">
 
               <span className="text-secondary dark:text-primary">
@@ -55,12 +55,12 @@ const HeroSection = () => {
             
           </h1>
 
-          <p className="mt-6 text-base md:text-lg text-secondary/80 dark:text-primary/70 max-w-3xl mx-auto">
+          <p className="mt-5 sm:t-6 sm:text-base md:text-lg text-secondary/80 dark:text-primary/70 max-w-3xl mx-auto">
             Connect with thousands of flexible job opportunities. Work on your
             terms, grow your income, and build your future.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
               size="lg"
               onClick={() => navigate('/find-your-job')}
@@ -95,8 +95,8 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <div className="relative z-30 mt-16 px-6 pb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+      <div className="relative z-20 mt-12 sm:mt-16 px-4 sm:px-6 pb-12 sm:pb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
           {stats.map((item) => (
             <div
               key={item.label}
