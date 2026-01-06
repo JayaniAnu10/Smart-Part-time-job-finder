@@ -14,14 +14,11 @@ import AuthLayout from "@/Layouts/AuthLayout";
 import JobProfile from "@/pages/FindYourJob/JobProfile";
 import JobApplicants from "@/pages/EmployerDashboard/JobApplicants";
 import SeekerProfile from "@/pages/EmployerDashboard/SeekerProfile";
-import JobSeekerStep1 from "@/pages/jobseeker-registration/JobSeekerStep1";
-import JobSeekerStep2 from "@/pages/jobseeker-registration/JobSeekerStep1";
-import EmployerStep2 from "@/pages/employer-registration/EmployerStep1";
-import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
 import TermsPage from "@/pages/Terms/TermsPage";
-import JobseekerDashboard from "@/pages/JobseekerDashboard";
 import ContactPage from "@/pages/Contact/ContactPage";
 import JobHistory from "@/pages/JobHistory/JobHistory";
+
+
 
 const router = createBrowserRouter([
   {
@@ -43,11 +40,7 @@ const router = createBrowserRouter([
       { path: "about", element: <AboutPage /> },
       { path: "terms", element: <TermsPage /> },
       { path: "contact", element: <ContactPage /> },
-      { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
-      { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
-      { path: "employer/register/step1", element: <EmployerStep1 /> },
-      { path: "employer/register/step2", element: <EmployerStep2 /> },
-      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
+     
       {
         path: "empDashboard",
         element: (
@@ -59,9 +52,9 @@ const router = createBrowserRouter([
       {
         path: ":jobId/applicants",
         element: (
-          <PrivateRoute requiredRole="employer">
+          //<PrivateRoute requiredRole="employer">
             <JobApplicants />
-          </PrivateRoute>
+          //</PrivateRoute>
         ),
       },
       { 
