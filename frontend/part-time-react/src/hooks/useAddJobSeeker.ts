@@ -1,4 +1,5 @@
 import APIClient from "@/services/apiClient";
+import { useAuthStore } from "@/store/AuthStore";
 import type { JobSeekerRegistrationData } from "@/store/useJobSeekerStore";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -8,6 +9,7 @@ const apiClient = new APIClient<JobSeekerRegistrationData>(
 );
 
 const useAddJobSeeker = () => {
+  const user = useAuthStore((s) => s.user);
   return useMutation<any, Error, JobSeekerRegistrationData>({
     mutationFn: (data: JobSeekerRegistrationData) => {
       const formData = new FormData();
@@ -22,7 +24,7 @@ const useAddJobSeeker = () => {
         bio: data.bio,
         skills: data.skills.join(","),
         profilePicture: data.profilePicture,
-        userId: "e05752c6-9f09-4c57-85e6-83494098f7f9",
+        userId: user?.id,
       };
 
       formData.append(

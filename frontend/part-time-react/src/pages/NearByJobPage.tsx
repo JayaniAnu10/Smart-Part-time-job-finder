@@ -13,13 +13,16 @@ export interface NearJobResponse {
 }
 
 const NearByJobPage = () => {
-  const [lat, setLat] = useState<number | null>(null);
-  const [lng, setLng] = useState<number | null>(null);
+  const DEFAULT_LAT = 5.9549;
+  const DEFAULT_LNG = 80.555;
+  const [lat, setLat] = useState<number>(DEFAULT_LAT);
+  const [lng, setLng] = useState<number>(DEFAULT_LNG);
   const [jobs, setJobs] = useState<NearJobResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  {
+    /*useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setLat(pos.coords.latitude);
@@ -30,7 +33,8 @@ const NearByJobPage = () => {
         setError("Location permission denied");
       }
     );
-  }, []);
+  }, []);*/
+  }
 
   useEffect(() => {
     if (lat && lng) {
