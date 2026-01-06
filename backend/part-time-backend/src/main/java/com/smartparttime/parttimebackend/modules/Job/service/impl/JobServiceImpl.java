@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -77,7 +78,7 @@ public class JobServiceImpl implements JobService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         job.setCategory(category);
         job.setEmployer(employer);
-        job.setPostedDate(LocalDate.now());
+        job.setPostedDate(LocalDateTime.now());
         job.setStatus(JobStatus.ACTIVE);
         job.setIsUrgent(request.getIsUrgent() != null ? request.getIsUrgent() : false);
 

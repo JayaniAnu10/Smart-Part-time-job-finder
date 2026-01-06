@@ -65,7 +65,7 @@ const NearbyMap = ({ userLat, userLng, jobs }: Props) => {
                 className="w-full font-semibold bg-yellow-400 text-[#0f1f3d] px-4 py-2 rounded hover:bg-yellow-500 cursor-pointer transition-transform duration-300"
                 onClick={() =>
                   window.open(
-                    `https://www.google.com/maps/dir/?api=1&destination=${job.latitude},${job.longitude}`,
+                    `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${job.latitude},${job.longitude}`,
                     "_blank"
                   )
                 }

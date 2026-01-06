@@ -23,7 +23,7 @@ public class JobListingDetailsDto {
 
     private LocalDateTime deadline;
 
-    private LocalDate postedDate;
+    private LocalDateTime postedDate;
 
     private BigDecimal minSalary;
 
