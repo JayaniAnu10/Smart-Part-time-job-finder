@@ -19,7 +19,10 @@ import JobSeekerStep2 from "@/pages/jobseeker-registration/JobSeekerStep2";
 import EmployerStep2 from "@/pages/employer-registration/EmployerStep2";
 import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
 import TermsPage from "@/pages/Terms/TermsPage";
-import JobseekerDashboard from "@/pages/JobseekerDashboard";
+import ContactPage from "@/pages/Contact/ContactPage";
+import JobHistory from "@/pages/JobHistory/JobHistory";
+
+
 
 const router = createBrowserRouter([
   {
@@ -28,6 +31,20 @@ const router = createBrowserRouter([
     children: [
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
+    ],
+  },
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "find-your-job", element: <FindJob /> },
+      { path: "nearby", element: <NearByJobPage /> },
+      { path: "chatbot", element: <ChatBot /> },
+      { path: "about", element: <AboutPage /> },
+      { path: "terms", element: <TermsPage /> },
+      { path: "contact", element: <ContactPage /> },
+     
       { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
       { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
       { path: "employer/register/step1", element: <EmployerStep1 /> },
@@ -44,10 +61,18 @@ const router = createBrowserRouter([
       {
         path: ":jobId/applicants",
         element: (
-          <PrivateRoute requiredRole="employer">
+          //<PrivateRoute requiredRole="employer">
             <JobApplicants />
-          </PrivateRoute>
+          //</PrivateRoute>
         ),
+      },
+      { 
+        path: "job-history", 
+        element: (
+          //<PrivateRoute requiredRole="jobseeker">
+            <JobHistory />
+          //</PrivateRoute>
+        ) 
       },
       {
         path: "seekerProfile/:id",

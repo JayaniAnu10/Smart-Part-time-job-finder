@@ -27,7 +27,7 @@ interface InputProps {
 }
 
 const CustomInput: React.FC<InputProps> = ({ label, id, placeholder, type = 'text', value, onChange, min }) => {
-  // Field එක හිස් නම් හෝ salary/vacancies වල default අගයන් තියෙනවා නම් පාට අඩු කරන logic එක
+  
   const isPlaceholderStyle = 
     !value || 
     (id === 'minSalary' && value === 2500) || 
