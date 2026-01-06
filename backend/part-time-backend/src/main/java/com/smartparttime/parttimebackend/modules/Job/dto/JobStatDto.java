@@ -13,7 +13,7 @@ import java.util.UUID;
 public class JobStatDto {
     private Long applicants;
     private UUID id;
-    private LocalDate postedDate;
+    private LocalDateTime postedDate;
     private JobStatus status;
     private String title;
     private LocalDateTime deadline;

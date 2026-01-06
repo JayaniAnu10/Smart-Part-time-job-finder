@@ -52,7 +52,7 @@ public class Job {
     private LocalDateTime deadline;
 
     @Column(name = "posted_date")
-    private LocalDate postedDate;
+    private LocalDateTime postedDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
