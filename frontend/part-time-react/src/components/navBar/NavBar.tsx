@@ -119,7 +119,7 @@ const NavBar = () => {
             >
               {user?.isJobseeker && (
                 <DropdownMenuItem asChild>
-                  <Link to="/dashboard">{t("seekerDashboard")}</Link>
+                  <Link to="/seekerDashboard">{t("seekerDashboard")}</Link>
                 </DropdownMenuItem>
               )}
 

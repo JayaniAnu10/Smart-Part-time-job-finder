@@ -17,7 +17,7 @@ import useAddEmployer from "@/hooks/useAddEmployer";
 import Logo from "@/components/common/Logo";
 import axios from "axios";
 
-export default function EmployerStep3() {
+export default function EmployerStep2() {
   const navigate = useNavigate();
   const { data, setData, reset } = useEmployerStore();
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -81,7 +81,9 @@ export default function EmployerStep3() {
       <RegistrationCard title="Additional Details">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
-            <p className="text-[14px] text-secondary dark:text-primary mb-1">Company Logo</p>
+            <p className="text-[14px] text-secondary dark:text-primary mb-1">
+              Company Logo
+            </p>
             <div className="flex items-center gap-6">
               <div className="w-20 h-20 bg-[#E0E7F5] rounded-[15px] flex items-center justify-center overflow-hidden">
                 {companyLogo ? (
