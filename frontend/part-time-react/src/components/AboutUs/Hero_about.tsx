@@ -2,12 +2,12 @@ import React from "react";
 
 const Hero_about: React.FC = () => {
   return (
-    // py-16 represents the size
-    <section className="bg-[#0f1f3d] py-16 text-center">
-      <h1 className="text-6xl font-bold tracking-tight mb-4 text-yellow-400">
+    // bg-secondary (index.css එකේ තියෙන පාට) පාවිච්චි කළා
+    <section className="bg-secondary py-16 text-center transition-colors duration-300">
+      <h1 className="text-6xl font-bold tracking-tight mb-4 text-primary">
         About DayBee.lk
       </h1>
-      <p className="text-xl text-[#4a6491] font-medium tracking-wide">
+      <p className="text-xl text-slate-400 font-medium tracking-wide">
         Sri Lanka's Premier Part-Time Job Platform
       </p>
     </section>
