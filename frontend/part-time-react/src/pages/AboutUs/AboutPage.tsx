@@ -6,7 +6,7 @@ import Stats from '../../components/AboutUs/Stats';
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background transition-colors duration-300">
+    <div className="min-h-screen bg-background transition-colors duration-300 pt-20">
       <Hero_about />
       
       {/* using gap-12 ,can change the gap between WhoWeAre & Values sections.

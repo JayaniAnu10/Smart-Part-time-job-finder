@@ -7,11 +7,12 @@ interface ValueCardProps {
 }
 
 const ValueCard: React.FC<ValueCardProps> = ({ title, description, icon }) => (
-  <div className="bg-[var(--card)] p-10 rounded-xl border border-blue-100/50 shadow-sm transition-all duration-300 ease-in-out 
-                  hover:-translate-y-2 hover:shadow-xl hover:border-[var(--primary)] cursor-default group">
+  <div className="bg-card p-10 rounded-xl border border-border/50 dark:border-blue-900/30 shadow-sm 
+                  transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl 
+                  hover:border-primary cursor-default group">
     <div className="text-4xl mb-5 group-hover:scale-110 transition-transform duration-300">{icon}</div>
-    <h3 className="font-bold text-[var(--secondary)] text-2xl mb-3">{title}</h3>
-    <p className="text-[var(--secondary)]/70 text-base leading-relaxed">{description}</p>
+    <h3 className="font-bold text-secondary dark:text-white text-2xl mb-3">{title}</h3>
+    <p className="text-foreground/70 dark:text-slate-400 text-base leading-relaxed">{description}</p>
   </div>
 );
 
@@ -25,7 +26,7 @@ const Values: React.FC = () => {
 
   return (
     <section className="py-12">
-      <h2 className="text-3xl font-bold text-[var(--secondary)] text-center mb-12">Our Core Values</h2>
+      <h2 className="text-3xl font-bold text-secondary dark:text-white text-center mb-12">Our Core Values</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {data.map((item, index) => (
           <ValueCard key={index} {...item} />
