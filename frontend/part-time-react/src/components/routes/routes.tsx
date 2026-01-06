@@ -21,6 +21,7 @@ import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
 import TermsPage from "@/pages/Terms/TermsPage";
 import ContactPage from "@/pages/Contact/ContactPage";
 import JobHistory from "@/pages/JobHistory/JobHistory";
+import JobseekerDashboard from "@/pages/JobseekerDashboard";
 
 
 
@@ -31,6 +32,8 @@ const router = createBrowserRouter([
     children: [
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
+      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
+
     ],
   },
   {
@@ -94,8 +97,7 @@ const router = createBrowserRouter([
       { path: "chatbot", element: <ChatBot /> },
       { path: "about", element: <AboutPage /> },
 
-      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
-
+      
       {
         path: "postJob",
         element: (
