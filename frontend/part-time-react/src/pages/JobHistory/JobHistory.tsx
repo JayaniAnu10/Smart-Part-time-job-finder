@@ -22,7 +22,7 @@ export const JobHistory = () => {
           
           {/* Stats Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <StatsCard label="Jobs Completed" value="3" />
+            <StatsCard label="Jobs Completed" value="3" icon="briefcase" />
             <StatsCard label="Total Earnings" value="LKR 6,700" />
             <StatsCard label="Average Rating" value="0.0" />
           </div>

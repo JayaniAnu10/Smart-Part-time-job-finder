@@ -7,11 +7,11 @@ import FooterSection from '../../components/FooterSection';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
 
 const FindJobs: React.FC = () => {
-  // 1. States හදාගන්න
+  // 1. States 
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Sample Data (ඔයාගේ කලින් තිබුණු data ටිකමයි)
+  // Sample Data 
   const allJobs = [
     { id: '1', title: 'Delivery Driver', company: 'QuickFood Delivery', location: 'Colombo 7', salary: 'Rs 2,000/day', time: '8:00 AM - 5:00 PM', category: 'Delivery & Logistics', isUrgent: true },
     { id: '2', title: 'Math Tutor', company: 'Learn Zone', location: 'Nugegoda', salary: 'Rs 2,500/hour', time: 'Flexible', category: 'Tutoring', isUrgent: false },
@@ -21,7 +21,7 @@ const FindJobs: React.FC = () => {
     { id: '6', title: 'Event Staff', company: 'Party Planners LK', location: 'Galle Face', salary: 'Rs 3,000/day', time: 'Variable', category: 'Events', isUrgent: true }
   ];
 
-  // 2. Filter Logic (useMemo එකෙන් performance වැඩි වෙනවා)
+  // 2. Filter Logic
   const filteredJobs = useMemo(() => {
     return allJobs.filter(job => {
       const matchesCategory = selectedCategory === "All Categories" || job.category === selectedCategory;
