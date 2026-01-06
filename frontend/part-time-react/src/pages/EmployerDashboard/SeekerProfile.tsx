@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import useSeekerDetails from "@/hooks/useSeekerDetails";
@@ -8,7 +7,6 @@ import {
   Award,
   Briefcase,
   CalendarDaysIcon,
-  CheckCircle,
   Mail,
   MapPin,
   Phone,
@@ -27,9 +25,9 @@ const SeekerProfile = () => {
   if (isError) <p>Error loading the profile</p>;
 
   return (
-    <div className="min-h-screen bg-background py-12">
-      <div className="container mx-auto p-4  max-w-5xl">
-        <Card className="p-10 md:px-15 mb-6">
+    <div className="min-h-screen bg-background py-9 ">
+      <div className="container mx-auto p-3  max-w-5xl">
+        <Card className="p-7 md:px-15 mb-6">
           <div className="flex flex-col md:flex-row items-start gap-6 mb-10 mt-5">
             <Avatar className="w-32 h-32 flex self-center">
               <AvatarImage src={data?.profileDetails.profilePicture} />
@@ -42,10 +40,10 @@ const SeekerProfile = () => {
             </Avatar>
             <div className="flex-1 ">
               <div className="flex items-center md:flex-row flex-col gap-3 mb-2">
-                <h1 className="text-3xl font-bold text-foreground">
+                <h1 className="text-4xl font-bold text-foreground">
                   {data?.profileDetails.fullName}
                 </h1>
-                <Badge className="bg-primary text-[#0f1f3d]">
+                <Badge className="bg-yellow-400 text-[#0f1f3d]">
                   {" "}
                   {data?.profileDetails.isVerified == true
                     ? "Verified"
@@ -76,7 +74,7 @@ const SeekerProfile = () => {
                   <span>{data?.profileDetails.email}</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Star className="w-4 h-4 fill-primary text-[#fbbd23]" />
+                  <Star className="w-4 h-4 fill-yellow-400 text-[#fbbd23]" />
                   <span>
                     {data?.profileDetails.rate.toPrecision(2)} Rating{" "}
                   </span>
@@ -87,14 +85,14 @@ const SeekerProfile = () => {
 
           <div className="grid md:grid-cols-3 gap-6 mb-8 ">
             <Card className="p-4 border border-border hover:scale-105 transition-transform duration-300">
-              <Briefcase className="w-6 h-6 text-primary mb-2" />
+              <Briefcase className="w-6 h-6 text-yellow-400 mb-2" />
               <p className="text-2xl font-bold text-foreground">
                 {data?.profileDetails.completedJobs}
               </p>
               <p className="text-sm text-muted-foreground">Jobs Completed</p>
             </Card>
             <Card className="p-4 border border-border hover:scale-105 transition-transform duration-300">
-              <Award className="w-6 h-6 text-primary mb-2" />
+              <Award className="w-6 h-6 text-yellow-400 mb-2" />
               <p className="text-2xl font-bold text-foreground">3</p>
               <p className="text-sm text-muted-foreground">Badges Earned</p>
             </Card>
@@ -116,7 +114,11 @@ const SeekerProfile = () => {
               </h2>
               <div className="flex flex-wrap gap-2">
                 {data?.profileDetails.skills.split(",").map((skill) => (
-                  <Badge key={skill} variant="secondary" className="text-sm">
+                  <Badge
+                    key={skill}
+                    variant="default"
+                    className="text-sm hover:bg-yellow-400"
+                  >
                     {skill}
                   </Badge>
                 ))}

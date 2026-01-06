@@ -37,11 +37,6 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
-    console.log(
-      "INTERCEPTOR HIT:",
-      error?.response?.status,
-      error?.config?.url
-    );
     const originalRequest = error.config;
 
     // Handle 401 (Unauthorized)
@@ -65,7 +60,6 @@ axiosInstance.interceptors.response.use(
         refreshClient
           .post("/auth/refresh")
           .then((res) => {
-            console.log("REFRESH RESPONSE:", res.status, res.data);
             const newAccess = res.data.token;
             const { user, setAuth } = useAuthStore.getState();
 
@@ -79,10 +73,8 @@ axiosInstance.interceptors.response.use(
             resolve(axiosInstance(originalRequest));
           })
           .catch((err) => {
-            // --- THIS IS THE CRITICAL CATCH BLOCK ---
             // If /auth/refresh fails (401), the Refresh Token is dead
             processQueue(err, null);
-            console.error("Session expired. Logging out...");
 
             useAuthStore.getState().clearAuth();
 
@@ -98,9 +90,6 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-/**
- * Generic API Client Class
- */
 class APIClient<T> {
   endpoint: string;
 

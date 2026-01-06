@@ -15,7 +15,7 @@ const SkillTag: React.FC<SkillTagProps> = ({ label, selected, toggle }) => {
         ${
           selected
             ? "bg-yellow-400 text-secondary border-yellow-400"
-            : "bg-[#E0E7F5] dark:bg-card text-[#364D7D] dark:text-primary/50 border-[#E0E7F5] dark:border-card "
+            : "bg-[#E0E7F5] dark:bg-card text-[#364D7D] dark:text-primary/50 border-[#E0E7F5] dark:border-input "
         }`}
     >
       {label}
