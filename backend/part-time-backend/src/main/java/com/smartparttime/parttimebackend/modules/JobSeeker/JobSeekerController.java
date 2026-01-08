@@ -77,6 +77,11 @@ public class JobSeekerController {
 
     }
 
+    @GetMapping("/stats/{id}")
+    public SeekerStatsDto getSeekerStats(@PathVariable UUID id) {
+        return jobSeekerService.seekerStats(id);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteJobSeeker(@PathVariable UUID id){
         return jobSeekerService.deleteSeeker(id);
