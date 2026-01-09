@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -107,9 +108,9 @@ public class JobSeekerService {
             throw new NotFoundException("JobSeeker not found");
         }
 
-        String fullName = seeker.getFirstName() + " " + seeker.getLastName();
-        var countUpcomingJobs=jobApplicationRepository.countByJobseeker_IdAndStatus(id, ApplicationStatus.APPROVED);
-        var activeApplications= jobApplicationRepository.countByJobseeker_IdAndStatus(id,ApplicationStatus.PENDING);
+        String fullName = seeker.getFirstName();
+        var countUpcomingJobs=jobApplicationRepository.countByJobseeker_IdAndStatusNotAndSchedule_StartDatetimeAfter(id,ApplicationStatus.REJECTED, LocalDateTime.now());
+        var activeApplications= jobApplicationRepository.countByJobseeker_IdAndStatusAndSchedule_StartDatetimeAfter(id,ApplicationStatus.PENDING,LocalDateTime.now());
 
         var earning = attendanceRepository.totalEarning(id, AttendanceStatus.CHECKED_OUT);
         var trustScore= userRepository.findById(id).get().getTrustScore();
