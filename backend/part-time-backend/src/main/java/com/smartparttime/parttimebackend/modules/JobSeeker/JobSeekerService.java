@@ -3,6 +3,10 @@ package com.smartparttime.parttimebackend.modules.JobSeeker;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
+import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
+import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
+import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.*;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +34,8 @@ public class JobSeekerService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final AzureImageStorageClient imageStorageClient;
+    private final JobApplicationRepository jobApplicationRepository;
+    private final AttendanceRepository attendanceRepository;
 
     @Transactional
     public JobSeekerDto addSeeker(@Valid JobSeekerRegisterRequest request,
@@ -93,6 +100,25 @@ public class JobSeekerService {
         jobSeekerMapper.update(request,jobSeeker);
         jobSeekerRepository.save(jobSeeker);
         return jobSeekerMapper.toJobSeekerDto(jobSeeker);
+    }
+
+    public SeekerStatsDto seekerStats(UUID id) {
+        var seeker = jobSeekerRepository.findById(id).orElse(null);
+        if (seeker == null) {
+            throw new NotFoundException("JobSeeker not found");
+        }
+
+        String fullName = seeker.getFirstName();
+        var countUpcomingJobs=jobApplicationRepository.countByJobseeker_IdAndStatusNotAndSchedule_StartDatetimeAfter(id,ApplicationStatus.REJECTED, LocalDateTime.now());
+        var activeApplications= jobApplicationRepository.countByJobseeker_IdAndStatusAndSchedule_StartDatetimeAfter(id,ApplicationStatus.PENDING,LocalDateTime.now());
+
+        var earning = attendanceRepository.totalEarning(id, AttendanceStatus.CHECKED_OUT);
+        var trustScore= userRepository.findById(id).get().getTrustScore();
+
+        var upcomingJobs=attendanceRepository.jobsTo(id);
+        return new SeekerStatsDto(fullName, countUpcomingJobs,activeApplications,earning,trustScore,upcomingJobs);
+
+
     }
 
     @Transactional

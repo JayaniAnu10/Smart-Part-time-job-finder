@@ -13,8 +13,8 @@ export interface NearJobResponse {
 }
 
 const NearByJobPage = () => {
-  const DEFAULT_LAT = 5.9549;
-  const DEFAULT_LNG = 80.555;
+  const DEFAULT_LAT = 5.939647107591209;
+  const DEFAULT_LNG = 80.57449256992793;
   const [lat, setLat] = useState<number>(DEFAULT_LAT);
   const [lng, setLng] = useState<number>(DEFAULT_LNG);
   const [jobs, setJobs] = useState<NearJobResponse[]>([]);

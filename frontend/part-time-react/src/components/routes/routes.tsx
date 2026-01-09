@@ -30,7 +30,6 @@ const router = createBrowserRouter([
     children: [
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
-      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
       { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
       { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
       { path: "employer/register/step1", element: <EmployerStep1 /> },
@@ -44,19 +43,27 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "seekerDashboard",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobseekerDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: ":jobId/applicants",
         element: (
-          //<PrivateRoute requiredRole="employer">
-          <JobApplicants />
-          //</PrivateRoute>
+          <PrivateRoute requiredRole="employer">
+            <JobApplicants />
+          </PrivateRoute>
         ),
       },
       {
         path: "job-history",
         element: (
-          //<PrivateRoute requiredRole="jobseeker">
-          <JobHistory />
-          //</PrivateRoute>
+          <PrivateRoute requiredRole="jobseeker">
+            <JobHistory />
+          </PrivateRoute>
         ),
       },
       {
