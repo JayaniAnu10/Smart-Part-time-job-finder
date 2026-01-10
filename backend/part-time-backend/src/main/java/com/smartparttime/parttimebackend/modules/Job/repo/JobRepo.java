@@ -60,4 +60,12 @@ public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExec
         GROUP BY j.id, j.postedDate, j.status, j.title, j.deadline
     """)
     List<JobStatDto> getJobStatsByEmployer(@Param("employerId") UUID employerId);
+
+    List<Job> findAllByStatusAndLocationContainsIgnoreCase(JobStatus status, String location);
+
+    List<Job> findAllByStatus(JobStatus status);
+
+    List<Job> findAllByStatusAndRequiredGenderContainingIgnoreCase(JobStatus status, String requiredGender);
+
+    List<Job> findAllById(UUID id);
 }

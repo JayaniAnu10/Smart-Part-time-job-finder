@@ -49,4 +49,8 @@ public class JobSeeker {
     @Column(name = "nic")
     private String nic;
 
+    @Lob
+    @Column(name = "embedding")
+    private String embedding;
+
 }

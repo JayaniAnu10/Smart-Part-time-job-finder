@@ -2,6 +2,7 @@ package com.smartparttime.parttimebackend.modules.Chatbot.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.InternalServerException;
 import com.smartparttime.parttimebackend.modules.Chatbot.Dto.ChatMessage;
