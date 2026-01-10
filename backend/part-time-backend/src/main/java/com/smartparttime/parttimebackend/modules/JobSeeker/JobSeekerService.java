@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.JobSeeker;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
@@ -7,11 +8,9 @@ import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
+import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.*;
 import com.smartparttime.parttimebackend.modules.User.*;
-import com.smartparttime.parttimebackend.modules.User.UserDtos.UserRegisterResponse;
-import com.smartparttime.parttimebackend.modules.User.UserExceptions.PasswordMismatchException;
-import com.smartparttime.parttimebackend.modules.User.entities.User;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -29,13 +28,14 @@ import java.util.UUID;
 @Service
 public class JobSeekerService {
     private final JobSeekerMapper jobSeekerMapper;
-    private final UserMapper userMapper;
+    private final EmbeddingService embeddingService;
     private final JobSeekerRepository jobSeekerRepository;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final AzureImageStorageClient imageStorageClient;
     private final JobApplicationRepository jobApplicationRepository;
     private final AttendanceRepository attendanceRepository;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
     public JobSeekerDto addSeeker(@Valid JobSeekerRegisterRequest request,
@@ -59,7 +59,8 @@ public class JobSeekerService {
         }
 
 
-        userRepository.save(user);
+        var savedUser= userRepository.save(user);
+        generateSeekerEmbedding(savedUser.getId());
 
         return jobSeekerMapper.toJobSeekerDto(seeker);
     }
@@ -86,7 +87,7 @@ public class JobSeekerService {
 
     }
 
-
+    @Transactional
     public JobSeekerDto updateJobSeeker(UpdateJobSeekerRequest request, UUID id) {
         var jobSeeker=jobSeekerRepository.findById(id).orElse(null);
         if(jobSeeker==null){
@@ -99,6 +100,9 @@ public class JobSeekerService {
 
         jobSeekerMapper.update(request,jobSeeker);
         jobSeekerRepository.save(jobSeeker);
+
+        generateSeekerEmbedding(jobSeeker.getId());
+
         return jobSeekerMapper.toJobSeekerDto(jobSeeker);
     }
 
@@ -183,5 +187,31 @@ public class JobSeekerService {
             throw new BadRequestException("Job seeker already exists");
         }
     }
+
+    @Transactional
+    public void generateSeekerEmbedding(UUID seekerId) {
+        JobSeeker seeker = jobSeekerRepository.findById(seekerId)
+                .orElseThrow(() -> new NotFoundException("JobSeeker not found"));
+
+        // Combine profile info to a single text string
+        String profileText = String.format("%s %s %s %s",
+                seeker.getSkills() != null ? seeker.getSkills() : "",
+                seeker.getBio(),
+                seeker.getGender(),
+                seeker.getAddress()
+        );
+
+        //  Use your existing EmbeddingService
+        List<Float> embedding = embeddingService.getEmbedding(profileText);
+
+        try {
+            // Store as JSON in the DB
+            seeker.setEmbedding(objectMapper.writeValueAsString(embedding));
+            jobSeekerRepository.save(seeker);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to save embedding", e);
+        }
+    }
+
 
 }
