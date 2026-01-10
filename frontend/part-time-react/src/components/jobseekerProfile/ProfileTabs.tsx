@@ -7,7 +7,7 @@ interface Props {
 
 export default function ProfileTabs({ active, onChange }: Props) {
   return (
-    <div className="flex max-w-xl h-[44px] rounded-xl bg-[#E0E7F5] dark:bg-background p- shadow-sm items-center">
+    <div className="flex max-w-xl h-[44px] rounded-xl bg-[#E0E7F5] dark:bg-card p- shadow-sm items-center">
       <button
         onClick={() => onChange("profile")}
         className={`flex-1 flex h-[36px] items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer
