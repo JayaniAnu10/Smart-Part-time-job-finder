@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.Recommendation;
+package com.smartparttime.parttimebackend.modules.Recommendation.Services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -66,4 +66,6 @@ public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExec
     List<Job> findAllByStatus(JobStatus status);
 
     List<Job> findAllByStatusAndRequiredGenderContainingIgnoreCase(JobStatus status, String requiredGender);
+
+    List<Job> findAllById(UUID id);
 }

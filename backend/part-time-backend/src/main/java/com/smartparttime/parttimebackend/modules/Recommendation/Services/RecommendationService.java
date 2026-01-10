@@ -1,8 +1,7 @@
-package com.smartparttime.parttimebackend.modules.Recommendation;
+package com.smartparttime.parttimebackend.modules.Recommendation.Services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
@@ -32,8 +31,9 @@ public class RecommendationService {
                 seeker.getEmbedding(), new TypeReference<List<Float>>() {}
         );
 
-        List<Job> candidates = jobRepo.findAllByStatusAndRequiredGenderContainingIgnoreCase(JobStatus.ACTIVE, seeker.getGender());
+        //List<Job> candidates = jobRepo.findAllByStatusAndRequiredGenderContainingIgnoreCase(JobStatus.ACTIVE, seeker.getGender());
 
+        List<Job> candidates =jobRepo.findAll();
         return candidates.stream()
                 .map(job -> {
                     List<Float> jobVec = jobEmbeddingCache.get(job.getId());

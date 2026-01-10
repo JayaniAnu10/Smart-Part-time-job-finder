@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.Recommendation;
+package com.smartparttime.parttimebackend.modules.Recommendation.Services;
 
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;

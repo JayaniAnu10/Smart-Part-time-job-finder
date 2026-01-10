@@ -24,7 +24,7 @@ import com.smartparttime.parttimebackend.modules.Job.service.JobService;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
-import com.smartparttime.parttimebackend.modules.Recommendation.JobEmbeddingCache;
+import com.smartparttime.parttimebackend.modules.Recommendation.Services.JobEmbeddingCache;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
