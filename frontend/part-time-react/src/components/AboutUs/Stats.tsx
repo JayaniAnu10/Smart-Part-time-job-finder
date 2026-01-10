@@ -11,7 +11,7 @@ const Stats: React.FC = () => {
         reliable workers for your business, DayBee.lk is here to help you
         succeed.
       </p>
-      <div className="grid grid-cols-3 gap-6 border-t border-[var(--secondary)]/20 pt-12">
+      <div className="grid grid-cols-3 gap-6 border-t border-[#0f1f3d]/20 pt-12">
         <div className="flex flex-col gap-2">
           <p className="text-5xl font-black text-[var(--secondary)] tracking-tight">
             2,800+
