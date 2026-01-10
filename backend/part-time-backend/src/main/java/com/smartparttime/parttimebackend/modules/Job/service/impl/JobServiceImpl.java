@@ -8,7 +8,7 @@ import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
-import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingService;
+import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
@@ -24,6 +24,7 @@ import com.smartparttime.parttimebackend.modules.Job.service.JobService;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
+import com.smartparttime.parttimebackend.modules.Recommendation.JobEmbeddingCache;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class JobServiceImpl implements JobService {
     private JobCategoryMapper jobCategoryMapper;
     @Autowired
     private AttendanceRepository attendanceRepository;
-
+    private JobEmbeddingCache jobEmbeddingCache;
     private EmailService emailService;
 
 
@@ -112,6 +113,7 @@ public class JobServiceImpl implements JobService {
         }
 
         var savedJob = jobRepo.save(job);
+        jobEmbeddingCache.addOrUpdate(savedJob);
         return jobMapper.toDto(savedJob);
     }
 
@@ -209,6 +211,7 @@ public class JobServiceImpl implements JobService {
         }
 
         var updated = jobRepo.save(job);
+        jobEmbeddingCache.addOrUpdate(updated);
 
         return jobMapper.toDto(updated);
     }

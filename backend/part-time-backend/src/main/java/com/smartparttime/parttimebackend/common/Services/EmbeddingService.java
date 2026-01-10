@@ -1,4 +1,4 @@
-package com.smartparttime.parttimebackend.modules.Chatbot.Service;
+package com.smartparttime.parttimebackend.common.Services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.ai.embedding.EmbeddingModel;

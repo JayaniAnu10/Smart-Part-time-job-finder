@@ -8,9 +8,8 @@ import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
-import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingService;
+import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.*;
-import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -201,7 +200,6 @@ public class JobSeekerService {
                 seeker.getAddress()
         );
 
-        //  Use your existing EmbeddingService
         List<Float> embedding = embeddingService.getEmbedding(profileText);
 
         try {
