@@ -238,7 +238,7 @@ public class JobServiceImpl implements JobService {
                         job.getTitle()
                 ));
 
-
+        jobEmbeddingCache.remove(jobId);
         jobApplicationRepository.deleteAll(applicants);
         attendanceRepository.deleteAll(attendances);
 
