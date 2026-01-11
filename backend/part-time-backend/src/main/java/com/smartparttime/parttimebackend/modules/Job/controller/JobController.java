@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,6 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JobController {
 
+    private final RestTemplate restTemplate = new RestTemplate();
     private final JobService jobService;
 
     @PostMapping("/create/{employerId}")
@@ -142,6 +143,20 @@ public class JobController {
     @GetMapping("/category")
     public List<JobCategoryDto> getCategories(){
         return jobService.getCategories();
+    }
+
+    @GetMapping("/reverse")
+    public ResponseEntity<String> reverseGeocode(@RequestParam double lat, @RequestParam double lon) {
+        String url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("User-Agent", "SmartPartTime/1.0 (contact@smartparttime.lk)"); // Nominatim requires User-Agent
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+        return ResponseEntity.ok(response.getBody());
     }
 
 }

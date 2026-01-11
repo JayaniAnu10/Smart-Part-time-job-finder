@@ -26,7 +26,7 @@ import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
 import com.smartparttime.parttimebackend.modules.Recommendation.Services.JobEmbeddingCache;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,36 +42,36 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class JobServiceImpl implements JobService {
 
     private final EmbeddingService  embeddingService;
     @Autowired
-    private JobRepo jobRepo;
+    private final JobRepo jobRepo;
 
     @Autowired
-    private JobCategoryRepo categoryRepo;
+    private final JobCategoryRepo categoryRepo;
 
     @Autowired
-    private EmployerRepository employerRepository;
+    private final EmployerRepository employerRepository;
     @Autowired
-    private JobMapper jobMapper;
+    private final JobMapper jobMapper;
     @Autowired
-    private JobApplicationRepository jobApplicationRepository;
+    private  final JobApplicationRepository jobApplicationRepository;
     private final JobSeekerRepository jobSeekerRepository;
     private final NotificationService notificationService;
     @Autowired
-    private JobCategoryMapper jobCategoryMapper;
+    private final JobCategoryMapper jobCategoryMapper;
     @Autowired
-    private AttendanceRepository attendanceRepository;
-    private JobEmbeddingCache jobEmbeddingCache;
-    private EmailService emailService;
+    private final AttendanceRepository attendanceRepository;
+    private final JobEmbeddingCache jobEmbeddingCache;
+    private final EmailService emailService;
 
 
     @Transactional
     @Override
-    public JobResponseDto createJob(JobRequestDto request, UUID employerId){
+    public JobResponseDto createJob(JobRequestDto request, UUID employerId) {
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
 
@@ -114,6 +114,8 @@ public class JobServiceImpl implements JobService {
 
         var savedJob = jobRepo.save(job);
         jobEmbeddingCache.addOrUpdate(savedJob);
+
+
         return jobMapper.toDto(savedJob);
     }
 
@@ -238,7 +240,7 @@ public class JobServiceImpl implements JobService {
                         job.getTitle()
                 ));
 
-
+        jobEmbeddingCache.remove(jobId);
         jobApplicationRepository.deleteAll(applicants);
         attendanceRepository.deleteAll(attendances);
 
@@ -326,6 +328,9 @@ public class JobServiceImpl implements JobService {
         var categories =categoryRepo.findAll();
         return jobCategoryMapper.toDto(categories);
     }
+
+
+
 
 
 }

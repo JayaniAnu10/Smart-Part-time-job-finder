@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import axios from "axios";
 import { redIcon } from "../map/NearByMap";
+import { axiosInstance } from "@/services/apiClient";
 
 type Props = {
   onSelect: (value: {
@@ -19,9 +20,9 @@ function RecenterMap({ lat, lng }: { lat: number; lng: number }) {
 }
 
 async function reverseGeocode(lat: number, lng: number) {
-  const res = await axios.get(
-    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
-  );
+  const res = await axiosInstance.get("jobs/reverse", {
+    params: { lat, lon: lng },
+  });
   const data = await res.data;
   return data?.display_name ?? "";
 }

@@ -70,6 +70,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/auth/logout").permitAll()
                         .requestMatchers(HttpMethod.POST,"/user/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/user").permitAll()
+                        .requestMatchers("/checkout").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/checkout/webhook").permitAll()
                         .requestMatchers("/recommendations/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/ratings").permitAll()
                         .requestMatchers(HttpMethod.GET,"/ratings/*").permitAll()
