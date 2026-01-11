@@ -1,4 +1,4 @@
-// src/components/NotificationItem.tsx
+
 import React from 'react';
 import { Briefcase, CheckCircle, Star, Info } from 'lucide-react';
 
@@ -11,18 +11,18 @@ interface NotificationProps {
 }
 
 const NotificationItem: React.FC<NotificationProps> = ({ type, title, description, time, isNew }) => {
-  // Type eka anuwa icon eka wenas kirima
+  
   const getIcon = () => {
     switch (type) {
-      case 'application': return <Briefcase className="text-orange-500" />;
-      case 'completed': return <CheckCircle className="text-orange-500" />;
-      case 'badge': return <Star className="text-blue-500" />;
-      case 'reminder': return <Info className="text-blue-500" />;
+      case 'application': return <Briefcase className="text-yellow-400" />;
+      case 'completed': return <CheckCircle className="text-yellow-400" />;
+      case 'badge': return <Star className="text-blue-900" />;
+      case 'reminder': return <Info className="text-blue-900" />;
     }
   };
 
   return (
-    <div className="flex items-start p-4 mb-4 border border-gray-200 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow">
+    <div className="flex items-start p-6 mb-4 border border-gray-200 rounded-xl bg-white shadow-sm hover:shadow-md  transition-shadow">
       <div className={`p-3 rounded-2xl mr-4 ${type === 'application' || type === 'completed' ? 'bg-orange-50' : 'bg-blue-50'}`}>
         {getIcon()}
       </div>

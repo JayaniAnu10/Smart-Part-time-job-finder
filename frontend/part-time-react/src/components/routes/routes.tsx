@@ -22,6 +22,7 @@ import TermsPage from "@/pages/Terms/TermsPage";
 import ContactPage from "@/pages/Contact/ContactPage";
 import JobHistory from "@/pages/JobHistory/JobHistory";
 import JobseekerDashboard from "@/pages/JobseekerDashboard";
+import NotificationPage from "@/pages/Notifications/NotificationPage";
 
 
 
@@ -36,6 +37,12 @@ const router = createBrowserRouter([
 
     ],
   },
+
+  {
+    path: "/notifications",
+    element: <NotificationPage />, 
+  },
+  
   {
     path: "/",
     element: <Layout />,
@@ -43,6 +50,7 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "find-your-job", element: <FindJob /> },
       { path: "nearby", element: <NearByJobPage /> },
+      
       { path: "chatbot", element: <ChatBot /> },
       { path: "about", element: <AboutPage /> },
       { path: "terms", element: <TermsPage /> },
