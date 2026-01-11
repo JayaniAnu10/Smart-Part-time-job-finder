@@ -2,19 +2,27 @@ package com.smartparttime.parttimebackend.modules.Payment;
 
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.PaymentException;
+import com.smartparttime.parttimebackend.modules.Job.PromoStatus;
 import com.smartparttime.parttimebackend.modules.Job.entity.Promotion;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.PromotionCategoryRepository;
 import com.smartparttime.parttimebackend.modules.Job.repo.PromotionRepository;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.CheckoutRequest;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.CheckoutResponse;
+import com.smartparttime.parttimebackend.modules.Payment.Dto.WebhookRequest;
 import com.smartparttime.parttimebackend.modules.Payment.Service.PaymentGateway;
+import com.stripe.exception.SignatureVerificationException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.net.Webhook;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -52,5 +60,16 @@ public class CheckoutService {
             promotionRepository.delete(promotion);
             throw e;
         }
+    }
+
+    public void handleWebhookEvent(WebhookRequest request){
+        paymentGateway
+                .parseWebhookRequest(request)
+                .ifPresent(paymentResult -> {
+                    var promotion= promotionRepository.findById(paymentResult.getPromotionId());
+                    promotion.setStatus(paymentResult.getPaymentStatus());
+                    promotionRepository.save(promotion);
+                });
+
     }
 }

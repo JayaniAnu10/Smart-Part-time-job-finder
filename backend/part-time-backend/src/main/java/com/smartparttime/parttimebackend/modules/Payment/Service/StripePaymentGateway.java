@@ -1,21 +1,35 @@
 package com.smartparttime.parttimebackend.modules.Payment.Service;
 
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.PaymentException;
+import com.smartparttime.parttimebackend.modules.Job.PromoStatus;
 import com.smartparttime.parttimebackend.modules.Job.entity.Promotion;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.CheckoutResponse;
+import com.smartparttime.parttimebackend.modules.Payment.Dto.PaymentResult;
+import com.smartparttime.parttimebackend.modules.Payment.Dto.WebhookRequest;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Event;
+import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
+import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class StripePaymentGateway implements PaymentGateway {
 
     @Value("${websiteUrl}")
     private String websiteUrl;
+
+    @Value("${stripe.webhookSecretKey}")
+    private String webhookSecretKey;
 
     @Override
     public CheckoutResponse createCheckoutSession(Promotion promotion) {
@@ -38,6 +52,39 @@ public class StripePaymentGateway implements PaymentGateway {
         }
 
     }
+
+    @Override
+    public Optional<PaymentResult> parseWebhookRequest(WebhookRequest webhookRequest) {
+        try {
+            var payload= webhookRequest.getPayload();
+            var signature= webhookRequest.getHeaders().get("stripe-signature");
+            var event = Webhook.constructEvent(payload,signature,webhookSecretKey);
+
+           return switch(event.getType()){
+                case  "payment_intent.succeeded" ->
+                    Optional.of(new PaymentResult(extractPromotionId(event),PromoStatus.PAID));
+
+                case  "payment_intent.payment_failed" ->
+                    Optional.of(new PaymentResult(extractPromotionId(event),PromoStatus.FAILED));
+
+                default ->
+                    Optional.empty();
+            };
+
+        } catch (SignatureVerificationException e) {
+            throw  new PaymentException("Signature verification failed");
+        }
+    }
+
+    public UUID extractPromotionId(Event event) {
+        var stripeObject = event.getDataObjectDeserializer().getObject().orElseThrow(
+                () -> new PaymentException("Could not deserialize stripe event")
+        );
+
+        var paymentIntent = (PaymentIntent) stripeObject;
+        return UUID.fromString(paymentIntent.getMetadata().get("promotion_id"));
+    }
+
 
     private SessionCreateParams.LineItem createLineItem(Promotion promotion) {
         return SessionCreateParams.LineItem.builder()
