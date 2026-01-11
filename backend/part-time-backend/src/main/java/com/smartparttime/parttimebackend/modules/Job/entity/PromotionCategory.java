@@ -1,8 +1,6 @@
-package com.smartparttime.parttimebackend.modules;
+package com.smartparttime.parttimebackend.modules.Job.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 

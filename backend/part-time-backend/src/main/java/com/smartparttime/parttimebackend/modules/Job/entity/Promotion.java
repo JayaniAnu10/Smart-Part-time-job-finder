@@ -1,13 +1,11 @@
 package com.smartparttime.parttimebackend.modules.Job.entity;
 
-import com.smartparttime.parttimebackend.modules.PromotionCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,9 +13,9 @@ import java.time.LocalDateTime;
 @Table(name = "promotion")
 public class Promotion {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "job_id")
