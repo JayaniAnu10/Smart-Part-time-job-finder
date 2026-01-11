@@ -46,19 +46,27 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "seekerDashboard",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobseekerDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: ":jobId/applicants",
         element: (
-          //<PrivateRoute requiredRole="employer">
-          <JobApplicants />
-          //</PrivateRoute>
+          <PrivateRoute requiredRole="employer">
+            <JobApplicants />
+          </PrivateRoute>
         ),
       },
       {
         path: "job-history",
         element: (
-          //<PrivateRoute requiredRole="jobseeker">
-          <JobHistory />
-          //</PrivateRoute>
+          <PrivateRoute requiredRole="jobseeker">
+            <JobHistory />
+          </PrivateRoute>
         ),
       },
       {

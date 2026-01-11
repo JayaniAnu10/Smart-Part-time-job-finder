@@ -1,6 +1,6 @@
-import React from 'react';
-import type { ReactNode } from 'react';
-import { Mail, Phone, MapPin, Clock, type LucideIcon } from 'lucide-react';
+import React from "react";
+import type { ReactNode } from "react";
+import { Mail, Phone, MapPin, Clock, type LucideIcon } from "lucide-react";
 
 interface DetailItemProps {
   icon: LucideIcon;
@@ -8,23 +8,27 @@ interface DetailItemProps {
   children: ReactNode;
 }
 
-const DetailItem: React.FC<DetailItemProps> = ({ icon: Icon, title, children }) => (
+const DetailItem: React.FC<DetailItemProps> = ({
+  icon: Icon,
+  title,
+  children,
+}) => (
   <div className="flex gap-4 mb-6">
     <div className="bg-amber-50 p-3 rounded-lg h-fit">
       <Icon className="w-5 h-5 text-amber-500" />
     </div>
     <div>
-      <h3 className="font-bold text-gray-800">{title}</h3>
-      <div className="text-gray-600 text-sm leading-relaxed">{children}</div>
+      <h3 className="font-bold ">{title}</h3>
+      <div className="text-gray-500 text-sm leading-relaxed">{children}</div>
     </div>
   </div>
 );
 
 const ContactDetails: React.FC = () => {
   return (
-    <div className="bg-white p-8 rounded-xl border border-gray-100 shadow-sm h-full">
-      <h2 className="text-2xl font-bold text-gray-800 mb-8">Contact Information</h2>
-      
+    <div className="bg-card p-8 rounded-xl border border-input shadow-sm h-full">
+      <h2 className="text-2xl font-bold mb-8">Contact Information</h2>
+
       <DetailItem icon={Mail} title="Email">
         <p>support@daybee.lk</p>
         <p>info@daybee.lk</p>
