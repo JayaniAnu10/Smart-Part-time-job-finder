@@ -7,7 +7,6 @@ import ProfileHeader from "@/components/jobseekerProfile/ProfileHeader";
 import ProfileForm from "@/components/jobseekerProfile/ProfileForm";
 import type { ProfileFormData } from "@/components/jobseekerProfile/ProfileForm";
 
-
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<"profile" | "reviews">("profile");
 
@@ -58,7 +57,7 @@ export default function ProfilePage() {
 
         {activeTab === "reviews" && (
           <Card className="max-w-5xl p-8 text-center text-muted-foreground">
-            Ratings & Reviews coming soon...
+            
           </Card>
         )}
       </div>
