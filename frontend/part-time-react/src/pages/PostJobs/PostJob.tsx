@@ -18,8 +18,8 @@ import useAddJob, { type JobData } from "@/hooks/useAddJob";
 import { useForm, Controller } from "react-hook-form";
 import useCategory from "@/hooks/useCategory";
 import { useState } from "react";
-import Checkbox from "@/components/Checkbox";
 import { Switch } from "@/components/ui/switch";
+import { useAuthStore } from "@/store/AuthStore";
 
 const benefitOptions = [
   "Transport",
@@ -38,13 +38,14 @@ const benefitOptions = [
 const requiredGenderOptions = ["Male", "Female", "Male & Female both"];
 
 const PostJob = () => {
+  const user = useAuthStore((s) => s.user);
   const navigate = useNavigate();
   const [benefits, setBenefits] = useState<string[]>([]);
   const [isUrgent, setIsUrgent] = useState(false);
-  const id = "511e9a6c-3ce6-494b-bf39-80e1afce4d5e";
+  const id = user?.id;
   const { data: categories } = useCategory();
 
-  const handleAddJob = useAddJob(id, () => {
+  const handleAddJob = useAddJob(id!, () => {
     reset();
     navigate("/");
   });
