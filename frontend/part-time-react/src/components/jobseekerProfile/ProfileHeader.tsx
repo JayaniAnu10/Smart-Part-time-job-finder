@@ -51,7 +51,7 @@ export default function ProfileHeader({ name, role }: Props) {
         <button
           type="button"
           onClick={handleClick}
-          className="absolute bottom-1 right-1 rounded-full bg-yellow-400 p-2 text-secondary shadow transition"
+          className="absolute bottom-1 border-none right-1 rounded-full bg-yellow-400 p-2 text-secondary shadow transition"
         >
           <Camera size={16} />
         </button>
