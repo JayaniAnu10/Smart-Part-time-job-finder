@@ -42,7 +42,7 @@ export default function ProfilePage() {
 
       <div className="mt-6">
         {activeTab === "profile" && (
-          <Card className="max-w-5xl rounded-lg p-6 md:p-8">
+          <Card className="max-w-5xl rounded-lg p-6 md:p-8 border-none shadow-lg">
             <ProfileHeader name="No Name" role="Job Seeker" />
 
             <Separator className="my-8" />
