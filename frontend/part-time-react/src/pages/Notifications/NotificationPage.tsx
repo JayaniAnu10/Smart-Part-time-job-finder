@@ -9,10 +9,10 @@ const NotificationPage = () => {
   ];
 
   return (
-    /* 1. Meka thama sampurna screen eka wate yana background eka */
+    
     <div className="bg-gray-50 min-h-screen w-full overflow-x-hidden">
       
-      {/* 2. Meka thama oyage image eke thiyena width ekata content eka maddata ganna container eka */}
+     
       <div className="max-w-4xl mx-auto px-4 py-12">
         
         {/* Header Section */}
@@ -21,7 +21,7 @@ const NotificationPage = () => {
             <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Notifications</h1>
             <p className="text-slate-500 mt-2 text-lg">Stay updated with your job activities</p>
           </div>
-          <button className="text-slate-600 border-2 font-semibold border-slate-200 bg-white px-6 py-2.5 rounded-xl hover:bg-yellow-400 hover:text-white hover:border-yellow-400 transition-all shadow-sm">
+          <button className="text-slate-600 border-2 font-medium border-slate-200 bg-white px-6 py-2.5 rounded-xl hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all shadow-sm">
             Mark All as Read
           </button>
         </div>
