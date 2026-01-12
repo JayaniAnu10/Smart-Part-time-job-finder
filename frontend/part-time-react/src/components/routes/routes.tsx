@@ -23,6 +23,7 @@ import ContactPage from "@/pages/Contact/ContactPage";
 import JobHistory from "@/pages/JobHistory/JobHistory";
 import JobseekerDashboard from "@/pages/JobseekerDashboard";
 import JobseekerProfile from "@/pages/JobseekerProfile";
+import JobPromotion from "@/pages/PostJobs/JobPromotion";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
     children: [
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
-      { path: "/seekerDashboard", element: <JobseekerDashboard/> },
+      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
       { path: "/seekerProfile", element: <JobseekerProfile /> },
       { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
       { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
@@ -42,6 +43,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="employer">
             <EmployerDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "promotion",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <JobPromotion />
           </PrivateRoute>
         ),
       },
