@@ -1,22 +1,15 @@
 package com.smartparttime.parttimebackend.modules.Payment;
 
-import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
-import com.smartparttime.parttimebackend.modules.Job.PromoStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.PromotionRepository;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.CheckoutRequest;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.CheckoutResponse;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.WebhookRequest;
-import com.stripe.exception.SignatureVerificationException;
-import com.stripe.model.PaymentIntent;
-import com.stripe.net.Webhook;
+import com.smartparttime.parttimebackend.modules.Payment.Service.CheckoutService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController

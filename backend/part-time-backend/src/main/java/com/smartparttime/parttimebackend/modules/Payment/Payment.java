@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Payment;
 
+import com.smartparttime.parttimebackend.modules.Job.entity.Promotion;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,6 +35,7 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 
 }
