@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Job.entity;
 
 import com.smartparttime.parttimebackend.modules.Job.PromoStatus;
+import com.smartparttime.parttimebackend.modules.Payment.Payment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -38,5 +39,9 @@ public class Promotion {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private PromoStatus status;
+
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
 }

@@ -1,12 +1,13 @@
 package com.smartparttime.parttimebackend.modules.Payment.Service;
 
-import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.PaymentException;
 import com.smartparttime.parttimebackend.modules.Job.PromoStatus;
 import com.smartparttime.parttimebackend.modules.Job.entity.Promotion;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.CheckoutResponse;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.PaymentResult;
 import com.smartparttime.parttimebackend.modules.Payment.Dto.WebhookRequest;
+import com.smartparttime.parttimebackend.modules.Payment.Payment;
+import com.smartparttime.parttimebackend.modules.Payment.PaymentStatus;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
@@ -15,7 +16,6 @@ import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -32,25 +32,27 @@ public class StripePaymentGateway implements PaymentGateway {
     private String webhookSecretKey;
 
     @Override
-    public CheckoutResponse createCheckoutSession(Promotion promotion) {
+    public CheckoutResponse createCheckoutSession(Promotion promotion, Payment payment) {
         try{
             var builder = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
                     .setSuccessUrl(websiteUrl + "/checkout-success?promotion_id=" + promotion.getId())
                     .setCancelUrl(websiteUrl + "/checkout-cancel")
-                    .putMetadata("promotion_id",promotion.getId().toString());
+                    .setPaymentIntentData(
+                            SessionCreateParams.PaymentIntentData.builder()
+                                    .putMetadata("promotion_id", promotion.getId().toString())
+                                    .build()
+                    );
+                    builder.addLineItem(createLineItem(promotion))
+                    .build();
 
-            var lineItem = createLineItem(promotion);
-            builder.addLineItem(lineItem);
+            var session = Session.create(builder.build());
 
-            var session = Session.create(builder.build()) ;
+            return new CheckoutResponse(promotion.getId(), session.getUrl());
 
-            return new CheckoutResponse(promotion.getId(),session.getUrl());
-
-        }catch (StripeException e){
-            throw new PaymentException("");
+        } catch (StripeException e) {
+            throw new PaymentException("Failed to create session: " + e.getMessage());
         }
-
     }
 
     @Override
@@ -62,10 +64,10 @@ public class StripePaymentGateway implements PaymentGateway {
 
            return switch(event.getType()){
                 case  "payment_intent.succeeded" ->
-                    Optional.of(new PaymentResult(extractPromotionId(event),PromoStatus.PAID));
+                    Optional.of(new PaymentResult(PaymentStatus.SUCCESS,extractPromotionId(event),PromoStatus.ACTIVE));
 
                 case  "payment_intent.payment_failed" ->
-                    Optional.of(new PaymentResult(extractPromotionId(event),PromoStatus.FAILED));
+                    Optional.of(new PaymentResult(PaymentStatus.FAILED,extractPromotionId(event),PromoStatus.EXPIRED));
 
                 default ->
                     Optional.empty();
@@ -84,7 +86,6 @@ public class StripePaymentGateway implements PaymentGateway {
         var paymentIntent = (PaymentIntent) stripeObject;
         return UUID.fromString(paymentIntent.getMetadata().get("promotion_id"));
     }
-
 
     private SessionCreateParams.LineItem createLineItem(Promotion promotion) {
         return SessionCreateParams.LineItem.builder()
