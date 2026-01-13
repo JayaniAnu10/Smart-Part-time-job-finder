@@ -47,7 +47,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "promotion",
+        path: "promotion/:jobId",
         element: (
           <PrivateRoute requiredRole="employer">
             <JobPromotion />

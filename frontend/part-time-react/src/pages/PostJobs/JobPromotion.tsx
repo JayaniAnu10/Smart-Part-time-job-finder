@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,8 @@ import {
   SkipForward,
 } from "lucide-react";
 import usePromo from "@/hooks/usePromo";
+import useCheckout from "@/hooks/useCheckout";
+import { useAuthStore } from "@/store/AuthStore";
 
 interface PromotionPlan {
   id: number;
@@ -30,12 +32,11 @@ const JobPromotion = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const user = useAuthStore((s) => s.user);
 
-  const jobId = location.state?.jobId;
-  const jobTitle = location.state?.jobTitle || "Your Job";
-
+  const { jobId } = useParams<{ jobId: string }>();
+  const jobTitle = location.state?.title || "Your Job";
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
-  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   const { data: promotions } = usePromo();
 
@@ -84,29 +85,19 @@ const JobPromotion = () => {
       popular: promo.name.toLowerCase().includes("standard"),
     })) ?? [];
 
-  const handleSelectPlan = (planId: number) => {
-    setSelectedPlan(planId);
-  };
+  const { mutate: checkout } = useCheckout();
 
-  const handlePaymentSuccess = () => {
-    setShowPaymentDialog(false);
-    const plan = promotionPlans.find((p) => p.id === selectedPlan);
-    navigate("/promotion-success", {
-      state: {
-        jobId,
-        jobTitle,
-        planName: plan?.name,
-        duration: plan?.duration,
-        price: plan?.price,
-      },
+  const handlePromotionSelect = (promotionCategoryId: number) => {
+    checkout({
+      userId: user?.id!,
+      jobId: jobId!,
+      promotionCategoryId,
     });
   };
 
   const handleSkip = () => {
     navigate("/empDashboard");
   };
-
-  const selectedPlanData = promotionPlans.find((p) => p.id === selectedPlan);
 
   return (
     <div className="min-h-screen bg-background">
@@ -199,7 +190,7 @@ const JobPromotion = () => {
                 variant={plan.popular ? "default" : "outline"}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSelectPlan(plan.id);
+                  handlePromotionSelect(plan.id);
                 }}
               >
                 Select Plan
@@ -212,7 +203,7 @@ const JobPromotion = () => {
         <div className="text-center">
           <Button
             variant="ghost"
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-[#0f1f3d]"
             onClick={handleSkip}
           >
             <SkipForward className="w-4 h-4 mr-2" />
