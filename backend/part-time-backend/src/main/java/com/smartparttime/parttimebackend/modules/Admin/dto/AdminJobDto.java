@@ -22,5 +22,5 @@ public class AdminJobDto {
     private String status;
 
 
-    private LocalDateTime postedDate;
+    private String postedDate;
 }
