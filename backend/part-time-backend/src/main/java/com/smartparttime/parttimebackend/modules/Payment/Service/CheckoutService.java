@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Payment.Service;
 
+import com.smartparttime.parttimebackend.common.Services.EmailService;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.PaymentException;
 import com.smartparttime.parttimebackend.modules.Job.PromoStatus;
@@ -28,6 +29,7 @@ public class CheckoutService {
     private final PromotionRepository promotionRepository;
     private final PaymentGateway paymentGateway;
     private final PaymentRepository paymentRepository;
+    private final EmailService emailService;
 
 
     @Transactional
@@ -82,9 +84,18 @@ public class CheckoutService {
                     promotionRepository.save(promotion);
 
                     Payment payment = promotion.getPayment();
+                    System.out.println(payment);
                     if (payment != null) {
                         payment.setStatus(paymentResult.getPaymentStatus());
                         paymentRepository.save(payment);
+                        System.out.println("success1");
+                        String email = payment.getPayer().getEmail();
+                        if (paymentResult.getPaymentStatus() == PaymentStatus.SUCCESS) {
+                            emailService.sendPaymentSuccessEmail(email, promotion);
+                            System.out.println("success");
+                        } else if (paymentResult.getPaymentStatus() == PaymentStatus.FAILED) {
+                            emailService.sendPaymentFailedEmail(email, promotion);
+                        }
                     }
                 });
 
