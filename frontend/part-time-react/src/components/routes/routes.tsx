@@ -25,6 +25,15 @@ import JobseekerDashboard from "@/pages/JobseekerDashboard";
 import JobseekerProfile from "@/pages/JobseekerProfile";
 import JobPromotion from "@/pages/PostJobs/JobPromotion";
 import PromoSuccess from "@/pages/PostJobs/PromoSuccess";
+import AdminDashboardPage from "@/pages/AdminDashboardPage";
+
+import ManageUsers from "@/pages/adminActions/ManageUsers";
+import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
+import ReviewReports from "@/pages/adminActions/ReviewReports";
+import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
+
+
+
 
 const router = createBrowserRouter([
   {
@@ -95,6 +104,11 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+
+
+
+
+
     ],
   },
   {
@@ -136,6 +150,38 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+
+      {
+        path: "admin/dashboard",
+        element: <AdminDashboardPage />,
+      },
+
+      {
+        path: "/admin/dashboard",
+        element: <AdminDashboardPage />,
+      },
+      {
+        path: "/admin/manage-users",
+        element: <ManageUsers />,
+      },
+      {
+        path: "/admin/moderate-job-posts",
+        element: <ModerateJobPosts />,
+      },
+      {
+        path: "/admin/review-reports",
+        element: <ReviewReports />,
+      },
+      {
+        path: "/admin/view-analytics",
+        element: <ViewAnalytics />,
+      },
+
+
+
+
+
+
     ],
   },
 ]);
