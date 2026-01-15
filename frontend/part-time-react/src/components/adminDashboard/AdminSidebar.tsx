@@ -1,27 +1,23 @@
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-
-} from "@/components/ui/sidebar";
-
 import QuickActions from "@/components/adminDashboard/QuickActions";
 
 export default function AdminSidebar() {
   return (
-    <Sidebar>
+    <aside className="w-72 min-h-screen bg-sidebar text-sidebar-foreground border-r border-sidebar-border p-4">
       
-      <SidebarHeader>
-        <h2 className="px-4 py-2 text-3xl font-medium text-secondary dark:text-primary">
-          Quick Actions
+      {/* Wrapper that stretches */}
+      <div className="h-full flex flex-col">
+        
+        {/* Title */}
+        <h2 className="text-2xl font-semibold mb-6">
+          
         </h2>
-      </SidebarHeader>
 
-      <SidebarContent className="p-4">
-        <QuickActions />
-      </SidebarContent>
+        {/* THIS PART FILLS THE FREE SPACE */}
+        <div className="flex-1">
+          <QuickActions />
+        </div>
 
-      
-    </Sidebar>
+      </div>
+    </aside>
   );
 }
