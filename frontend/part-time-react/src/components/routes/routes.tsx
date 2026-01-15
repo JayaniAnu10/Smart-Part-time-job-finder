@@ -24,6 +24,7 @@ import JobHistory from "@/pages/JobHistory/JobHistory";
 import JobseekerDashboard from "@/pages/JobseekerDashboard";
 import JobseekerProfile from "@/pages/JobseekerProfile";
 import JobPromotion from "@/pages/PostJobs/JobPromotion";
+import PromoSuccess from "@/pages/PostJobs/PromoSuccess";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="employer">
             <JobPromotion />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "checkout-success",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <PromoSuccess />
           </PrivateRoute>
         ),
       },
