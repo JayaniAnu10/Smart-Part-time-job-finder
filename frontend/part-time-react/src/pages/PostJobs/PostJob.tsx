@@ -45,9 +45,9 @@ const PostJob = () => {
   const id = user?.id;
   const { data: categories } = useCategory();
 
-  const handleAddJob = useAddJob(id!, () => {
+  const handleAddJob = useAddJob(id!, (jobId, jobTitle) => {
     reset();
-    navigate("/");
+    navigate(`/promotion/${jobId}`, { state: { title: jobTitle } });
   });
 
   const {

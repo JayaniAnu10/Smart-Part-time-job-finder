@@ -23,6 +23,8 @@ import ContactPage from "@/pages/Contact/ContactPage";
 import JobHistory from "@/pages/JobHistory/JobHistory";
 import JobseekerDashboard from "@/pages/JobseekerDashboard";
 import JobseekerProfile from "@/pages/JobseekerProfile";
+import JobPromotion from "@/pages/PostJobs/JobPromotion";
+import PromoSuccess from "@/pages/PostJobs/PromoSuccess";
 import AdminDashboardPage from "@/pages/AdminDashboardPage";
 
 import ManageUsers from "@/pages/adminActions/ManageUsers";
@@ -51,6 +53,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="employer">
             <EmployerDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "promotion/:jobId",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <JobPromotion />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "checkout-success",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <PromoSuccess />
           </PrivateRoute>
         ),
       },

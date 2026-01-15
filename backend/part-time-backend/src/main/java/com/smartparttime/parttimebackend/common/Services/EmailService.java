@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.common.Services;
 
+import com.smartparttime.parttimebackend.modules.Job.entity.Promotion;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
@@ -136,5 +137,45 @@ public class EmailService {
         mailSender.send(email);
     }
 
+
+    public void sendPaymentSuccessEmail(String email, Promotion promotion) {
+
+        String subject = "Payment Successful - Job Promotion Activated";
+
+        String body = """
+        <h2>Payment Successful 🎉</h2>
+        <p>Your job promotion has been successfully activated.</p>
+        <p><strong>Job:</strong> %s</p>
+        <p><strong>Plan:</strong> %s</p>
+        <p><strong>Duration:</strong> %d days</p>
+        <br/>
+        <p>Thank you for using our platform.</p>
+        """.formatted(
+                promotion.getJob().getTitle(),
+                promotion.getCategory().getName(),
+                promotion.getCategory().getDays()
+        );
+
+        sendSimpleEmail(email, subject, body);
     }
+
+
+    public void sendPaymentFailedEmail(String email, Promotion promotion) {
+
+        String subject = "Payment Failed - Job Promotion";
+
+        String body = """
+        <h2>Payment Failed ❌</h2>
+        <p>Unfortunately, your payment could not be completed.</p>
+        <p><strong>Job:</strong> %s</p>
+        <p>Please try again or contact support if the issue persists.</p>
+        """.formatted(
+                promotion.getJob().getTitle()
+        );
+
+        sendSimpleEmail(email, subject, body);
+    }
+
+
+}
 
