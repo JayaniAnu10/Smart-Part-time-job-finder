@@ -1,122 +1,150 @@
 import { useNavigate } from "react-router-dom";
-import heroBackground from "@/assets/hero6.png";
 import { Button } from "@/components/ui/button";
+import {
+  Search,
+  Briefcase,
+  Users,
+  Building2,
+  Star,
+} from "lucide-react";
 
-import SearchIcon from "@/assets/search.svg";
-import PostJobButtonIcon from "@/assets/logo-icon.svg";
-import PostJobButtonIconDarkMode from "@/assets/darkmode-briefcase.svg";
+import heroImage from "@/assets/h.jpg";
+import heroImage1 from "@/assets/hero3.jpeg";
 
-import JobsIcon from "@/assets/jobs.svg";
-import JobSeekerIcon from "@/assets/group.svg";
-import CompaniesIcon from "@/assets/companies.svg";
-import SuccessIcon from "@/assets/star.svg";
+
 
 type StatItem = {
-  icon: string;
+  icon: React.ElementType;
   value: string;
   label: string;
 };
 
 const stats: StatItem[] = [
-  { icon: JobsIcon, value: "2,500+", label: "Active Jobs" },
-  { icon: JobSeekerIcon, value: "15,000+", label: "Job Seekers" },
-  { icon: CompaniesIcon, value: "850+", label: "Companies" },
-  { icon: SuccessIcon, value: "94%", label: "Success Rate" },
+  { icon: Briefcase, value: "2,500+", label: "Active Jobs" },
+  { icon: Users, value: "15,000+", label: "Job Seekers" },
+  { icon: Building2, value: "850+", label: "Companies" },
+  { icon: Star, value: "94%", label: "Success Rate" },
 ];
 
 const HeroSection = () => {
   const navigate = useNavigate();
+
   return (
-    <section
-      className="relative min-h-[85vh] md:min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url(${heroBackground})` }}
-    >
-      <div className="absolute inset-0 bg-linear-to-b from-background/50 via-background/35 to-background/20 z-10" />
+    <section className="bg-gradient-to-br from-background via-yellow-300/40 dark:via-blue-300/30 to-background py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-      <div className="relative z-20 flex items-center justify-center px-4 sm:px-6 text-center pt-12 sm:pt-24">
-        <div className="max-w-5xl">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
-            <span className="whitespace-nowrap">
-              <span className="text-secondary dark:text-primary">
-                Find Your Perfect{" "}
-              </span>
+        {/*hero content */}
+        <div className="grid md:grid-cols-2 gap-12 items-center">
 
-              <span className="text-primary dark:text-yellow-400 whitespace-nowrap">
-                Part-Time Job
-              </span>
-            </span>
+          {/*left */}
+          <div className="text-secondary dark:text-primary space-y-6 -mt-16">
 
-            <span className="text-secondary dark:text-primary">
-              {" "}
-              in Sri Lanka
-            </span>
-          </h1>
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-tight">
+              <span>Find Your Perfect </span>
+              <span className="text-yellow-400">Part-Time Job</span>
+              <span> in Sri Lanka</span>
+            </h1>
 
-          <p className="mt-5 sm:t-6 sm:text-base md:text-lg text-secondary/80 dark:text-primary/70 max-w-3xl mx-auto">
-            Connect with thousands of flexible job opportunities. Work on your
-            terms, grow your income, and build your future.
-          </p>
+            <p className="text-secondary/70 dark:text-primary/70 max-w-xl">
+              Connect with thousands of flexible job opportunities. Work on your
+              terms, grow your income, and build your future.
+            </p>
 
-          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              size="lg"
-              onClick={() => navigate("/find-your-job")}
-              className="h-14 px-8 py-6 bg-primary dark:bg-yellow-400 text-[18px] text-secondary transition-all duration-300 hover:scale-105 active:scale-95 
-                         hover:bg-primary dark:hover:bg-yellow-400 hover:text-secondary dark:hover:text-secondary cursor-pointer"
-            >
-              <img
-                src={SearchIcon}
-                alt="Search jobs"
-                className="mr-2 h-5 w-5"
-              />
-              Find Jobs Now
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3">
 
-            <Button
-              size="lg"
-              onClick={() => navigate("/postJob")}
-              className="h-14 px-8 py-6 border border-secondary bg-primary-foreground/40 dark:bg-secondary/50
-                         backdrop-blur-sm text-[18px] text-secondary dark:text-secondary-foreground transition-all 
-                         duration-300 active:scale-95 hover:bg-primary-foreground/40 dark:hover:bg-secondary/50 
-                         hover:text-secondary dark:hover:text-secondary-foreground cursor-pointer"
-            >
-              <img
-                src={PostJobButtonIcon}
-                alt="Post job"
-                className="mr-2 h-5 w-5 dark:hidden"
-              />
-              <img
-                src={PostJobButtonIconDarkMode}
-                alt="Post job"
-                className="mr-2 h-5 w-5 hidden dark:inline"
-              />
-              Post a Job
-            </Button>
-          </div>
-        </div>
-      </div>
+              <Button
+                size="lg"
+                onClick={() => navigate("/find-your-job")}
+                className="h-14 px-8 bg-yellow-400 text-secondary text-[18px]
+                           hover:scale-105 active:scale-95 transition cursor-pointer"
+              >
+                <Search className="mr-2 h-5 w-5" />
+                Find Jobs Now
+              </Button>
 
-      <div className="relative z-20 mt-12 sm:mt-16 px-4 sm:px-6 pb-12 sm:pb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
-          {stats.map((item) => (
-            <div
-              key={item.label}
-              className="rounded-xl bg-card backdrop-blur-md shadow-lg p-6 text-center"
-            >
-              <img
-                src={item.icon}
-                alt={item.label}
-                className="mx-auto mb-2 h-8 w-8"
-              />
-              <h3 className="text-3xl font-extrabold text-secondary dark:text-primary">
-                {item.value}
-              </h3>
-              <p className="text-secondary/70 dark:text-primary/70 mt-1">
-                {item.label}
-              </p>
+              <Button
+                size="lg"
+                onClick={() => navigate("/postJob")}
+                className="h-14 px-8 border border-secondary bg-primary-foreground/40  dark:border-white/30 
+                dark:bg-white/10 dark:text-white backdrop-blur-sm text-[18px] text-secondary foreground transition-all 
+                duration-300 active:scale-95 hover:bg-primary-foreground/40 dark:hover:bg-secondary/50 
+                hover:text-secondary dark:hover:text-secondary-foreground cursor-pointer"
+              >
+                <Briefcase className="mr-2 h-5 w-5" />
+                Post a Job
+              </Button>
+
             </div>
-          ))}
+          </div>
+
+          {/* right */}
+          <div className="relative w-full flex justify-center md:justify-end">
+
+            <div className="relative w-[360px] h-[520px]">
+
+              <div className="absolute left-3 top-0 -translate-x-1/2
+                              w-[230px] h-[450px] rounded-[120px]
+                              bg-none shadow-xl">
+
+                <img
+                  src={heroImage}
+                  className="w-full h-full object-cover rounded-[110px]"
+                />
+              </div>
+
+              <div className="absolute top-0 right-3
+                              w-[210px] h-[220px] rounded-full
+                              bg-none shadow-xl"  
+                   style={{ borderRadius: "50% 50% 50% 0%" }}>
+
+                <img
+                  src={heroImage1}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: "50% 50% 50% 0%" }}
+                />
+              </div>
+
+              <div className="absolute bottom-16 right-3
+                              w-[210px] h-[220px] rounded-full
+                              bg-none shadow-xl"
+                   style={{ borderRadius: "50% 0% 50% 50%" }}>
+
+                <img
+                  src={heroImage}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: "50% 0% 50% 50%" }}
+                />
+              </div>
+
+            </div>
+          </div>
+
         </div>
+
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+
+          {stats.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.label}
+                className="rounded-xl bg-card shadow-lg p-6 text-center"
+              >
+                <Icon className="mx-auto mb-2 h-8 w-8 text-yellow-400" />
+
+                <h3 className="text-3xl font-extrabold text-secondary dark:text-primary">
+                  {item.value}
+                </h3>
+
+                <p className="text-secondary/70 dark:text-primary/70 mt-1">
+                  {item.label}
+                </p>
+              </div>
+            );
+          })}
+
+        </div>
+
       </div>
     </section>
   );
