@@ -35,11 +35,11 @@ const HeroSection = () => {
     <motion.section initial="hidden"
                     animate="visible"
                     variants={fadeIn}
-                    className="bg-gradient-to-br from-background via-yellow-300/40 dark:via-blue-300/30 to-background py-24">
+                    className=" bg-gradient-to-br from-background via-yellow-300/40 dark:via-blue-300/40 to-background py-24">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-        {/*hero content */}
+        {/*hero content*/}
         <div className="grid md:grid-cols-2 gap-12 items-center">
 
           {/*left */}
@@ -97,7 +97,7 @@ const HeroSection = () => {
 
               <motion.div variants={fadeUp}
                           transition={{ delay: 0.2}}
-                          className="absolute left-3 top-0 -translate-x-1/2 w-[230px] h-[450px] rounded-[120px]bg-none 
+                          className="absolute left-3 top-0 -translate-x-1/2 w-[230px] h-[450px] rounded-[120px] bg-none 
                                      filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]">
 
                 <img src={heroImage}
