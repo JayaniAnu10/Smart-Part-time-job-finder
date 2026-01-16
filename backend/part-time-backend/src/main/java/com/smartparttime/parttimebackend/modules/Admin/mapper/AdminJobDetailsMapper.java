@@ -36,7 +36,7 @@ public class AdminJobDetailsMapper {
 
         dto.setDescription(job.getDescription());
         dto.setRequirements(job.getRequirements());
-        dto.setBenefits(job.getAccommodation()); 
+        dto.setBenefits(job.getAccommodation());
 
         dto.setMinSalary(job.getMinSalary());
         dto.setMaxSalary(job.getMaxSalary());

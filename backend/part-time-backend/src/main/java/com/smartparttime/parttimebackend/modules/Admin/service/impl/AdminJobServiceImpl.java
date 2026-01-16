@@ -1,6 +1,8 @@
 package com.smartparttime.parttimebackend.modules.Admin.service.impl;
 
+import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDetailsViewDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDto;
+import com.smartparttime.parttimebackend.modules.Admin.mapper.AdminJobDetailsMapper;
 import com.smartparttime.parttimebackend.modules.Admin.mapper.AdminJobMapper;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminJobRepo;
 import com.smartparttime.parttimebackend.modules.Admin.service.AdminJobService;
@@ -20,6 +22,10 @@ public class AdminJobServiceImpl implements AdminJobService {
     private  AdminJobRepo adminJobRepo;
     @Autowired
     private  AdminJobMapper adminJobMapper;
+
+    @Autowired
+    private  AdminJobDetailsMapper adminJobDetailsMapper;
+
 
 
 
@@ -85,4 +91,15 @@ public class AdminJobServiceImpl implements AdminJobService {
                 .map(adminJobMapper::mapToDto)
                 .collect(Collectors.toList());
     }
+
+
+    public AdminJobDetailsViewDto getJobDetails(UUID id) {
+        Job job = adminJobRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+
+        return adminJobDetailsMapper.toDto(job);
+    }
+
+
+
 }

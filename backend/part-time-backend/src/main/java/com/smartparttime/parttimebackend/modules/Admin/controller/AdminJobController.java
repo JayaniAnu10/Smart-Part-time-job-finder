@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Admin.controller;
 
 
+import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDetailsViewDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDto;
 import com.smartparttime.parttimebackend.modules.Admin.mapper.AdminJobMapper;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminJobRepo;
@@ -57,6 +58,13 @@ public class AdminJobController {
     public List<AdminJobDto> searchJobs(@RequestParam String keyword) {
         return adminJobService.searchJobs(keyword);
     }
+
+
+    @GetMapping("/{id}/details")
+    public AdminJobDetailsViewDto getJobDetails(@PathVariable UUID id) {
+        return adminJobService.getJobDetails(id);
+    }
+
 
 
 
