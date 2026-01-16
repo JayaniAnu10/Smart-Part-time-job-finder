@@ -1,8 +1,7 @@
 import { Eye } from "lucide-react";
 import { useState } from "react";
-
 import type { AdminJob } from "@/hooks/useAdminJobs";
-import ViewJobModal from "./ViewJobMOdal";
+import ViewJobModal from "./ViewJobModal";
 
 interface Props {
   jobs: AdminJob[];
@@ -10,6 +9,7 @@ interface Props {
 
 export default function JobsTable({ jobs }: Props) {
   const [open, setOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<AdminJob | null>(null);
 
   return (
     <>
@@ -34,22 +34,17 @@ export default function JobsTable({ jobs }: Props) {
                 <td className="p-4">{job.postedDate}</td>
                 <td className="p-4 text-right">
                   <button
-                    onClick={() => setOpen(true)}
-                    className="
-    inline-flex items-center gap-2
-    px-4 py-2
-    rounded-lg
-    bg-yellow-400 text-black
-    font-semibold text-sm
-    hover:bg-yellow-500
-    transition-all duration-200
-    shadow-sm
-  "
+                    onClick={() => {
+                      setSelectedJob(job);
+                      setOpen(true);
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg
+                               bg-yellow-400 text-black font-semibold text-sm
+                               hover:bg-yellow-500 transition-all duration-200 shadow-sm"
                   >
                     <Eye size={16} />
                     View
                   </button>
-
                 </td>
               </tr>
             ))}
@@ -58,7 +53,14 @@ export default function JobsTable({ jobs }: Props) {
       </div>
 
       {/* Modal */}
-      <ViewJobModal open={open} onClose={() => setOpen(false)} />
+      <ViewJobModal
+        open={open}
+        job={selectedJob}
+        onClose={() => {
+          setOpen(false);
+          setSelectedJob(null);
+        }}
+      />
     </>
   );
 }
