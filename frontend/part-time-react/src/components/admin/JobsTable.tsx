@@ -35,10 +35,21 @@ export default function JobsTable({ jobs }: Props) {
                 <td className="p-4 text-right">
                   <button
                     onClick={() => setOpen(true)}
-                    className="inline-flex items-center gap-2 text-blue-600 hover:underline"
+                    className="
+    inline-flex items-center gap-2
+    px-4 py-2
+    rounded-lg
+    bg-yellow-400 text-black
+    font-semibold text-sm
+    hover:bg-yellow-500
+    transition-all duration-200
+    shadow-sm
+  "
                   >
-                    <Eye size={16} /> View
+                    <Eye size={16} />
+                    View
                   </button>
+
                 </td>
               </tr>
             ))}
