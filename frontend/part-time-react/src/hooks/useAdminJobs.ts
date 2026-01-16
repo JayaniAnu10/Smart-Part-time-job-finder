@@ -45,3 +45,16 @@ export function useAdminJobs(status?: string, keyword?: string) {
 
   return { jobs, loading, error };
 }
+
+
+
+const actionClient = new APIClient<any>("/admin/jobs");
+
+export function approveJob(jobId: string) {
+  return actionClient.patch(`${jobId}/approve`);
+}
+
+export function rejectJob(jobId: string) {
+  return actionClient.patch(`${jobId}/reject`);
+}
+
