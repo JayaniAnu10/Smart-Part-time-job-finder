@@ -32,7 +32,7 @@ export function useAdminJobs(status?: string, keyword?: string) {
         data = await jobClient.get();
       }
 
-      setJobs(data); // ✅ THIS updates the table
+      setJobs(data); 
     } catch {
       setError("Failed to load jobs");
     } finally {
@@ -49,6 +49,6 @@ export function useAdminJobs(status?: string, keyword?: string) {
     jobs,
     loading,
     error,
-    refetch: fetchJobs, // ✅ THIS IS WHAT YOU WERE MISSING
+    refetch: fetchJobs, 
   };
 }
