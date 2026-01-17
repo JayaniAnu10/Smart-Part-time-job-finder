@@ -10,17 +10,17 @@ export default function ModerateJobPosts() {
   const { jobs, loading, error, refetch } = useAdminJobs(status);
 
   
-  const filteredJobs = useMemo(() => {
-    if (!keyword.trim()) return jobs;
+const filteredJobs = useMemo(() => {
+  if (!keyword.trim()) return jobs;
 
-    const q = keyword.toLowerCase();
+  const q = keyword.toLowerCase();
 
-    return jobs.filter((job) =>
-      (job.title ?? "").toLowerCase().includes(q) ||
-      (job.category ?? "").toLowerCase().includes(q) ||
-      (job.employerEmail ?? "").toLowerCase().includes(q)
-    );
-  }, [jobs, keyword]);
+  return jobs.filter((job) =>
+    (job.title ?? "").toLowerCase().includes(q) ||
+    (job.company ?? "").toLowerCase().includes(q)
+  );
+}, [jobs, keyword]);
+
 
   return (
     <div className="p-12 space-y-6">
