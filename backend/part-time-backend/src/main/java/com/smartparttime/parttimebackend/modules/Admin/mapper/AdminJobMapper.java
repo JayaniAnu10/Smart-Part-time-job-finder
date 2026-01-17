@@ -4,7 +4,6 @@ import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class AdminJobMapper {
 
@@ -13,24 +12,30 @@ public class AdminJobMapper {
         AdminJobDto dto = new AdminJobDto();
 
         dto.setId(job.getId());
+
+
         dto.setTitle(job.getTitle());
 
 
-        if (job.getCategory() != null) {
-            dto.setCategory(job.getCategory().getCategory());
+        if (job.getEmployer() != null) {
+            dto.setCompany(job.getEmployer().getCompanyName());
         } else {
-            dto.setCategory("UNKNOWN");
+            dto.setCompany("UNKNOWN");
         }
 
 
-        if (job.getEmployer() != null && job.getEmployer().getUser() != null) {
-            dto.setEmployerEmail(job.getEmployer().getUser().getEmail());
+        if (job.getLocation() != null) {
+            dto.setLocation(job.getLocation());
         } else {
-            dto.setEmployerEmail("UNKNOWN");
+            dto.setLocation("N/A");
         }
 
 
-        dto.setStatus(job.getStatus().name());
+        if (job.getStatus() != null) {
+            dto.setStatus(job.getStatus().name());
+        } else {
+            dto.setStatus("UNKNOWN");
+        }
 
 
         if (job.getPostedDate() != null) {
@@ -38,7 +43,6 @@ public class AdminJobMapper {
         } else {
             dto.setPostedDate("N/A");
         }
-
 
         return dto;
     }

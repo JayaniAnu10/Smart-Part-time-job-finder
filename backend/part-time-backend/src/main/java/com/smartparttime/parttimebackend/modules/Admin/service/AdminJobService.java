@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Admin.service;
 
+import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDetailsViewDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDto;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 
@@ -21,4 +22,6 @@ public interface AdminJobService {
     void deleteJob(UUID jobId);
 
     List<AdminJobDto> searchJobs(String keyword);
+
+    AdminJobDetailsViewDto getJobDetails(UUID id);
 }

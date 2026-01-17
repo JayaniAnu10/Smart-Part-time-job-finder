@@ -1,21 +1,63 @@
+import { useState, useMemo } from "react";
 import StatusFilter from "@/components/admin/Statusfilter";
 import JobsTable from "@/components/admin/JobsTable";
+import { useAdminJobs } from "@/hooks/useAdminJobs";
 
 export default function ModerateJobPosts() {
+  const [status, setStatus] = useState<string>("ALL");
+  const [keyword, setKeyword] = useState("");
+
+  const { jobs, loading, error, refetch } = useAdminJobs(status);
+
+  
+  const filteredJobs = useMemo(() => {
+    let data = jobs;
+
+    
+    if (status !== "ALL") {
+      data = data.filter((job) => job.status === status);
+    }
+
+    
+    if (keyword.trim()) {
+      const q = keyword.toLowerCase();
+      data = data.filter(
+        (job) =>
+          (job.title ?? "").toLowerCase().includes(q) ||
+          (job.company ?? "").toLowerCase().includes(q)
+      );
+    }
+
+    return data;
+  }, [jobs, status, keyword]);
+
   return (
     <div className="p-12 space-y-6">
-   
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-secondary dark:text-primary">Moderate Job Posts</h1>
+        <h1 className="text-3xl font-bold text-secondary dark:text-primary">
+          Moderate Job Posts
+        </h1>
         <p className="text-secondary/70 dark:text-primary/70">
-          Review and approve job listings
+          Review, approve, or reject job listings
         </p>
       </div>
 
-      <StatusFilter />
+      {/* Filters */}
+      <StatusFilter
+        status={status}
+        onStatusChange={setStatus}
+        onSearch={setKeyword}
+      />
 
-      <JobsTable />
+      {/* States */}
+      {loading && <p className="text-muted-foreground">Loading jobs...</p>}
+      {error && <p className="text-red-500">{error}</p>}
 
+      {/* Table */}
+      {!loading && !error && (
+        <JobsTable jobs={filteredJobs} refetch={refetch} />
+      )}
     </div>
   );
 }
