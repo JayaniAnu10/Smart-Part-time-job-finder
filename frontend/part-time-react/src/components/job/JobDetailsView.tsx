@@ -53,11 +53,11 @@ function renderList(
   return <p className="text-gray-500 italic">{emptyText}</p>;
 }
 
-/* ================= MAIN COMPONENT ================= */
+
 export default function JobDetailsView({ job }: Props) {
   return (
     <div className="p-8 space-y-10">
-      {/* ================= HEADER ================= */}
+      
       <div>
         <h1 className="text-3xl font-extrabold text-slate-900 mb-1">
           {job.title}
@@ -70,7 +70,7 @@ export default function JobDetailsView({ job }: Props) {
         )}
       </div>
 
-      {/* ================= META INFO ================= */}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 border-t pt-6">
         {job.location && (
           <div className="flex items-center gap-3 text-sm text-gray-600">
@@ -109,7 +109,7 @@ export default function JobDetailsView({ job }: Props) {
         )}
       </div>
 
-      {/* ================= DESCRIPTION ================= */}
+      
       {job.description && (
         <section>
           <h3 className="text-lg font-bold mb-3 border-l-4 border-yellow-500 pl-3">
@@ -121,7 +121,7 @@ export default function JobDetailsView({ job }: Props) {
         </section>
       )}
 
-      {/* ================= REQUIREMENTS ================= */}
+     
       <section>
         <h3 className="text-lg font-bold mb-3 border-l-4 border-yellow-500 pl-3">
           Requirements
@@ -129,7 +129,7 @@ export default function JobDetailsView({ job }: Props) {
         {renderList(job.requirements, "No requirements provided")}
       </section>
 
-      {/* ================= BENEFITS ================= */}
+     
       <section>
         <h3 className="text-lg font-bold mb-3 border-l-4 border-yellow-500 pl-3">
           Benefits

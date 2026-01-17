@@ -21,13 +21,14 @@ export default function StatusFilter({
 }: Props) {
   return (
     <div className="flex items-center gap-4 p-4 h-[100px] border rounded-xl bg-muted">
-      {/* 🔍 Search */}
+      
+      {/* Search */}
       <div className="relative flex-1">
         <Search className="absolute left-3 top-4 h-4 w-4 text-secondary" />
         <Input
           placeholder="Search jobs..."
           className="pl-9 h-12"
-          onChange={(e) => onSearch(e.target.value)} 
+          onChange={(e) => onSearch(e.target.value)}
         />
       </div>
 

@@ -10,17 +10,26 @@ export default function ModerateJobPosts() {
   const { jobs, loading, error, refetch } = useAdminJobs(status);
 
   
-const filteredJobs = useMemo(() => {
-  if (!keyword.trim()) return jobs;
+  const filteredJobs = useMemo(() => {
+    let data = jobs;
 
-  const q = keyword.toLowerCase();
+    
+    if (status !== "ALL") {
+      data = data.filter((job) => job.status === status);
+    }
 
-  return jobs.filter((job) =>
-    (job.title ?? "").toLowerCase().includes(q) ||
-    (job.company ?? "").toLowerCase().includes(q)
-  );
-}, [jobs, keyword]);
+    
+    if (keyword.trim()) {
+      const q = keyword.toLowerCase();
+      data = data.filter(
+        (job) =>
+          (job.title ?? "").toLowerCase().includes(q) ||
+          (job.company ?? "").toLowerCase().includes(q)
+      );
+    }
 
+    return data;
+  }, [jobs, status, keyword]);
 
   return (
     <div className="p-12 space-y-6">
@@ -47,10 +56,7 @@ const filteredJobs = useMemo(() => {
 
       {/* Table */}
       {!loading && !error && (
-        <JobsTable
-          jobs={filteredJobs}
-          refetch={refetch}
-        />
+        <JobsTable jobs={filteredJobs} refetch={refetch} />
       )}
     </div>
   );
