@@ -3,6 +3,7 @@ package com.smartparttime.parttimebackend.modules.Admin.controller;
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminUserDto;
 import com.smartparttime.parttimebackend.modules.Admin.service.AdminUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class AdminUserController {
     }
 
 
-    @PutMapping("/{id}/status")
+    @PatchMapping("/{id}/status")
     public AdminUserDto updateUserStatus(
             @PathVariable UUID id,
             @RequestParam boolean isActive
@@ -41,4 +42,8 @@ public class AdminUserController {
     public List<AdminUserDto> searchUsers(@RequestParam String keyword) {
         return adminUserService.searchUsers(keyword);
     }
+
+
+
+
 }
