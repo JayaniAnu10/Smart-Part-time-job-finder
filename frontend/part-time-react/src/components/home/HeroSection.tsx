@@ -35,11 +35,11 @@ const HeroSection = () => {
     <motion.section initial="hidden"
                     animate="visible"
                     variants={fadeIn}
-                    className=" bg-gradient-to-br from-background via-yellow-300/40 dark:via-blue-300/40 to-background py-24">
+                    className="bg-gradient-to-br from-background via-yellow-300/40 dark:via-blue-300/40 to-background py-16">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-        {/*hero content*/}
+        {/*hero content */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
 
           {/*left */}
@@ -97,11 +97,13 @@ const HeroSection = () => {
 
               <motion.div variants={fadeUp}
                           transition={{ delay: 0.2}}
-                          className="absolute left-3 top-0 -translate-x-1/2 w-[230px] h-[450px] rounded-[120px] bg-none 
+                          className="absolute left-3 top-0 -translate-x-1/2 w-[225px] h-[455px] rounded-[120px] bg-none 
                                      filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]">
+                          
 
                 <img src={heroImage}
-                     className="w-full h-full object-cover rounded-[110px]"/>
+                     className="w-full h-full object-cover rounded-[110px]"
+                     />
               </motion.div>
  
               <motion.div  variants={fadeUp} 
@@ -117,11 +119,11 @@ const HeroSection = () => {
               <motion.div variants={fadeUp}
               transition={{delay: 0.6}}
                           className="absolute bottom-16 right-3 w-[210px] h-[220px] rounded-full bg-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
-                          style={{ borderRadius: "50% 0% 50% 50%" }}>
+                          style={{ borderRadius: "0% 50% 50% 50%" }}>
 
                 <img src={heroImage2}
                      className="w-full h-full object-cover"
-                     style={{ borderRadius: "50% 0% 50% 50%" }}/>
+                     style={{ borderRadius: "0% 50% 50% 50%" }}/>
               </motion.div>
 
             </div>
