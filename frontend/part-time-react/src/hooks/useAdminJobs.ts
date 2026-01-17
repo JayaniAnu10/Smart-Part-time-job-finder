@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import APIClient from "@/services/apiClient";
-
 
 export type AdminJob = {
   id: string;
   title: string;
-  category: string;          
-  employerEmail: string;     
+  category: string;
+  employerEmail: string;
   status: "ACTIVE" | "CLOSED";
-  postedDate: string;        
+  postedDate: string;
 };
 
 const jobClient = new APIClient<AdminJob[]>("/admin/jobs");
@@ -18,43 +17,38 @@ export function useAdminJobs(status?: string, keyword?: string) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let request: Promise<AdminJob[]>;
+  const fetchJobs = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    setLoading(true);
-    setError(null);
+      let data: AdminJob[];
 
-    
-    if (keyword && keyword.trim() !== "") {
-      request = jobClient.getAll({ keyword });
-    }
-    
-    else if (status && status !== "ALL") {
-      request = jobClient.getAll({ status });
-    }
-    
-    else {
-      request = jobClient.get();
-    }
+      if (keyword && keyword.trim() !== "") {
+        data = await jobClient.getAll({ keyword });
+      } else if (status && status !== "ALL") {
+        data = await jobClient.getAll({ status });
+      } else {
+        data = await jobClient.get();
+      }
 
-    request
-      .then((data) => setJobs(data))
-      .catch(() => setError("Failed to load jobs"))
-      .finally(() => setLoading(false));
+      setJobs(data); // ✅ THIS updates the table
+    } catch {
+      setError("Failed to load jobs");
+    } finally {
+      setLoading(false);
+    }
   }, [status, keyword]);
 
-  return { jobs, loading, error };
+  // initial load + filter change
+  useEffect(() => {
+    fetchJobs();
+  }, [fetchJobs]);
+
+  return {
+    jobs,
+    loading,
+    error,
+    refetch: fetchJobs, // ✅ THIS IS WHAT YOU WERE MISSING
+  };
 }
-
-
-
-const actionClient = new APIClient<any>("/admin/jobs");
-
-export function approveJob(jobId: string) {
-  return actionClient.patch(`${jobId}/approve`);
-}
-
-export function rejectJob(jobId: string) {
-  return actionClient.patch(`${jobId}/reject`);
-}
-
