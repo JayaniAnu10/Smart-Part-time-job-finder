@@ -123,7 +123,7 @@ const HeroSection = () => {
 
                 <img src={heroImage2}
                      className="w-full h-full object-cover"
-                     style={{ borderRadius: "0% 50% 50% 50%" }}/>
+                     style={{ borderRadius: "0% 0% 50% 50%" }}/>
               </motion.div>
 
             </div>
