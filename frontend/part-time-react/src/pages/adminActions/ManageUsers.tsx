@@ -1,4 +1,4 @@
-import UserFilters from "@/components/admin/UserFilters";
+
 import UsersTable from "@/components/admin/UsersTable";
 
 export default function ManageUsers() {
@@ -12,7 +12,7 @@ export default function ManageUsers() {
         </p>
       </div>
 
-      <UserFilters />
+      
 
       <UsersTable />
 
