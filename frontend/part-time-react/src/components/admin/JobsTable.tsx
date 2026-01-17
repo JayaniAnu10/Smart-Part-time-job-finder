@@ -35,7 +35,7 @@ export default function JobsTable({ jobs, refetch }: Props) {
                 <td className="p-4 font-medium">{job.title}</td>
                 <td className="p-4">{job.company}</td>
 
-                {/* ✅ STATUS PILL – MATCHES MODAL BUTTON COLORS */}
+                {/* STATUS PILL – MATCHES MODAL BUTTON COLORS */}
                 <td className="p-4">
                   <span
                     className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
