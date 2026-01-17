@@ -5,9 +5,10 @@ import ViewJobModal from "./ViewJobModal";
 
 interface Props {
   jobs: AdminJob[];
+  refetch: () => void;
 }
 
-export default function JobsTable({ jobs }: Props) {
+export default function JobsTable({ jobs, refetch }: Props) {
   const [open, setOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<AdminJob | null>(null);
 
@@ -27,11 +28,30 @@ export default function JobsTable({ jobs }: Props) {
 
           <tbody>
             {jobs.map((job) => (
-              <tr key={job.id} className="border-t">
+              <tr
+                key={job.id}
+                className="border-t hover:bg-muted/40 transition"
+              >
                 <td className="p-4 font-medium">{job.title}</td>
                 <td className="p-4">{job.company}</td>
-                <td className="p-4">{job.status}</td>
+
+                {/* ✅ STATUS PILL – MATCHES MODAL BUTTON COLORS */}
+                <td className="p-4">
+                  <span
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+                      ${
+                        job.status === "ACTIVE"
+                          ? "bg-green-500/10 text-green-600 border border-green-500/30"
+                          : "bg-red-500/10 text-red-600 border border-red-500/30"
+                      }
+                    `}
+                  >
+                    {job.status}
+                  </span>
+                </td>
+
                 <td className="p-4">{job.postedDate}</td>
+
                 <td className="p-4 text-right">
                   <button
                     onClick={() => {
@@ -60,6 +80,7 @@ export default function JobsTable({ jobs }: Props) {
           setOpen(false);
           setSelectedJob(null);
         }}
+        onActionSuccess={refetch}
       />
     </>
   );
