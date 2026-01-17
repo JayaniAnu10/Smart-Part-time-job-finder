@@ -23,6 +23,17 @@ import ContactPage from "@/pages/Contact/ContactPage";
 import JobHistory from "@/pages/JobHistory/JobHistory";
 import JobseekerDashboard from "@/pages/JobseekerDashboard";
 import JobseekerProfile from "@/pages/JobseekerProfile";
+import JobPromotion from "@/pages/PostJobs/JobPromotion";
+import PromoSuccess from "@/pages/PostJobs/PromoSuccess";
+import AdminDashboardPage from "@/pages/AdminDashboardPage";
+
+import ManageUsers from "@/pages/adminActions/ManageUsers";
+import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
+import ReviewReports from "@/pages/adminActions/ReviewReports";
+import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
+
+
+
 
 const router = createBrowserRouter([
   {
@@ -31,7 +42,7 @@ const router = createBrowserRouter([
     children: [
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
-      { path: "/seekerDashboard", element: <JobseekerDashboard/> },
+      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
       { path: "/seekerProfile", element: <JobseekerProfile /> },
       { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
       { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
@@ -42,6 +53,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="employer">
             <EmployerDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "promotion/:jobId",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <JobPromotion />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "checkout-success",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <PromoSuccess />
           </PrivateRoute>
         ),
       },
@@ -77,6 +104,11 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+
+
+
+
+
     ],
   },
   {
@@ -118,6 +150,38 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+
+      {
+        path: "admin/dashboard",
+        element: <AdminDashboardPage />,
+      },
+
+      {
+        path: "/admin/dashboard",
+        element: <AdminDashboardPage />,
+      },
+      {
+        path: "/admin/manage-users",
+        element: <ManageUsers />,
+      },
+      {
+        path: "/admin/moderate-job-posts",
+        element: <ModerateJobPosts />,
+      },
+      {
+        path: "/admin/review-reports",
+        element: <ReviewReports />,
+      },
+      {
+        path: "/admin/view-analytics",
+        element: <ViewAnalytics />,
+      },
+
+
+
+
+
+
     ],
   },
 ]);

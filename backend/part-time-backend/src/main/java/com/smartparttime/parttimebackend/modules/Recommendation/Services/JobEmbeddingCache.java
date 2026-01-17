@@ -28,11 +28,11 @@ public class JobEmbeddingCache {
                     );
                     jobEmbeddingMap.put(job.getId(), embedding);
                 } catch (Exception e) {
-                    log.warn("Failed to parse embedding for job {}", job.getId());
+
                 }
             }
         });
-        log.info("Loaded {} job embeddings into cache", jobEmbeddingMap.size());
+
     }
 
     public List<Float> get(UUID jobId) {
