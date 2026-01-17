@@ -8,7 +8,8 @@ public class AdminUserDto {
     private UUID id;
     private String name;
     private String email;
-    private String type;
+    private String role;
     private String status;
     private String createdAt;
+
 }
