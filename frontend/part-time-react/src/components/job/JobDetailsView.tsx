@@ -8,12 +8,12 @@ import {
 
 type Job = {
   title: string;
-  companyName?: string;     // ✅ from DTO
+  companyName?: string;   
   location?: string;
   salary?: string;
   time?: string;
   applicants?: number | string;
-  postedDate?: string;      // ✅ from DTO (ISO string)
+  postedDate?: string;     
   description?: string;
   requirements?: string[] | string;
   benefits?: string[] | string;
@@ -23,7 +23,7 @@ type Props = {
   job: Job;
 };
 
-/* ---------- Helper to render string | array cleanly ---------- */
+
 function renderList(
   data?: string[] | string,
   emptyText = "No data provided"
