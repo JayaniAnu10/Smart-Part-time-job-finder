@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
+import { useAdminUsers } from "@/hooks/useAdminUsers";
 
 export default function UsersTable() {
+  const { users, loading, error } = useAdminUsers();
+
+  if (loading) return <p>Loading users...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
-    <div className="border rounded-xl overflow-hidden ">
+    <div className="border rounded-xl overflow-hidden">
       <table className="w-full text-sm">
         <thead className="text-left bg-muted [&_th]:!text-secondary dark:[&_th]:!text-primary">
-          <tr >
+          <tr>
             <th className="p-4">User</th>
             <th className="p-4">Email</th>
             <th className="p-4">Role</th>
@@ -14,16 +20,18 @@ export default function UsersTable() {
           </tr>
         </thead>
 
-        <tbody className="text-left [&_td]:!text-secondary dark:[&_td]:!text-primary" >
-          <tr className="border-t">
-            <td className="p-4">John Doe</td>
-            <td className="p-4">john@gmail.com</td>
-            <td className="p-4">Employer</td>
-            <td className="p-4">2024-01-10</td>
-            <td className="p-4 text-right">
-              <Button size="sm" variant="outline" className="hover:bg-yellow-400">View</Button>
-            </td>
-          </tr>
+        <tbody className="[&_td]:!text-secondary dark:[&_td]:!text-primary">
+          {users.map(user => (
+            <tr key={user.id} className="border-t">
+              <td className="p-4">{user.name}</td>
+              <td className="p-4">{user.email}</td>
+              <td className="p-4">{user.role}</td>
+              <td className="p-4">{user.createdAt}</td>
+              <td className="p-4 text-right">
+                <Button size="sm" variant="outline">View</Button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
