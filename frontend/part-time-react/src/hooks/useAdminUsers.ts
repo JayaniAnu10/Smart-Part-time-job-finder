@@ -8,13 +8,23 @@ export function useAdminUsers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  const fetchUsers = () => {
+    setLoading(true);
     client
       .get()
       .then(setUsers)
       .catch(() => setError("Failed to load users"))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
-  return { users, loading, error };
+  return {
+    users,
+    loading,
+    error,
+    refetch: fetchUsers, // 🔥 IMPORTANT
+  };
 }
