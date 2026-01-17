@@ -7,7 +7,8 @@ export default function ModerateJobPosts() {
   const [status, setStatus] = useState<string>("ALL");
   const [keyword, setKeyword] = useState("");
 
-  const { jobs, loading, error } = useAdminJobs(status, keyword);
+  
+  const { jobs, loading, error, refetch } = useAdminJobs(status, keyword);
 
   return (
     <div className="p-12 space-y-6">
@@ -23,7 +24,7 @@ export default function ModerateJobPosts() {
 
       {/* Filters */}
       <StatusFilter
-        status={status}
+        status ={status}
         onStatusChange={setStatus}
         onSearch={setKeyword}
       />
@@ -33,7 +34,12 @@ export default function ModerateJobPosts() {
       {error && <p className="text-red-500">{error}</p>}
 
       {/* Jobs Table */}
-      {!loading && !error && <JobsTable jobs={jobs} />}
+      {!loading && !error && (
+        <JobsTable
+          jobs={jobs}
+          refetch={refetch}   
+        />
+      )}
     </div>
   );
 }
