@@ -114,27 +114,47 @@ public class EmailService {
                                     String jobTitle) {
 
         String subject = "Job Update — Position Removed";
-        String message = """
-        Dear %s %s,
 
-        We’re really sorry to let you know that the job you applied for,
-        "%s", has been canceled by the employer.
 
-        We truly appreciate the time and effort you put into applying.
+        String htmlContent = """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; color: #1e293b;">
+            <div style="background-color: #0f172a; padding: 30px; text-align: center;">
+                <h1 style="color: #fbbf24; margin: 0; font-size: 24px; letter-spacing: 1px;">DayBee.lk</h1>
+            </div>
+            <div style="padding: 40px 30px; line-height: 1.6;">
+                <h2 style="color: #0f172a; margin-top: 0;">Hello, %s %s!</h2>
+                <p>We’re writing to let you know that the position <strong>"%s"</strong> has been removed from our platform by the employer or the system administrator.</p>
+                
+                <div style="background-color: #fffbeb; border-left: 4px solid #fbbf24; padding: 15px; margin: 25px 0;">
+                    <p style="margin: 0; color: #92400e; font-size: 14px;">
+                        <strong>Note:</strong> While this specific role is no longer available, your profile remains active for other exciting opportunities.
+                    </p>
+                </div>
 
-        If you have any questions or need assistance, our team is here
-        to help — please feel free to contact us anytime.
-
-        Thank you for understanding,
-        DayBee.lk Team
+                <p>We truly appreciate the time and effort you put into your application. Our team is here to help if you have any questions or need assistance moving forward.</p>
+                
+                <p style="margin-top: 30px;">Thank you for your understanding,</p>
+                <p><strong>The DayBee.lk Team</strong></p>
+            </div>
+            <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">
+                <p style="margin: 0;">&copy; 2026 DayBee.lk. All rights reserved.</p>
+            </div>
+        </div>
         """.formatted(firstName, lastName, jobTitle);
 
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(to);
-        email.setSubject(subject);
-        email.setText(message);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
-        mailSender.send(email);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+
+            System.err.println("Failed to send HTML email: " + e.getMessage());
+        }
     }
 
 
@@ -174,7 +194,70 @@ public class EmailService {
         );
 
         sendSimpleEmail(email, subject, body);
+
     }
+
+    public void sendUserDeletedEmail(String email) {
+
+        String subject = "Account Removed – DayBee.lk";
+
+        
+        String body = """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 550px; margin: 0 auto; border: 1px solid #f1f5f9; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div style="background-color: #0f172a; padding: 35px; text-align: center; border-bottom: 4px solid #fbbf24;">
+                <h1 style="color: #fbbf24; margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 1px;">DayBee.lk</h1>
+            </div>
+            
+            <div style="padding: 45px 35px; background-color: #ffffff;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="display: inline-block; padding: 18px; background-color: #fff1f2; border-radius: 50%; margin-bottom: 15px;">
+                        <span style="font-size: 32px;">⚠️</span>
+                    </div>
+                    <h2 style="color: #0f172a; margin: 0; font-size: 22px; font-weight: 700;">Account Notice</h2>
+                </div>
+
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                    Hello,
+                </p>
+
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+                    This is an automated notification to inform you that your account on the <strong>DayBee.lk Platform</strong> has been 
+                    <span style="color: #e11d48; font-weight: bold;">permanently removed</span> by the system administrator.
+                </p>
+
+                <div style="background-color: #f8fafc; border-radius: 16px; padding: 25px; border: 1px dashed #cbd5e1; margin-bottom: 30px;">
+                    <p style="margin: 0; font-size: 14px; color: #64748b; line-height: 1.6;">
+                        <strong style="color: #475569;">Why was this done?</strong><br/>
+                        Accounts are typically removed due to policy violations, long-term inactivity, or a request for account closure. 
+                        If you believe this action was taken by mistake, please reach out to our support team for assistance.
+                    </p>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="mailto:support@daybee.lk" style="display: inline-block; padding: 14px 30px; background-color: #0f172a; color: #fbbf24; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                        Contact DayBee.lk Support
+                    </a>
+                </div>
+
+                <p style="color: #94a3b8; font-size: 14px; margin-top: 45px; border-top: 1px solid #f1f5f9; padding-top: 25px;">
+                    Thank you,<br/>
+                    <strong style="color: #0f172a;">The DayBee.lk Team</strong>
+                </p>
+            </div>
+            
+            <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9;">
+                &copy; 2026 DayBee.lk. All rights reserved.<br/>
+                This is a system-generated message. Please do not reply directly to this email.
+            </div>
+        </div>
+        """;
+
+        sendSimpleEmail(email, subject, body);
+    }
+
+
+
+
 
 
 }
