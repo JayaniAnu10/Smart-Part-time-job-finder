@@ -16,5 +16,7 @@ public interface AdminUserService {
         List<AdminUserDto> searchUsers(String keyword);
 
 
+        void deleteUser(UUID id);
 
+        String getUserEmailById(UUID userId);
 }
