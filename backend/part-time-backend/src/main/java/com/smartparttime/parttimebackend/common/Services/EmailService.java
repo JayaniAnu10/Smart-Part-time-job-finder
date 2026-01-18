@@ -118,7 +118,9 @@ public class EmailService {
         Dear %s %s,
 
         We’re really sorry to let you know that the job you applied for,
-        "%s", has been canceled by the employer.
+        "%s", has been canceled by the employer or
+        
+        system administrator with any reason
 
         We truly appreciate the time and effort you put into applying.
 
