@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Admin.controller;
 
+import com.smartparttime.parttimebackend.common.Services.EmailService;
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminUserDto;
 import com.smartparttime.parttimebackend.modules.Admin.service.AdminUserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class AdminUserController {
 
     private final AdminUserService adminUserService;
+    private final EmailService emailService;
 
 
     @GetMapping
@@ -42,6 +44,23 @@ public class AdminUserController {
     public List<AdminUserDto> searchUsers(@RequestParam String keyword) {
         return adminUserService.searchUsers(keyword);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+
+        String userEmail = adminUserService.getUserEmailById(id);
+
+        try {
+            emailService.sendUserDeletedEmail(userEmail);
+        } catch (Exception e) {
+            System.out.println("Failed to send user deletion email: " + userEmail);
+        }
+
+
+        adminUserService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 
