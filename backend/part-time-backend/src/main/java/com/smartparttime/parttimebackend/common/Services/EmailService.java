@@ -115,7 +115,7 @@ public class EmailService {
 
         String subject = "Job Update — Position Removed";
 
-        
+
         String htmlContent = """
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; color: #1e293b;">
             <div style="background-color: #0f172a; padding: 30px; text-align: center;">
@@ -194,7 +194,28 @@ public class EmailService {
         );
 
         sendSimpleEmail(email, subject, body);
+
     }
+
+    public void sendUserDeletedEmail(String email) {
+
+        String subject = "Account Removed – Smart Part-Time Platform";
+
+        String body = """
+        <p>Hello,</p>
+
+        <p>Your account has been <strong>permanently removed</strong> by the platform administrator.</p>
+
+        <p>If you believe this action was taken by mistake, please contact our support team.</p>
+
+        <br/>
+        <p>Regards,<br/>
+        <strong>Smart Part-Time Team</strong></p>
+        """;
+
+        sendSimpleEmail(email, subject, body);
+    }
+
 
 
 
