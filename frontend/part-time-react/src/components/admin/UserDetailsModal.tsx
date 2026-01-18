@@ -4,17 +4,19 @@ import {
   Calendar,
   Mail,
   Fingerprint,
+  Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import APIClient from "@/services/apiClient";
 import { useAdminUserActions } from "@/hooks/useAdminActions";
+import { axiosInstance } from "@/services/apiClient";
 
 interface Props {
   open: boolean;
   userId: string | null;
   onClose: () => void;
-  onStatusChange: () => void; 
+  onStatusChange: () => void;
 }
 
 export default function UserDetailsModal({
@@ -25,7 +27,8 @@ export default function UserDetailsModal({
 }: Props) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [confirm, setConfirm] = useState(false);
+  const [confirmVerify, setConfirmVerify] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
 
   const { updateUserActiveStatus } = useAdminUserActions();
@@ -42,6 +45,7 @@ export default function UserDetailsModal({
       .finally(() => setLoading(false));
   }, [open, userId]);
 
+  /* ================= VERIFY / UNVERIFY ================= */
   const handleToggleVerification = async () => {
     if (!user) return;
 
@@ -56,8 +60,23 @@ export default function UserDetailsModal({
         status: nextVerified ? "VERIFIED" : "NOT_VERIFIED",
       });
 
-      onStatusChange(); 
-      setConfirm(false);
+      onStatusChange();
+      setConfirmVerify(false);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  /* ================= DELETE USER ================= */
+  const handleDeleteUser = async () => {
+    if (!user) return;
+
+    try {
+      setActionLoading(true);
+      await axiosInstance.delete(`/admin/users/${user.id}`);
+
+      onStatusChange(); // refresh table
+      onClose();        // close modal
     } finally {
       setActionLoading(false);
     }
@@ -67,6 +86,7 @@ export default function UserDetailsModal({
     <AnimatePresence>
       {open && userId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
             animate={{ opacity: 1, backdropFilter: "blur(12px)" }}
@@ -76,6 +96,7 @@ export default function UserDetailsModal({
             className="absolute inset-0 bg-[#020617]/80"
           />
 
+          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -83,6 +104,7 @@ export default function UserDetailsModal({
             transition={{ duration: 0.25 }}
             className="bg-[#0f172a] w-full max-w-2xl rounded-[2rem] border border-slate-800 relative overflow-hidden flex flex-col"
           >
+            {/* Close */}
             <button
               onClick={onClose}
               className="absolute top-6 right-6 p-2 rounded-xl bg-slate-800/50 text-slate-400 hover:bg-[#fbbf24] hover:text-slate-900"
@@ -90,6 +112,7 @@ export default function UserDetailsModal({
               <X size={18} />
             </button>
 
+            {/* Header */}
             <div className="p-8 flex items-center gap-6 border-b border-slate-800">
               <div className="h-20 w-20 rounded-2xl bg-[#1e293b] flex items-center justify-center">
                 <User className="text-[#fbbf24]" size={36} />
@@ -105,6 +128,7 @@ export default function UserDetailsModal({
               </div>
             </div>
 
+            {/* Content */}
             <div className="p-8 space-y-6">
               {loading ? (
                 <p className="text-slate-400">Loading...</p>
@@ -135,36 +159,53 @@ export default function UserDetailsModal({
               )}
             </div>
 
-            <div className="p-6 border-t border-slate-800 flex justify-between">
+            {/* Footer */}
+            <div className="p-6 border-t border-slate-800 flex justify-between items-center">
+              {/* LEFT ACTIONS */}
               {user && user.role !== "ADMIN" && (
-                !confirm ? (
-                  <button
-                    onClick={() => setConfirm(true)}
-                    className="px-6 py-2 rounded-xl bg-slate-700 text-white"
-                  >
-                    {user.status === "VERIFIED"
-                      ? "Mark as Not Verified"
-                      : "Verify User"}
-                  </button>
-                ) : (
-                  <div className="flex gap-2">
+                <div className="flex gap-3">
+                  {/* VERIFY / UNVERIFY */}
+                  {!confirmVerify ? (
                     <button
-                      onClick={() => setConfirm(false)}
-                      className="px-4 py-2 rounded-xl border border-slate-700 text-slate-400"
+                      onClick={() => setConfirmVerify(true)}
+                      className="px-5 py-2 rounded-xl bg-slate-700 text-white"
                     >
-                      Cancel
+                      {user.status === "VERIFIED"
+                        ? "Mark as Not Verified"
+                        : "Verify User"}
                     </button>
+                  ) : (
                     <button
                       onClick={handleToggleVerification}
                       disabled={actionLoading}
-                      className="px-4 py-2 rounded-xl bg-[#fbbf24] text-black font-bold"
+                      className="px-5 py-2 rounded-xl bg-[#fbbf24] text-black font-bold"
                     >
-                      Yes, Confirm
+                      Confirm
                     </button>
-                  </div>
-                )
+                  )}
+
+                  {/* DELETE USER */}
+                  {!confirmDelete ? (
+                    <button
+                      onClick={() => setConfirmDelete(true)}
+                      className="px-5 py-2 rounded-xl bg-red-500/10 text-red-400 flex items-center gap-2"
+                    >
+                      <Trash2 size={16} />
+                      Delete User
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleDeleteUser}
+                      disabled={actionLoading}
+                      className="px-5 py-2 rounded-xl bg-red-500 text-white font-bold"
+                    >
+                      Yes, Delete
+                    </button>
+                  )}
+                </div>
               )}
 
+              {/* CLOSE */}
               <button
                 onClick={onClose}
                 className="px-8 py-2 rounded-xl bg-[#fbbf24] text-black font-bold"
@@ -179,7 +220,15 @@ export default function UserDetailsModal({
   );
 }
 
-function InfoCard({ label, value, icon }: any) {
+function InfoCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+}) {
   return (
     <div className="p-5 rounded-2xl bg-[#1e293b]/50 border border-slate-800">
       <div className="flex items-center gap-2 text-[#fbbf24] text-xs mb-1">
