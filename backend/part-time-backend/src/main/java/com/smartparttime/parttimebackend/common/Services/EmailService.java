@@ -114,29 +114,47 @@ public class EmailService {
                                     String jobTitle) {
 
         String subject = "Job Update — Position Removed";
-        String message = """
-        Dear %s %s,
 
-        We’re really sorry to let you know that the job you applied for,
-        "%s", has been canceled by the employer or
         
-        system administrator with any reason
+        String htmlContent = """
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; color: #1e293b;">
+            <div style="background-color: #0f172a; padding: 30px; text-align: center;">
+                <h1 style="color: #fbbf24; margin: 0; font-size: 24px; letter-spacing: 1px;">DayBee.lk</h1>
+            </div>
+            <div style="padding: 40px 30px; line-height: 1.6;">
+                <h2 style="color: #0f172a; margin-top: 0;">Hello, %s %s!</h2>
+                <p>We’re writing to let you know that the position <strong>"%s"</strong> has been removed from our platform by the employer or the system administrator.</p>
+                
+                <div style="background-color: #fffbeb; border-left: 4px solid #fbbf24; padding: 15px; margin: 25px 0;">
+                    <p style="margin: 0; color: #92400e; font-size: 14px;">
+                        <strong>Note:</strong> While this specific role is no longer available, your profile remains active for other exciting opportunities.
+                    </p>
+                </div>
 
-        We truly appreciate the time and effort you put into applying.
-
-        If you have any questions or need assistance, our team is here
-        to help — please feel free to contact us anytime.
-
-        Thank you for understanding,
-        DayBee.lk Team
+                <p>We truly appreciate the time and effort you put into your application. Our team is here to help if you have any questions or need assistance moving forward.</p>
+                
+                <p style="margin-top: 30px;">Thank you for your understanding,</p>
+                <p><strong>The DayBee.lk Team</strong></p>
+            </div>
+            <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">
+                <p style="margin: 0;">&copy; 2026 DayBee.lk. All rights reserved.</p>
+            </div>
+        </div>
         """.formatted(firstName, lastName, jobTitle);
 
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(to);
-        email.setSubject(subject);
-        email.setText(message);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
-        mailSender.send(email);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+
+            System.err.println("Failed to send HTML email: " + e.getMessage());
+        }
     }
 
 
@@ -177,6 +195,9 @@ public class EmailService {
 
         sendSimpleEmail(email, subject, body);
     }
+
+
+
 
 
 }
