@@ -1,14 +1,28 @@
 import StatsCard from "@/components/JobHistory/StatsCard";
 import JobItem from "@/components/JobHistory/JobItem";
 import FooterSection from "@/components/FooterSection"; // imported footer
+import { useState } from "react";
+import AddRatingDialog from "@/components/ratings/AddRatingDialog";
 
-const dummyJobs = [
+export interface Job {
+  id: string;
+  title: string;
+  company: string;
+  date: string;
+  duration: string;
+  earnings: number;
+  status: string;
+}
+
+const dummyJobs: Job[] = [
   { id: "1", title: "Delivery Driver", company: "ABC Logistics Ltd.", date: "Nov 19, 2024", duration: "8 hours", earnings: 2800, status: "Completed" },
   { id: "2", title: "Warehouse Helper", company: "StoreMart", date: "Nov 18, 2024", duration: "6 hours", earnings: 2100, status: "Completed" },
   { id: "3", title: "Sales Assistant", company: "Fashion Point", date: "Nov 17, 2024", duration: "8 hours", earnings: 1800, status: "Completed" }
 ];
 
 export const JobHistory = () => {
+  const [openJobId, setOpenJobId] = useState<string | null>(null);
+
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col">
      
@@ -42,13 +56,22 @@ export const JobHistory = () => {
             
             <div className="flex flex-col divide-y divide-slate-100">
               {dummyJobs.map(job => (
-                <JobItem key={job.id} job={job} />
+                <JobItem  key={job.id} 
+                          job={job} 
+                          onAddRating={() => setOpenJobId(job.id)} />
               ))}
             </div>
           </div>
         </div>
       </div>
 
+       {openJobId && (
+        <AddRatingDialog
+          jobId={Number(openJobId)}
+          onClose={() => setOpenJobId(null)}
+        />
+      )}
+             
       {/* Footer Section */}
       <FooterSection />
     </div>
