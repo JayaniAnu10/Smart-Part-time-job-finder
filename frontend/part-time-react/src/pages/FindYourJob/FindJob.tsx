@@ -10,11 +10,14 @@ import {
 import {
   ArrowLeft,
   ArrowRight,
+  Building2,
   Calendar,
   Clock,
   DollarSign,
   MapPin,
   Search,
+  Sparkles,
+  TrendingUp,
   Users,
   Zap,
 } from "lucide-react";
@@ -30,8 +33,11 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { getDaysLeft, getTimeAgo } from "@/utils/date";
 import AIButton from "./AIButton";
+import useRecommended from "@/hooks/useRecommended";
+import { useAuthStore } from "@/store/AuthStore";
 
 const FindJob = () => {
+  const user = useAuthStore((s) => s.user);
   const [titleSearch, setTitleSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
@@ -77,6 +83,8 @@ const FindJob = () => {
     queryParams.toString(),
     { page }
   );
+
+  const { data: recommendedJobs = [] } = useRecommended(user?.id);
 
   const filteredJobs = data?.jobs.content ?? [];
   const totalPages = data?.jobs.totalPages ?? 1;
@@ -202,8 +210,70 @@ const FindJob = () => {
           </div>
         </div>
       </div>
+
+      {/* AI Recommendations */}
+      {recommendedJobs.length > 0 && (
+        <div className="container mx-4 px-3 lg:px-8 pt-6 md:pt-7">
+          <Card className="p-4 md:p-6 mb-6 md:mb-8  bg-linear-to-br from-yellow-300/10 to-accent/5">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-yellow-400 p-2 rounded-lg">
+                <Sparkles className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg md:text-xl font-bold">
+                  AI Recommended for You
+                </h3>
+                <p className="text-sm text-muted-foreground dark:text-amber-200">
+                  Based on your profile
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {recommendedJobs.map((job) => (
+                <Link key={job.id} to={`/jobs/${job.id}`}>
+                  <Card className="p-4 hover-lift  hover:scale-102 transition-transform duration-300 cursor-pointer h-full border border-yellow-400/20">
+                    <div className="flex items-start gap-2 mb-2 flex-wrap">
+                      <Badge className="bg-yellow-400 text-[#0f1f3d]">
+                        <TrendingUp className="h-3 w-3 mr-1" />
+                        Match
+                      </Badge>
+                      {job.isUrgent && (
+                        <Badge variant="destructive">
+                          <Zap className="h-3 w-3 mr-1" />
+                          URGENT
+                        </Badge>
+                      )}
+                      <Badge className="bg-green-600 text-gray-800">
+                        {job.category}
+                      </Badge>
+                    </div>
+                    <h4 className="font-semibold mb-2 line-clamp-1">
+                      {job.title}
+                    </h4>
+                    <div className="space-y-1 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Building2 className="h-3 w-3 shrink-0" />
+                        <span className="truncate">{job.employer}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3 shrink-0" />
+                        <span className="truncate">
+                          {shortenLocation(job.location)}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 text-yellow-400 font-semibold">
+                        LKR {job.minSalary}/day
+                      </div>
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
       <Card className="bg-background">
-        <div className="container px-2 lg:px-8 pb-12 pt-12 md:mx-4">
+        <div className="container px-2 lg:px-8 pb-12 pt-5 md:mx-4 mx-5">
           <div className="lg:flex lg:gap-6">
             {/* Desktop Sidebar Filters */}
             <div className="hidden lg:block w-72 shrink-0 rounded-2xl ">
@@ -344,7 +414,7 @@ const FindJob = () => {
                               </Badge>
                             ))}
                           </div>
-                          <div className="flex md:flex-row gap-15 mt-3">
+                          <div className="flex md:flex-row md:gap-15 gap-4 mt-3 ">
                             <div className="flex items-center gap-2">
                               <Calendar className="w-4 h-4 text-yellow-400 shrink-0" />
                               <span className="truncate">

@@ -1,11 +1,15 @@
 package com.smartparttime.parttimebackend.modules.Admin.service.impl;
 
+import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDetailsViewDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminJobDto;
+import com.smartparttime.parttimebackend.modules.Admin.mapper.AdminJobDetailsMapper;
 import com.smartparttime.parttimebackend.modules.Admin.mapper.AdminJobMapper;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminJobRepo;
 import com.smartparttime.parttimebackend.modules.Admin.service.AdminJobService;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
+import com.smartparttime.parttimebackend.modules.Job.service.JobService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +18,20 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AdminJobServiceImpl implements AdminJobService {
 
     @Autowired
     private  AdminJobRepo adminJobRepo;
     @Autowired
     private  AdminJobMapper adminJobMapper;
+
+    @Autowired
+    private  AdminJobDetailsMapper adminJobDetailsMapper;
+
+    @Autowired
+    private final JobService jobService;
+
 
 
 
@@ -70,13 +82,7 @@ public class AdminJobServiceImpl implements AdminJobService {
         return adminJobMapper.mapToDto(job);
     }
 
-    @Override
-    public void deleteJob(UUID jobId) {
-        if (!adminJobRepo.existsById(jobId)) {
-            throw new RuntimeException("Job not found");
-        }
-        adminJobRepo.deleteById(jobId);
-    }
+
 
     @Override
     public List<AdminJobDto> searchJobs(String keyword) {
@@ -85,4 +91,21 @@ public class AdminJobServiceImpl implements AdminJobService {
                 .map(adminJobMapper::mapToDto)
                 .collect(Collectors.toList());
     }
+
+
+    @Override
+    public void deleteJob(UUID jobId) {
+        jobService.deleteJob(jobId);
+    }
+
+
+    public AdminJobDetailsViewDto getJobDetails(UUID id) {
+        Job job = adminJobRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+
+        return adminJobDetailsMapper.toDto(job);
+    }
+
+
+
 }

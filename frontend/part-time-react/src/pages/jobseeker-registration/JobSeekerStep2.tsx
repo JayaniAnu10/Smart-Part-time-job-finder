@@ -98,7 +98,9 @@ export default function JobSeekerStep3() {
 
       <RegistrationCard title="Profile Details">
         <div className="mb-2">
-          <p className="text-[14px] text-secondary dark:text-primary mb-3">Profile Picture</p>
+          <p className="text-[14px] text-secondary dark:text-primary mb-3">
+            Profile Picture
+          </p>
 
           <div className="flex items-center gap-6">
             <div className="w-20 h-20 bg-[#E0E7F5] rounded-full flex items-center justify-center overflow-hidden">
@@ -123,7 +125,9 @@ export default function JobSeekerStep3() {
         </div>
 
         <div className="mt-6">
-          <p className="text-[14px] text-secondary dark:text-primary mb-2">Bio</p>
+          <p className="text-[14px] text-secondary dark:text-primary mb-2">
+            Bio
+          </p>
 
           <textarea
             placeholder="Tell employers about yourself..."
@@ -184,8 +188,10 @@ export default function JobSeekerStep3() {
 
         <div className="flex justify-between mt-6">
           <Link to="/jobseeker/register/step1">
-            <button className="px-6 h-10 rounded-[12px] border border-border bg-[#fafafa] dark:bg-background text-secondary 
-                               dark:text-primary  dark:hover:text-secondary text-[14px] flex items-center gap-2 hover:bg-yellow-400 transition cursor-pointer">
+            <button
+              className="px-6 h-10 rounded-[12px] border border-border bg-[#fafafa] dark:bg-background text-secondary 
+                               dark:text-primary  dark:hover:text-secondary text-[14px] flex items-center gap-2 hover:bg-yellow-400 transition cursor-pointer"
+            >
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>

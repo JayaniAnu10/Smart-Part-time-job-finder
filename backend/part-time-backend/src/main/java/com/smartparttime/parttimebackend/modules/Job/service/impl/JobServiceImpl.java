@@ -8,7 +8,7 @@ import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
-import com.smartparttime.parttimebackend.modules.Chatbot.Service.EmbeddingService;
+import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
@@ -24,8 +24,9 @@ import com.smartparttime.parttimebackend.modules.Job.service.JobService;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
+import com.smartparttime.parttimebackend.modules.Recommendation.Services.JobEmbeddingCache;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,41 +36,42 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class JobServiceImpl implements JobService {
 
     private final EmbeddingService  embeddingService;
     @Autowired
-    private JobRepo jobRepo;
+    private final JobRepo jobRepo;
 
     @Autowired
-    private JobCategoryRepo categoryRepo;
+    private final JobCategoryRepo categoryRepo;
 
     @Autowired
-    private EmployerRepository employerRepository;
+    private final EmployerRepository employerRepository;
     @Autowired
-    private JobMapper jobMapper;
+    private final JobMapper jobMapper;
     @Autowired
-    private JobApplicationRepository jobApplicationRepository;
+    private  final JobApplicationRepository jobApplicationRepository;
     private final JobSeekerRepository jobSeekerRepository;
     private final NotificationService notificationService;
     @Autowired
-    private JobCategoryMapper jobCategoryMapper;
+    private final JobCategoryMapper jobCategoryMapper;
     @Autowired
-    private AttendanceRepository attendanceRepository;
-
-    private EmailService emailService;
+    private final AttendanceRepository attendanceRepository;
+    private final JobEmbeddingCache jobEmbeddingCache;
+    private final EmailService emailService;
 
 
     @Transactional
     @Override
-    public JobResponseDto createJob(JobRequestDto request, UUID employerId){
+    public JobResponseDto createJob(JobRequestDto request, UUID employerId) {
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
 
@@ -77,7 +79,7 @@ public class JobServiceImpl implements JobService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         job.setCategory(category);
         job.setEmployer(employer);
-        job.setPostedDate(LocalDate.now());
+        job.setPostedDate(LocalDateTime.now());
         job.setStatus(JobStatus.ACTIVE);
         job.setIsUrgent(request.getIsUrgent() != null ? request.getIsUrgent() : false);
 
@@ -111,6 +113,9 @@ public class JobServiceImpl implements JobService {
         }
 
         var savedJob = jobRepo.save(job);
+        jobEmbeddingCache.addOrUpdate(savedJob);
+
+
         return jobMapper.toDto(savedJob);
     }
 
@@ -208,6 +213,7 @@ public class JobServiceImpl implements JobService {
         }
 
         var updated = jobRepo.save(job);
+        jobEmbeddingCache.addOrUpdate(updated);
 
         return jobMapper.toDto(updated);
     }
@@ -234,7 +240,7 @@ public class JobServiceImpl implements JobService {
                         job.getTitle()
                 ));
 
-
+        jobEmbeddingCache.remove(jobId);
         jobApplicationRepository.deleteAll(applicants);
         attendanceRepository.deleteAll(attendances);
 
@@ -322,6 +328,9 @@ public class JobServiceImpl implements JobService {
         var categories =categoryRepo.findAll();
         return jobCategoryMapper.toDto(categories);
     }
+
+
+
 
 
 }

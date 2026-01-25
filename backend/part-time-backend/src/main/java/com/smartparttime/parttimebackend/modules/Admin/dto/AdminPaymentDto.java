@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Admin.dto;
 
+import com.smartparttime.parttimebackend.modules.Payment.PaymentStatus;
 import lombok.Data;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ public class AdminPaymentDto {
     private String receiverEmail;
 
     private double amount;
-    private String status;
+    private PaymentStatus status;
 
     private String paymentDate;
 }

@@ -29,7 +29,7 @@ public class JobResponseDto {
 
     private LocalDateTime deadline;
 
-    private LocalDate postedDate;
+    private LocalDateTime postedDate;
 
     private JobStatus status;
 

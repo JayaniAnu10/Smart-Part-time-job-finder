@@ -23,8 +23,10 @@ import ScheduleDialog from "./ScheduleDialog";
 import useJobApply from "@/hooks/useJobApply";
 import toast from "react-hot-toast";
 import EmployerRating from "./EmployerRating";
+import { useAuthStore } from "@/store/AuthStore";
 
 const JobProfile = () => {
+  const user = useAuthStore((s) => s.user);
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   if (!id) return <p>Job not found.</p>;
@@ -33,12 +35,12 @@ const JobProfile = () => {
   const { data: rate } = useUserRate(data?.employerId);
   const jobApplyMutation = useJobApply();
 
-  const currentUserId = "8e32f9cb-9108-4560-a6eb-8122b37c117e";
+  const currentUserId = user?.id;
 
   const handleApply = (scheduleId: string) => {
     if (data?.id && scheduleId) {
       jobApplyMutation.mutate(
-        { jobId: data?.id, jobseeker: currentUserId, scheduleId },
+        { jobId: data?.id, jobseeker: currentUserId!, scheduleId },
         {
           onSuccess: () => {
             toast.success("Application submitted successfully!");

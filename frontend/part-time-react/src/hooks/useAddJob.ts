@@ -27,14 +27,22 @@ export interface JobData {
   requiredGender: string;
 }
 
-const useAddJob = (id: string, onAddSucess: () => void) => {
-  const apiClient = new APIClient<JobData>(`jobs/create/${id}`);
+interface JobResponse {
+  id: string;
+  title: string;
+}
 
-  return useMutation<any, Error, JobData>({
-    mutationFn: apiClient.post,
-    onSuccess: () => {
+const useAddJob = (
+  id: string,
+  onAddSuccess: (jobId: string, jobTitle: string) => void
+) => {
+  const apiClient = new APIClient<JobResponse, JobData>(`jobs/create/${id}`);
+
+  return useMutation<JobResponse, Error, JobData>({
+    mutationFn: (data: JobData) => apiClient.post(data as any),
+    onSuccess: (data) => {
       toast.success("Job post created successfully! 🎉");
-      onAddSucess();
+      onAddSuccess(data.id, data.title);
     },
     onError: (error) => {
       //Axios error handle

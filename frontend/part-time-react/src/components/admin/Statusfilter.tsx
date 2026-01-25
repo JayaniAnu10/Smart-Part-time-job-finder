@@ -8,28 +8,40 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 
-export default function StatusFilters() {
+interface Props {
+  status: string;
+  onStatusChange: (value: string) => void;
+  onSearch: (value: string) => void;
+}
+
+export default function StatusFilter({
+  status,
+  onStatusChange,
+  onSearch,
+}: Props) {
   return (
     <div className="flex items-center gap-4 p-4 h-[100px] border rounded-xl bg-muted">
-
+      
+      {/* Search */}
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-3 h-6 w-4 text-secondary dark:text-primary" />
+        <Search className="absolute left-3 top-4 h-4 w-4 text-secondary" />
         <Input
-          placeholder="Search Jobs..."
-          className="pl-9 h-12 text-secondary dark:text-primary placeholder:text-secondary dark:placeholder:text-primary"
+          placeholder="Search jobs..."
+          className="pl-9 h-12"
+          onChange={(e) => onSearch(e.target.value)}
         />
       </div>
 
-      <Select>
-        <SelectTrigger className="h-12 w-[180px] text-secondary data-[placeholder]:text-secondary">
-          <SelectValue placeholder="All Status"/>
+      {/* Status Filter */}
+      <Select value={status} onValueChange={onStatusChange}>
+        <SelectTrigger className="h-12 w-[180px]">
+          <SelectValue placeholder="All Status" />
         </SelectTrigger>
 
-        <SelectContent className="text-secondary dark:text-primary">
-          <SelectItem value="all">All Status</SelectItem>
-          <SelectItem value="admin">Adctive</SelectItem>
-          <SelectItem value="employer">Pending</SelectItem>
-          <SelectItem value="jobseeker">Rejected</SelectItem>
+        <SelectContent>
+          <SelectItem value="ALL">All Status</SelectItem>
+          <SelectItem value="ACTIVE">Active</SelectItem>
+          <SelectItem value="CLOSED">Closed</SelectItem>
         </SelectContent>
       </Select>
     </div>

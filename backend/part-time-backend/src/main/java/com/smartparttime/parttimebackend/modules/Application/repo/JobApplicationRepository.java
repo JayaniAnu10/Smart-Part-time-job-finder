@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,13 +19,7 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
     List<JobApplication> findByStatus(ApplicationStatus status, Pageable pageable);
 
-    Page<JobApplication> findByJob_Id(UUID jobId, Pageable pageable);
-
     boolean existsByJob_IdAndJobseeker_IdAndStatus(UUID jobId, UUID jobseekerId, ApplicationStatus status);
-
-    boolean existsByJob_Id(UUID jobId);
-
-    List<JobApplication> findByJobseeker_IdAndSchedule_Id(UUID jobseekerId, UUID scheduleId);
 
     boolean existsByJobseeker_IdAndSchedule_Id(UUID jobseekerId, UUID scheduleId);
 
@@ -73,4 +68,10 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
 
     List<JobApplication> getJobApplicationsByJob_Id(UUID jobId);
+
+    long countByJobseeker_IdAndStatus(UUID jobseekerId, ApplicationStatus status);
+
+    Long countByJobseeker_IdAndStatusNotAndSchedule_StartDatetimeAfter(UUID jobseekerId, ApplicationStatus status, LocalDateTime scheduleStartDatetimeAfter);
+
+    Long countByJobseeker_IdAndStatusAndSchedule_StartDatetimeAfter(UUID id, ApplicationStatus applicationStatus, LocalDateTime now);
 }

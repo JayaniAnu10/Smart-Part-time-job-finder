@@ -12,51 +12,62 @@ export default function QuickActions() {
   const navigate = useNavigate();
 
   return (
-    <Card className="rounded-2xl">
-      <CardHeader>
-        <CardTitle className="text-2xl font-medium text-secondary dark:text-primary"></CardTitle>
+    <Card className="h-full rounded-2xl bg-card flex flex-col">
+      
+      {/* Header */}
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl font-semibold text-secondary dark:text-primary">
+          Admin Actions
+        </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      {/* Content fills remaining space */}
+      <CardContent className="flex-1 flex flex-col gap-4">
+        
         <Button
           variant="outline"
-          className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary hover:text-secondary 
-                     hover:bg-yellow-400 transition-all duration-300 hover:scale-102 active:scale-98"
+          className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary
+                     hover:bg-yellow-400 hover:text-secondary
+                     transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
           onClick={() => navigate("/admin/manage-users")}
         >
-          <Users className="w-5 h-5 text-secondary dark:text-primary group-hover:text-secondary" />
+          <Users className="w-5 h-5 group-hover:text-secondary" />
           Manage Users
         </Button>
 
         <Button
           variant="outline"
-          className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary hover:text-secondary 
-                     hover:bg-yellow-400 transition-all duration-300 hover:scale-102 active:scale-98"
-           onClick={() => navigate("/admin/moderate-job-posts")}
+          className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary
+                     hover:bg-yellow-400 hover:text-secondary
+                     transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          onClick={() => navigate("/admin/moderate-job-posts")}
         >
-          <Briefcase className="w-5 h-5 text-secondary dark:text-primary group-hover:text-secondary" />
+          <Briefcase className="w-5 h-5 group-hover:text-secondary" />
           Moderate Job Posts
         </Button>
 
         <Button
           variant="outline"
-          className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary hover:text-secondary 
-                     hover:bg-yellow-400 transition-all duration-300 hover:scale-102 active:scale-98"
+          className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary
+                     hover:bg-yellow-400 hover:text-secondary
+                     transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
           onClick={() => navigate("/admin/review-reports")}
         >
-          <AlertTriangle className="w-5 h-5 text-secondary dark:text-primary group-hover:text-secondary" />
+          <AlertTriangle className="w-5 h-5 group-hover:text-secondary" />
           Review Reports
         </Button>
 
         <Button
           variant="outline"
-          className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary hover:text-secondary 
-                     hover:bg-yellow-400 transition-all duration-300 hover:scale-102 active:scale-98"
-           onClick={() => navigate("/admin/view-analytics")}
+          className="group w-full justify-start gap-3 py-6 text-secondary dark:text-primary
+                     hover:bg-yellow-400 hover:text-secondary
+                     transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          onClick={() => navigate("/admin/view-analytics")}
         >
-          <Activity className="w-5 h-5 text-secondary dark:text-primary group-hover:text-secondary" />
+          <Activity className="w-5 h-5 group-hover:text-secondary" />
           View Analytics
         </Button>
+
       </CardContent>
     </Card>
   );

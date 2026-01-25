@@ -1,4 +1,5 @@
 import APIClient from "@/services/apiClient";
+import { useAuthStore } from "@/store/AuthStore";
 import type { EmployerRegistrationData } from "@/store/useEmployerStore";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -6,6 +7,7 @@ import toast from "react-hot-toast";
 const apiClient = new APIClient<EmployerRegistrationData>("/employer/register");
 
 const useAddEmployer = () => {
+  const { user } = useAuthStore();
   return useMutation<any, Error, EmployerRegistrationData>({
     mutationFn: (data: EmployerRegistrationData) => {
       const formData = new FormData();
@@ -19,7 +21,7 @@ const useAddEmployer = () => {
         industry: data.industry,
         website: data.website,
         description: data.description,
-        userId: "e05752c6-9f09-4c57-85e6-83494098f7f9",
+        userId: user?.id,
       };
 
       formData.append(
