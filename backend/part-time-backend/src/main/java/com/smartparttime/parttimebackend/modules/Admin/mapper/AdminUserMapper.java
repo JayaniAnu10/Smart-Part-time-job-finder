@@ -16,11 +16,11 @@ public class AdminUserMapper {
 
 
         if (user.getIsEmployer()) {
-            dto.setType("EMPLOYER");
+            dto.setRole("EMPLOYER");
         } else if (user.getIsJobseeker()) {
-            dto.setType("JOBSEEKER");
+            dto.setRole("JOBSEEKER");
         } else {
-            dto.setType("ADMIN");
+            dto.setRole("ADMIN");
         }
 
 
@@ -36,6 +36,8 @@ public class AdminUserMapper {
         dto.setStatus(user.getIsVerified() ? "VERIFIED" : "NOT_VERIFIED");
 
         dto.setCreatedAt(user.getCreatedAt() != null ? user.getCreatedAt().toString() : "N/A");
+
+
 
         return dto;
     }
