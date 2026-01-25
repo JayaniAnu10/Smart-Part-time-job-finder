@@ -127,9 +127,7 @@ const WelcomeScreen = () => {
             <Text style={styles.arrow}>→</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push('/LoginScreen')}>
-           
-          </TouchableOpacity>
+          
         </Animated.View>
       </LinearGradient>
     </View>
@@ -224,10 +222,9 @@ const styles = StyleSheet.create({
 
   getStartedText: {
     color: '#fff',
-    fontSize: 30,
+    fontSize: 18,
     fontWeight: '700',
     marginRight: 8,
-    marginLeft:8,
   },
 
   arrow: { color: '#FDB022', fontSize: 24 },
