@@ -121,7 +121,7 @@ const WelcomeScreen = () => {
         <Animated.View style={[styles.bottomSection, { opacity: fadeAnim }]}>
           <TouchableOpacity
             style={styles.getStartedButton}
-            onPress={() => router.push('/RegisterScreen')}
+            onPress={() => router.push('/LoginScreen')}
           >
             <Text style={styles.getStartedText}>Get Started</Text>
             <Text style={styles.arrow}>→</Text>
@@ -134,7 +134,7 @@ const WelcomeScreen = () => {
   );
 };
 
-export default WelcomeScreen;
+
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -222,12 +222,12 @@ const styles = StyleSheet.create({
 
   getStartedText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     marginRight: 8,
   },
 
-  arrow: { color: '#FDB022', fontSize: 24 },
+  arrow: { color: '#FDB022', fontSize: 25 },
 
   loginText: { color: '#fff', fontSize: 14 },
 
@@ -243,3 +243,5 @@ const styles = StyleSheet.create({
   c2: { width: 150, height: 150, bottom: '15%', left: -50 },
   c3: { width: 80, height: 80, top: '40%', left: -20 },
 });
+
+export default WelcomeScreen;
