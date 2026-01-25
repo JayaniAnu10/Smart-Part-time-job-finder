@@ -29,7 +29,7 @@ const JobItem = ({ job, onAddRating }: JobItemProps) => (
     <div className="flex gap-4">
       
       <button className="px-6 py-2 border border-slate-300 rounded-lg text-[13.5px] font-bold text-slate-700 
-                       hover:bg-[#ffc107] hover:border-[#ffc107]  
+                       hover:bg-[#ffc107] hover:border-[#ffc107] hover:text-black 
                        transition-all duration-300 shadow-sm">
         View Details
       </button>
