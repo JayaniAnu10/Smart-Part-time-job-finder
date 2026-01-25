@@ -12,6 +12,8 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'; // Icon ekata useful
 import { Picker } from '@react-native-picker/picker'; // Dropdown ekata
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 const RegisterScreen = () => {
   const router = useRouter();

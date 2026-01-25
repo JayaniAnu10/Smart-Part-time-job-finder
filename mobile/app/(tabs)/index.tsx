@@ -8,5 +8,6 @@ export default function Index() {
   //return <HomeScreen />;
   //return <JobDetailsScreen />;
   //return <FirstScreen />;
-  return <Redirect href="/WelcomeScreen" />;
+  //return <Redirect href="/WelcomeScreen" />;
+  return <Redirect href="/SelectRoleScreen" />;
 }
