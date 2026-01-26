@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 
 
-export default function JobSeekerRegisterStep1() {
+export default function SignupJobSeeker() {
   const router = useRouter();
 
   const [firstName, setFirstName] = useState('');
@@ -108,7 +108,7 @@ export default function JobSeekerRegisterStep1() {
 
         <TouchableOpacity
           style={styles.nextButton}
-          onPress={() => router.push('../JobSeekerRegisterStep2')}
+          onPress={() => router.push('/JobSeekerRegisterStep2')}
         >
           <Text style={styles.nextText}>Next</Text>
         </TouchableOpacity>
@@ -255,6 +255,7 @@ picker: {
   width: '100%',
   
   
-},
+}
 
 });
+
