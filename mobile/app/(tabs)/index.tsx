@@ -10,4 +10,6 @@ export default function Index() {
   //return <FirstScreen />;
   //return <Redirect href="/WelcomeScreen" />;
   return <Redirect href="/SelectRoleScreen" />;
+  //return <Redirect href="/JobSeekerRegisterStep2" />;
 }
+
