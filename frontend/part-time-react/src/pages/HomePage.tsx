@@ -16,7 +16,7 @@ const HomePage = () => {
       <WhyChooseSection />
       <BrowseByCategorySection />
       <RatingsSection />
-      <HowItWorksSection/>
+      <HowItWorksSection />
       <CTASection />
       
         
