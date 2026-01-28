@@ -1,12 +1,13 @@
-import { Briefcase, Calendar, CircleDollarSign } from "lucide-react";
+import type { Job } from '../../pages/JobHistory/JobHistory';
 
-const JobItem = ({ job }: { job: any }) => (
-  /* Light mode: bg-white | Dark mode: bg-[#0f192e] */
-  <div
-    className="p-10 rounded-2xl border-2 transition-all duration-300 flex flex-col gap-6 cursor-pointer
-                  bg-white border-slate-100 hover:bg-slate-100 
-                  dark:bg-[#0f192e] dark:border-white/5 dark:hover:bg-white/[0.03] dark:hover:shadow-md"
-  >
+
+interface JobItemProps {
+  job: Job;
+  onAddRating: () => void;
+}
+
+const JobItem = ({ job, onAddRating }: JobItemProps) => (
+  <div className="p-6 hover:bg-slate-50 transition-colors flex flex-col gap-5">
     <div className="flex justify-between items-start">
       <div className="flex flex-col gap-1">
         <h4 className="text-[24px] font-semibold tracking-tight text-slate-900 dark:text-white">
@@ -59,8 +60,11 @@ const JobItem = ({ job }: { job: any }) => (
       >
         View Details
       </button>
-
-      <button className="px-6 py-2 bg-[#ffc107] hover:bg-[#ffb300] rounded-lg text-[13.5px] font-bold text-black shadow-sm transition-all">
+      
+      
+      <button onClick={onAddRating}
+              className="px-6 py-2 text-secondary bg-[#ffc107] hover:bg-[#ffb300] rounded-lg text-[13.5px] font-bold 
+                         shadow-sm transition-all duration-300 hover:scale-103 active:scale-97 cursor-pointer">
         Rate Employer
       </button>
     </div>
