@@ -9,9 +9,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { COLORS } from "../constants/colors";
-import { Job } from "../constants/types";
-import { jobAPI } from "../scripts/api";
+import { COLORS } from "../../constants/colors";
+import { Job } from "../../constants/types";
+import { jobAPI } from "../../scripts/api";
 
 export default function JobDetailsScreen() {
   const { id } = useLocalSearchParams();

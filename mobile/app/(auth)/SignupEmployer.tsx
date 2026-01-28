@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const SignupEmployerStep1 = ({ navigation }: any) => {
+const SignupEmployer = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -110,7 +110,7 @@ const SignupEmployerStep1 = ({ navigation }: any) => {
   );
 };
 
-export default SignupEmployerStep1;
+export default SignupEmployer;
 
 const styles = StyleSheet.create({
   container: {
