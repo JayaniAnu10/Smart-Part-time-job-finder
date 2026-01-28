@@ -1,14 +1,18 @@
 package com.smartparttime.parttimebackend.modules.Auth.Services;
 
 import com.smartparttime.parttimebackend.common.configs.JwtConfig;
+import com.smartparttime.parttimebackend.modules.User.Role;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Service
