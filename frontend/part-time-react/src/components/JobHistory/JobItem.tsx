@@ -1,3 +1,4 @@
+import { Briefcase, Calendar, CircleDollarSign } from 'lucide-react';
 import type { Job } from '../../pages/JobHistory/JobHistory';
 
 
