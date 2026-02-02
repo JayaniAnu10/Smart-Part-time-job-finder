@@ -106,6 +106,15 @@ public class AdminJobServiceImpl implements AdminJobService {
         return adminJobDetailsMapper.toDto(job);
     }
 
+    public List<AdminJobDto> getRecentJobs() {
+        return adminJobRepo
+                .findTop5ByOrderByCreatedAtDesc()
+                .stream()
+                .map(adminJobMapper::mapToDto)
+                .toList();
+    }
+
+
 
 
 }

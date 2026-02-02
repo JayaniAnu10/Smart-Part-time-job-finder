@@ -24,4 +24,9 @@ public interface AdminJobService {
     List<AdminJobDto> searchJobs(String keyword);
 
     AdminJobDetailsViewDto getJobDetails(UUID id);
+
+    public List<AdminJobDto> getRecentJobs();
+
+
+
 }
