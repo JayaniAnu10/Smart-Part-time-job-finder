@@ -36,6 +36,7 @@ public interface AdminJobRepo extends JpaRepository<Job, UUID> {
             """)
     List<Job> searchJobs(String keyword);
 
-    List<Job> findTop5ByOrderByCreatedAtDesc();
+    List<Job> findTop5ByOrderByPostedDateDesc();
+
 
 }
