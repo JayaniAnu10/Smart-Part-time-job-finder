@@ -35,11 +35,11 @@ export default function ProfilePage() {
 
   return (
     <div className="relative pt-24 px-4 sm:px-8 lg:px-24 xl:px-32 pb-24 min-h-screen bg-background">
-      <NavBar />
+       <NavBar />
       <h1 className="text-4xl font-semibold text-secondary dark:text-primary mb-6">
         My Profile
       </h1>
-
+ 
       <ProfileTabs active={activeTab} onChange={setActiveTab} />
 
       <div className="mt-6">
@@ -58,7 +58,7 @@ export default function ProfilePage() {
         )}
 
         {activeTab === "reviews" && (
-          <Card className="max-w-5xl rounded-lg p-6 md:p-8 border-none shadow-lg">
+          <Card className="max-w-5xl p-8 text-muted-foreground">
             <ReviewsTab />
           </Card>
         )}
