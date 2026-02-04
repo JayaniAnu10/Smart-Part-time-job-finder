@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-import ProfileTabs from "@/components/jobseekerProfile/ProfileTabs";
-import ProfileHeader from "@/components/jobseekerProfile/ProfileHeader";
-import ProfileForm from "@/components/jobseekerProfile/ProfileForm";
-import type { ProfileFormData } from "@/components/jobseekerProfile/ProfileForm";
-import ReviewsTab from "@/components/jobseekerProfile/ReviewsTab";
+import ProfileTabs from "@/components/profile/ProfileTabs";
+import ProfileHeader from "@/components/profile/ProfileHeader";
+import ProfileForm from "@/components/profile/ProfileForm";
+import type { ProfileFormData } from "@/components/profile/ProfileForm";
+import ReviewsTab from "@/components/profile/ReviewsTab";
 import NavBar from "@/components/navBar/NavBar";
 
 export default function ProfilePage() {
