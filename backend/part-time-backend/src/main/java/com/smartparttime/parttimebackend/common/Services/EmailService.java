@@ -256,6 +256,39 @@ public class EmailService {
     }
 
 
+    public void sendComplaintResolvedReporterEmail(
+            String toEmail,
+            String reporterName,
+            String complaintType,
+            String createdAt
+    ) {
+
+        String subject = "Your Complaint Has Been Resolved";
+
+        String body = """
+        <h2>Complaint Update</h2>
+        <p>Dear %s,</p>
+
+        <p>Thank you for reporting a <strong>%s</strong> complaint on <strong>%s</strong>.</p>
+
+        <p>We want to inform you that this complaint has been <strong>reviewed and resolved</strong> by our admin team.</p>
+
+        <p>Your feedback helps us keep the platform safe and fair for everyone.</p>
+
+        <br/>
+        <p>Best regards,<br/>
+        <strong>DayBee.lk Admin Team</strong></p>
+        """.formatted(
+                reporterName,
+                complaintType,
+                createdAt
+        );
+
+        sendSimpleEmail(toEmail, subject, body);
+    }
+
+
+
 
 
 
