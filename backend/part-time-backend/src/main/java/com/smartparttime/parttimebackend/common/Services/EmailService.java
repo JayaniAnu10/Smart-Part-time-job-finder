@@ -321,6 +321,38 @@ public class EmailService {
 
 
 
+    public void sendComplaintResolvedTargetEmail(
+            String toEmail,
+            String targetName,
+            String complaintType
+    ) {
+
+        String subject = "Account Notice from DayBee.lk";
+
+        String body = """
+        <h2>Account Notice</h2>
+        <p>Dear %s,</p>
+
+        <p>A <strong>%s</strong> complaint related to your account was reviewed by our admin team.</p>
+
+        <p>The issue has now been <strong>resolved</strong>.</p>
+
+        <p>Please make sure to follow our community guidelines to avoid future actions.</p>
+
+        <br/>
+        <p>Regards,<br/>
+        <strong>DayBee.lk Admin Team</strong></p>
+        """.formatted(
+                targetName,
+                complaintType
+        );
+
+        sendSimpleEmail(toEmail, subject, body);
+    }
+
+
+
+
 
 
 
