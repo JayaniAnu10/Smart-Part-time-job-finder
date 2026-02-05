@@ -8,10 +8,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AlertTriangle } from "lucide-react";
+
 import APIClient from "@/services/apiClient";
 import ComplaintsTable from "@/components/admin/ComplaintsTable";
-import type { AdminComplaint } from "@/components/admin/ComplaintsTable";
+import ComplaintDetailsModal from "@/components/admin/ComplaintDetailsModal";
 
+import type { AdminComplaint } from "@/components/admin/ComplaintsTable";
 
 /* ================= API ================= */
 
@@ -24,12 +26,26 @@ export default function ReviewReportsPage() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("pending");
 
-  useEffect(() => {
+  /* 🔥 MODAL STATE */
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<AdminComplaint | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  /* ================= FETCH ================= */
+
+  const fetchComplaints = () => {
+    setLoading(true);
     client
       .get()
       .then(setComplaints)
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchComplaints();
   }, []);
+
+  /* ================= FILTER ================= */
 
   const filteredComplaints = useMemo(() => {
     if (statusFilter === "all") return complaints;
@@ -40,7 +56,7 @@ export default function ReviewReportsPage() {
 
   return (
     <div className="p-12 space-y-6">
-      {/* HEADER */}
+      {/* ================= HEADER ================= */}
       <div>
         <h1 className="text-3xl font-bold text-secondary dark:text-primary">
           Review Reports
@@ -50,13 +66,14 @@ export default function ReviewReportsPage() {
         </p>
       </div>
 
-      {/* FILTER */}
+      {/* ================= FILTER BAR ================= */}
       <Card>
         <CardContent className="flex items-center justify-between gap-4 p-6 flex-wrap">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="h-12 w-[200px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
+
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
@@ -72,7 +89,7 @@ export default function ReviewReportsPage() {
         </CardContent>
       </Card>
 
-      {/* TABLE */}
+      {/* ================= TABLE ================= */}
       {loading ? (
         <Card>
           <CardContent className="p-20 text-center text-secondary/70">
@@ -83,10 +100,24 @@ export default function ReviewReportsPage() {
         <ComplaintsTable
           complaints={filteredComplaints}
           onView={(complaint) => {
-            console.log("View complaint", complaint);
+            setSelectedComplaint(complaint);
+            setModalOpen(true);
           }}
         />
       )}
+
+      {/* ================= MODAL ================= */}
+      <ComplaintDetailsModal
+        open={modalOpen}
+        complaint={selectedComplaint}
+        onClose={() => {
+          setModalOpen(false);
+          setSelectedComplaint(null);
+        }}
+        onActionSuccess={() => {
+          fetchComplaints(); // refresh table after resolve/reject
+        }}
+      />
     </div>
   );
 }
