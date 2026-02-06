@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { Briefcase, Calendar, CircleDollarSign } from 'lucide-react';
 import type { Job } from '../../pages/JobHistory/JobHistory';
 
+=======
+import type { Job } from '../../pages/JobHistory/JobHistory';
+
+
+>>>>>>> 17b170942e0c1ddcbfcece02ae3ad3709c1da1f2
 interface JobItemProps {
   job: Job;
   onAddRating: () => void;
