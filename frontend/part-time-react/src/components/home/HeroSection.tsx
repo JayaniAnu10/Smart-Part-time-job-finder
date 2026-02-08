@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 import heroImage from "@/assets/hero1.jpg";
-import heroImage1 from "@/assets/hero2.jpg";
+import heroImage1 from "@/assets/hero2.jpeg";
 import heroImage2 from "@/assets/hero4.jpg";
 
 import { fadeUp, fadeIn, scaleIn, stagger } from "@/lib/animations";
@@ -35,7 +35,7 @@ const HeroSection = () => {
     <motion.section initial="hidden"
                     animate="visible"
                     variants={fadeIn}
-                    className="bg-gradient-to-br from-background via-yellow-300/40 dark:via-blue-300/40 to-background py-16">
+                    className="bg-gradient-to-br from-background via-yellow-300/40 dark:via-blue-300/20 to-background py-16">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 

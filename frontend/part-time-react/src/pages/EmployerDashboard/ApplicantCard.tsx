@@ -16,6 +16,7 @@ import useUpdateApplicationStatus from "@/hooks/useUpdateApplicationStatus";
 import toast from "react-hot-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
+import AddRatingDialog from "@/components/ratings/AddRatingDialog";
 
 interface Props {
   applicants: Applicants[];
@@ -28,6 +29,10 @@ const ApplicantCard = ({ applicants }: Props) => {
     action: "approve" | "reject";
   } | null>(null);
   const statusMutation = useUpdateApplicationStatus();
+
+  const [ratingApplicantId, setRatingApplicantId] = useState<string | null>(
+    null
+  );
 
   const handleApprove = async (id: string) => {
     setUpdating({ id, action: "approve" });
@@ -143,6 +148,16 @@ const ApplicantCard = ({ applicants }: Props) => {
                     View Profile
                   </Button>
 
+                  {lowerCase(applicant.status) === "approved" && (
+                    <Button
+                      onClick={() => setRatingApplicantId(applicant.jobSeekerId)}
+                      className="w-full md:w-auto bg-yellow-400 text-secondary hover:bg-yellow-400 
+                                 cursor-pointer transition-all duration-300 hover:scale-103 active:scale-97"
+                    >
+                      Rate
+                    </Button>
+                  )}
+
                   {lowerCase(applicant.status) === "pending" && (
                     <>
                       <Button
@@ -185,6 +200,14 @@ const ApplicantCard = ({ applicants }: Props) => {
               </div>
             </Card>
           ))}
+
+          {ratingApplicantId && (
+            <AddRatingDialog
+              jobId={Number(ratingApplicantId)} 
+              onClose={() => setRatingApplicantId(null)} 
+            />
+          )}
+
         </div>
       )}
     </div>

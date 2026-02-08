@@ -22,7 +22,11 @@ const dummyJobs: Job[] = [
 ];
 
 export const JobHistory = () => {
+<<<<<<< HEAD
+   const [openJobId, setOpenJobId] = useState<string | null>(null);
+=======
   const [openJobId, setOpenJobId] = useState<string | null>(null);
+>>>>>>> 17b170942e0c1ddcbfcece02ae3ad3709c1da1f2
 
   return (
    
@@ -58,25 +62,40 @@ export const JobHistory = () => {
               </button>
             </div>
             
+<<<<<<< HEAD
+            <div className="flex flex-col divide-y divide-slate-100">
+              {dummyJobs.map((job) => (
+                <JobItem key={job.id} job={job} 
+                         onAddRating={() => setOpenJobId(job.id)}   />
+=======
            
             <div className="flex flex-col divide-y divide-slate-100 dark:divide-white/10">
               {dummyJobs.map(job => (
                 <JobItem  key={job.id} 
                           job={job} 
                           onAddRating={() => setOpenJobId(job.id)} />
+>>>>>>> 17b170942e0c1ddcbfcece02ae3ad3709c1da1f2
               ))}
             </div>
           </div>
         </div>
       </div>
 
+<<<<<<< HEAD
+      {openJobId && (
+=======
        {openJobId && (
+>>>>>>> 17b170942e0c1ddcbfcece02ae3ad3709c1da1f2
         <AddRatingDialog
           jobId={Number(openJobId)}
           onClose={() => setOpenJobId(null)}
         />
       )}
+<<<<<<< HEAD
+          
+=======
              
+>>>>>>> 17b170942e0c1ddcbfcece02ae3ad3709c1da1f2
       {/* Footer Section */}
       <FooterSection />
     </div>
