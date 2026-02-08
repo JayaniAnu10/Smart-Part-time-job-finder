@@ -32,7 +32,7 @@ import ManageUsers from "@/pages/adminActions/ManageUsers";
 import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
 import ReviewReports from "@/pages/adminActions/ReviewReports";
 import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
-import ProfileForm from "../profile/forms/JobseekerProfileForm";
+import EmployerProfile from "@/pages/EmployerProfile";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +55,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="jobseeker">
             <JobHistory />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "seekerProfile",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobseekerProfile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "empProfile",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <EmployerProfile />
           </PrivateRoute>
         ),
       },
