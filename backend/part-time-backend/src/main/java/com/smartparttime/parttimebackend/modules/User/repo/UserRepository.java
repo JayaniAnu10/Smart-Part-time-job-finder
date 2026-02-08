@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.User.repo;
 
 import com.smartparttime.parttimebackend.modules.User.entities.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsUserByEmail(String email);
 
     @Modifying
+    @Transactional
     @Query("""
         UPDATE User u
         SET u.totalRatings = :totalRatings,

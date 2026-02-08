@@ -97,4 +97,9 @@ public class JobSeekerController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/history/{id}")
+    public ResponseEntity<JobHistoryResponseDto> getJobHistory(@PathVariable UUID id) {
+        return ResponseEntity.ok(jobSeekerService.getJobHistory(id));
+    }
 }

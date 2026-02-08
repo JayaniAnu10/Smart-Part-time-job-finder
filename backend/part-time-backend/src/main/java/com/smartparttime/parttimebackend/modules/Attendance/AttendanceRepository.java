@@ -53,5 +53,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             @Param("jobseekerId") UUID jobseekerId
     );
 
+    List<Attendance> findByUser_IdAndStatus(UUID userId, AttendanceStatus status);
+
 
 }
