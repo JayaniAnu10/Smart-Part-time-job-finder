@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-
-import { Briefcase, Calendar, CircleDollarSign } from 'lucide-react';
-import type { Job } from '../../pages/JobHistory/JobHistory';
-
-
-=======
 import {
   Briefcase,
   Calendar,
@@ -16,7 +9,6 @@ import type { Job } from "../../pages/JobHistory/JobHistory";
 import useDeleteRating from "@/hooks/useDeleteRating";
 import { useAuthStore } from "@/store/AuthStore";
 
->>>>>>> main
 interface JobItemProps {
   job: Job;
   onAddRating: () => void;

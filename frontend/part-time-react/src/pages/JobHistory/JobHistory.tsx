@@ -32,9 +32,6 @@ interface RatingDialogState {
 }
 
 export const JobHistory = () => {
-<<<<<<< HEAD
-   const [openJobId, setOpenJobId] = useState<string | null>(null);
-=======
   const [ratingDialog, setRatingDialog] = useState<RatingDialogState | null>(
     null,
   );
@@ -113,7 +110,6 @@ export const JobHistory = () => {
       });
     }
   };
->>>>>>> main
 
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-300 bg-background text-secondary dark:text-primary">
@@ -149,14 +145,6 @@ export const JobHistory = () => {
                 Completed Jobs
               </h2>
             </div>
-<<<<<<< HEAD
-            
-            <div className="flex flex-col divide-y divide-slate-100">
-              {dummyJobs.map((job) => (
-                <JobItem key={job.id} job={job} 
-                         onAddRating={() => setOpenJobId(job.id)}   />
-              ))}
-=======
 
             <div className="flex flex-col divide-y divide-gray-400/50 dark:divide-white/5 p-3">
               {transformedJobs.length > 0 ? (
@@ -173,17 +161,12 @@ export const JobHistory = () => {
                   No completed jobs yet
                 </div>
               )}
->>>>>>> main
             </div>
           </div>
         </div>
       </div>
 
-<<<<<<< HEAD
-      {openJobId && (
-=======
       {ratingDialog && (
->>>>>>> main
         <AddRatingDialog
           jobId={ratingDialog.jobId}
           employerId={ratingDialog.employerId}
@@ -191,12 +174,6 @@ export const JobHistory = () => {
           onClose={() => setRatingDialog(null)}
         />
       )}
-<<<<<<< HEAD
-          
-      {/* Footer Section */}
-      <FooterSection />
-=======
->>>>>>> main
     </div>
   );
 };
