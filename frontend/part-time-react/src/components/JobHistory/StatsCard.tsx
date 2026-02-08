@@ -1,27 +1,26 @@
-import React from 'react';
+import React from "react";
 
 interface StatsCardProps {
-  icon: React.ElementType; 
+  icon: React.ElementType;
   label: string;
   value: string | number;
 }
 
-const StatsCard = ({ icon: Icon, label, value }: any) => (
-  <div className="p-10 rounded-2xl border-2 transition-all duration-300 flex flex-col gap-4 cursor-pointer
-                  bg-white border-slate-100 hover:shadow-md hover:-translate-y-1
-                  dark:bg-[#0f192e] dark:border-white/5 dark:hover:bg-white/[0.02]">
-    
-    <div className="flex items-center justify-between">
-      {Icon && <Icon size={32} className="text-[#fbbd23]" strokeWidth={2} />}
-    </div>
+const StatsCard = ({ icon: Icon, label, value }: StatsCardProps) => (
+  <div className="rounded-xl border justify-items-start backdrop-blur-md hover:shadow-lg hover:scale-103 transition-transform duration-300 p-6">
+    <div className="flex flex-col items-start">
+      {Icon && (
+        <div className="mb-3">
+          <Icon size={36} className="text-yellow-400" strokeWidth={2} />
+        </div>
+      )}
 
-    <div>
-      <span className="text-4xl font-bold block leading-tight tracking-tighter text-slate-900 dark:text-white">
+      <h3 className="text-3xl font-extrabold text-secondary dark:text-primary">
         {value}
-      </span>
-      <span className="text-[15px] font-medium mt-1 block uppercase tracking-wider text-slate-500 dark:text-slate-400">
+      </h3>
+      <p className="text-secondary/70 dark:text-primary/70 mt-1 text-lg">
         {label}
-      </span>
+      </p>
     </div>
   </div>
 );
