@@ -6,10 +6,12 @@ import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
+import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.*;
+import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -22,6 +24,13 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
+import com.smartparttime.parttimebackend.modules.Rating.Rate;
+import com.smartparttime.parttimebackend.modules.Job.entity.Job;
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.util.*;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -33,6 +42,7 @@ public class JobSeekerService {
     private final AzureImageStorageClient imageStorageClient;
     private final JobApplicationRepository jobApplicationRepository;
     private final AttendanceRepository attendanceRepository;
+    private final RateRepository rateRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -211,5 +221,112 @@ public class JobSeekerService {
         }
     }
 
+
+    public JobHistoryResponseDto getJobHistory(UUID seekerId) {
+        // Verify job seeker exists
+        var seeker = jobSeekerRepository.findById(seekerId)
+                .orElseThrow(() -> new NotFoundException("Job seeker not found"));
+
+        // Get user for average rate
+        var user = userRepository.findById(seekerId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        // Get all completed attendances for this seeker
+        var completedAttendances = attendanceRepository.findByUser_IdAndStatus(
+                seekerId,
+                AttendanceStatus.CHECKED_OUT
+        );
+
+        // Calculate total earnings and group by job
+        BigDecimal totalEarnings = BigDecimal.ZERO;
+        Map<UUID, List<Attendance>> jobAttendanceMap = new HashMap<>();
+
+        for (Attendance attendance : completedAttendances) {
+            if (attendance.getJob() != null) {
+                jobAttendanceMap
+                        .computeIfAbsent(attendance.getJob().getId(), k -> new ArrayList<>())
+                        .add(attendance);
+
+                // Add to total earnings
+                if (attendance.getJob().getMinSalary() != null) {
+                    totalEarnings = totalEarnings.add(attendance.getJob().getMinSalary());
+                }
+            }
+        }
+
+        // Build completed job details
+        List<CompletedJobDetailDto> completedJobs = new ArrayList<>();
+
+        for (Map.Entry<UUID, List<Attendance>> entry : jobAttendanceMap.entrySet()) {
+            UUID jobId = entry.getKey();
+            List<Attendance> attendances = entry.getValue();
+
+            if (attendances.isEmpty()) continue;
+
+            Job job = attendances.get(0).getJob();
+
+            // Get employer name
+            String employerName = job.getEmployer() != null ?
+                    job.getEmployer().getCompanyName() : "N/A";
+
+            // Collect all schedule dates and calculate worked hours
+            List<LocalDateTime> scheduleDates = new ArrayList<>();
+            double totalWorkedHours = 0.0;
+
+            for (Attendance attendance : attendances) {
+                if (attendance.getSchedule() != null) {
+                    scheduleDates.add(attendance.getSchedule().getStartDatetime());
+
+                    // Calculate worked hours from schedule
+                    if (attendance.getSchedule().getStartDatetime() != null &&
+                            attendance.getSchedule().getEndDatetime() != null) {
+
+                        LocalDateTime start = attendance.getSchedule().getStartDatetime();
+                        LocalDateTime end = attendance.getSchedule().getEndDatetime();
+
+                        Duration duration = Duration.between(start, end);
+                        totalWorkedHours += duration.toMinutes() / 60.0;
+                    }
+                }
+            }
+
+            // Get rating for this job (if seeker rated the employer/job)
+            Rate rate = rateRepository.findByRateReceiver_IdAndRater_IdAndJob_Id(
+                    job.getEmployer().getId(),
+                    seekerId,
+                    jobId
+            );
+
+            Integer rating = (rate != null) ? rate.getRating() : 0;
+            UUID ratingId = (rate != null) ? rate.getId() : null;
+            String ratingComment = (rate != null) ? rate.getComment() : null;
+
+            CompletedJobDetailDto jobDetail = new CompletedJobDetailDto(
+                    jobId,
+                    job.getEmployer() != null ? job.getEmployer().getId() : null,
+                    job.getTitle(),
+                    employerName,
+                    scheduleDates,
+                    totalWorkedHours,
+                    job.getMinSalary(),
+                    rating,
+                    ratingId,
+                    ratingComment
+            );
+
+            completedJobs.add(jobDetail);
+        }
+
+        // Get average rate from user
+        BigDecimal averageRate = user.getAverageRate() != null ?
+                user.getAverageRate() : BigDecimal.ZERO;
+
+        return new JobHistoryResponseDto(
+                (long) jobAttendanceMap.size(),
+                totalEarnings,
+                averageRate,
+                completedJobs
+        );
+    }
 
 }

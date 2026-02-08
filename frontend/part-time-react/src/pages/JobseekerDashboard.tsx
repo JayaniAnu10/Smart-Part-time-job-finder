@@ -107,7 +107,7 @@ const JobseekerDashboard = () => {
       <section className="pt-12 max-w-352 mx-auto px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* LEFT SIDE - UPCOMING JOBS */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-8 mb-15">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-2xl font-bold text-secondary dark:text-primary">
@@ -331,41 +331,6 @@ const JobseekerDashboard = () => {
                 >
                   View Full Profile
                 </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="w-full mx-auto rounded-2xl mb-7">
-              <CardContent className="p-8 text-center space-y-5">
-                <div className="flex items-center gap-2">
-                  <img src={BadgeIcon} alt="badge" className="w-6 h-6" />
-                  <h3 className="text-lg font-semibold text-secondary dark:text-primary">
-                    Your Badges
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="rounded-xl bg-yellow-400 text-center py-6 space-y-2 shadow-lg">
-                    <span className="text-2xl">⚡</span>
-                    <p className="font-sm text-secondary">Quick Responder</p>
-                  </div>
-
-                  <div className="rounded-xl bg-yellow-400 text-center py-6 space-y-2 shadow-lg">
-                    <span className="text-2xl">✓</span>
-                    <p className="font-sm text-secondary ">
-                      Perfect Attendance
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl bg-[#364d7d]/10 dark:bg-primary/60 text-center py-6 space-y-2 shadow-lg">
-                    <span className="text-2xl">⭐</span>
-                    <p className="text-sm text-secondary ">5-Star Performer</p>
-                  </div>
-
-                  <div className="rounded-xl bg-[#364d7d]/10 dark:bg-primary/60 text-center py-6 space-y-2 shadow-lg">
-                    <span className="text-2xl">💰</span>
-                    <p className="text-sm text-secondary">Top Earner</p>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>
