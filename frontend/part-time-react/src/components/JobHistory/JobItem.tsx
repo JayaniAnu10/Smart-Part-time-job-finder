@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 import { Briefcase, Calendar, CircleDollarSign } from 'lucide-react';
 import type { Job } from '../../pages/JobHistory/JobHistory';
 
-=======
-import type { Job } from '../../pages/JobHistory/JobHistory';
-
-
->>>>>>> 17b170942e0c1ddcbfcece02ae3ad3709c1da1f2
 interface JobItemProps {
   job: Job;
   onAddRating: () => void;
@@ -66,11 +60,12 @@ const JobItem = ({ job, onAddRating }: JobItemProps) => (
       >
         View Details
       </button>
-      
-      
-      <button onClick={onAddRating}
-              className="px-6 py-2 text-secondary bg-[#ffc107] hover:bg-[#ffb300] rounded-lg text-[13.5px] font-bold 
-                         shadow-sm transition-all duration-300 hover:scale-103 active:scale-97 cursor-pointer">
+
+      <button
+        onClick={onAddRating}
+        className="px-6 py-2 text-secondary bg-[#ffc107] hover:bg-[#ffb300] rounded-lg text-[13.5px] font-bold 
+                         shadow-sm transition-all duration-300 hover:scale-103 active:scale-97 cursor-pointer"
+      >
         Rate Employer
       </button>
     </div>
