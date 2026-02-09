@@ -3,19 +3,21 @@ import { useQuery } from "@tanstack/react-query";
 
 interface HomeStats {
   activeJobs: number;
+  totalJobs: number;
   totalJobSeekers: number;
   totalEmployers: number;
 }
 
 const useHomeStats = () => {
-  const apiClient = new APIClient<HomeStats>("/admin/analytics/overview");
+  const apiClient = new APIClient<HomeStats>("/jobs/stats");
 
   return useQuery<HomeStats>({
-    queryKey: ["homeStats"],
+    queryKey: ["publicStats"],
     queryFn: async () => {
       const data = await apiClient.getAll();
       return {
         activeJobs: data.activeJobs || 0,
+        totalJobs: data.totalJobs || 0,
         totalJobSeekers: data.totalJobSeekers || 0,
         totalEmployers: data.totalEmployers || 0,
       };

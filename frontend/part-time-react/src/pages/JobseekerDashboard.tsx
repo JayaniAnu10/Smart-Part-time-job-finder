@@ -27,16 +27,20 @@ import { Spinner } from "@/components/ui/spinner";
 const JobseekerDashboard = () => {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const { data, isLoading, isError } = useSeekerStat(user?.id!);
-  const { data: ratingData } = useUserRate(user?.id!);
 
-  if (isLoading) <Spinner className="flex items-center justify-center" />;
+  const { data, isLoading, isError } = useSeekerStat(user?.id!, {
+    enabled: !!user?.id,
+  });
+  const { data: ratingData } = useUserRate(user?.id);
 
-  if (isError) {
-    <p>Something went wrong</p>;
+  if (!user || isLoading) {
+    return <Spinner className="flex items-center justify-center" />;
   }
 
-  // Calculate star display based on average rating
+  if (isError) {
+    return <p>Something went wrong</p>;
+  }
+
   const displayRating = ratingData?.averageRate
     ? Number(ratingData.averageRate.toFixed(1))
     : 0;
@@ -53,7 +57,7 @@ const JobseekerDashboard = () => {
               <span className="text-primary dark:text-yellow-400">
                 {data?.name}
               </span>
-              ! 👋
+              !
             </h1>
             <p className="mt-2 text-secondary/70 dark:text-primary/70">
               You have {data?.countUpcomingJobs} upcoming jobs
@@ -173,11 +177,14 @@ const JobseekerDashboard = () => {
                                   className="h-4 w-4 hidden dark:block"
                                 />
                                 <span>
-                                  {dateFormater(job.startTime, job.endTime)}
+                                  {dateFormater(
+                                    job.startDatetime,
+                                    job.endDatetime,
+                                  )}
                                 </span>
                               </div>
 
-                              <div className="flex items-center gap-1 text-yellow-400 font-medium">
+                              <div className="flex items-center gap-1">
                                 <img
                                   src={MoneyIcon}
                                   className="h-4 w-4 dark:hidden"
@@ -206,6 +213,7 @@ const JobseekerDashboard = () => {
 
                           <Button
                             variant="outline"
+                            onClick={() => navigate(`/upcoming-job/${job.id}`)}
                             className="text-secondary dark:text-primary transition-all duration-300 hover:scale-105 active:scale-95
                                                              hover:text-secondary hover:bg-yellow-400"
                           >

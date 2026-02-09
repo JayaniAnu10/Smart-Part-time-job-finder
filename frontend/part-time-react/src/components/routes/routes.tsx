@@ -34,6 +34,7 @@ import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
 import EmployerProfile from "@/pages/EmployerProfile";
 import ApplicantProfile from "@/pages/EmployerDashboard/ApplicantProfile";
 import EditJob from "@/pages/PostJobs/EditJob";
+import UpcomingJobDetails from "@/pages/UpcomingJobDetails";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +92,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="employer">
             <JobApplicants />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "upcoming-job/:applicationId",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <UpcomingJobDetails />
           </PrivateRoute>
         ),
       },

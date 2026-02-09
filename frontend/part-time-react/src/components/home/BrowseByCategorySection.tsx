@@ -1,21 +1,25 @@
 import { Card } from "@/components/ui/card";
 import useCategory from "@/hooks/useCategory";
-
-// Default icons for categories (you can customize this mapping)
 import DeliveryIcon from "@/assets/delivery.png";
 import FoodIcon from "@/assets/food-service.png";
 import RetailIcon from "@/assets/retail.png";
 import EventsIcon from "@/assets/events.png";
 import TutoringIcon from "@/assets/tutoring.png";
+import CleaningIcon from "@/assets/cleaning.png";
+import DataEntryIcon from "@/assets/dataentry.png";
+import OtherIcon from "@/assets/other.png";
 import TechIcon from "@/assets/tech.png";
 
 const categoryIcons: Record<string, string> = {
-  "Delivery & Logistics": DeliveryIcon,
-  "Food Service": FoodIcon,
-  Retail: RetailIcon,
-  Events: EventsIcon,
-  Tutoring: TutoringIcon,
-  "Tech Support": TechIcon,
+  "delivery & logistics": DeliveryIcon,
+  "food service": FoodIcon,
+  retail: RetailIcon,
+  "events & promotion": EventsIcon,
+  "tutoring & education": TutoringIcon,
+  "tech support": TechIcon,
+  "data entry": DataEntryIcon,
+  "cleaning & maintenance": CleaningIcon,
+  other: OtherIcon,
 };
 
 const BrowseByCategorySection = () => {

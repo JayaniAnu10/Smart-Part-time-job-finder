@@ -8,7 +8,7 @@ import heroImage1 from "@/assets/hero2.jpeg";
 import heroImage2 from "@/assets/hero4.jpg";
 
 import { fadeUp, fadeIn, scaleIn, stagger } from "@/lib/animations";
-import useHomeStats from "../useHomeStats";
+import useHomeStats from "../../hooks/useHomeStats";
 
 type StatItem = {
   icon: React.ElementType;
@@ -23,8 +23,8 @@ const HeroSection = () => {
   const stats: StatItem[] = [
     {
       icon: Briefcase,
-      value: statsData?.totalJobs
-        ? `${statsData.totalJobs.toLocaleString()}+`
+      value: statsData?.activeJobs
+        ? `${statsData.activeJobs.toLocaleString()}+`
         : "0",
       label: "Active Jobs",
     },
