@@ -32,6 +32,7 @@ import ManageUsers from "@/pages/adminActions/ManageUsers";
 import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
 import ReviewReports from "@/pages/adminActions/ReviewReports";
 import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
+import EmployerProfile from "@/pages/EmployerProfile";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,38 @@ const router = createBrowserRouter([
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
       { path: "/seekerDashboard", element: <JobseekerDashboard /> },
+      {
+        path: "empDashboard",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <EmployerDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "job-history",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobHistory />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "seekerProfile",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobseekerProfile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "empProfile",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <EmployerProfile />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 
@@ -67,14 +100,7 @@ const router = createBrowserRouter([
       { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
       { path: "employer/register/step1", element: <EmployerStep1 /> },
       { path: "employer/register/step2", element: <EmployerStep2 /> },
-      {
-        path: "empDashboard",
-        element: (
-          <PrivateRoute requiredRole="employer">
-            <EmployerDashboard />
-          </PrivateRoute>
-        ),
-      },
+
       {
         path: "promotion/:jobId",
         element: (
@@ -107,14 +133,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      {
-        path: "job-history",
-        element: (
-          <PrivateRoute requiredRole="jobseeker">
-            <JobHistory />
-          </PrivateRoute>
-        ),
-      },
+
       {
         path: "seekerProfile/:id",
         element: (
@@ -136,18 +155,6 @@ const router = createBrowserRouter([
       { path: "about", element: <AboutPage /> },
       { path: "contact", element: <ContactPage /> },
       { path: "terms", element: <TermsPage /> },
-    ],
-  },
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { index: true, element: <HomePage /> },
-      { path: "find-your-job", element: <FindJob /> },
-      { path: "nearby", element: <NearByJobPage /> },
-      { path: "chatbot", element: <ChatBot /> },
-      { path: "about", element: <AboutPage /> },
-
       {
         path: "postJob",
         element: (
@@ -161,6 +168,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="jobseeker">
             <JobProfile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "job-history",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobHistory />
           </PrivateRoute>
         ),
       },

@@ -1,84 +1,179 @@
-import { Briefcase, CircleDollarSign, Star } from 'lucide-react'; 
+import { Briefcase, CircleDollarSign, Star } from "lucide-react";
 import StatsCard from "@/components/JobHistory/StatsCard";
 import JobItem from "@/components/JobHistory/JobItem";
-import FooterSection from "@/components/FooterSection"; // imported footer
 import { useState } from "react";
 import AddRatingDialog from "@/components/ratings/AddRatingDialog";
+import useJobHistory from "@/hooks/useJobHistory";
+import { useAuthStore } from "@/store/AuthStore";
 
 export interface Job {
   id: string;
+  jobId: string;
+  employerId: string;
   title: string;
   company: string;
-  date: string;
+  dates: string[];
   duration: string;
   earnings: number;
   status: string;
+  rating: number;
+  ratingId: string | null;
+  comment: string | null;
 }
 
-const dummyJobs: Job[] = [
-  { id: "1", title: "Delivery Driver", company: "ABC Logistics Ltd.", date: "Nov 19, 2024", duration: "8 hours", earnings: 2800, status: "Completed" },
-  { id: "2", title: "Warehouse Helper", company: "StoreMart", date: "Nov 18, 2024", duration: "6 hours", earnings: 2100, status: "Completed" },
-  { id: "3", title: "Sales Assistant", company: "Fashion Point", date: "Nov 17, 2024", duration: "8 hours", earnings: 1800, status: "Completed" }
-];
+interface RatingDialogState {
+  jobId: string;
+  employerId: string;
+  existingRating?: {
+    id: string;
+    rating: number;
+    comment?: string;
+  };
+}
 
 export const JobHistory = () => {
-  const [openJobId, setOpenJobId] = useState<string | null>(null);
+  const [ratingDialog, setRatingDialog] = useState<RatingDialogState | null>(
+    null,
+  );
+  const { user } = useAuthStore();
+
+  // Fetch job history data using the custom hook
+  const {
+    data: jobHistoryData,
+    isLoading,
+    error,
+  } = useJobHistory(user?.id || "");
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg">Loading job history...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg text-red-500">
+          Error loading job history: {error.message}
+        </div>
+      </div>
+    );
+  }
+
+  // Transform backend data to match Job interface
+  const transformedJobs: Job[] =
+    jobHistoryData?.completedJobs.map((job, index) => {
+      // Format dates
+      const formattedDates = job.jobScheduleDates.map((date) =>
+        new Date(date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+      );
+
+      return {
+        id: `${index}`,
+        jobId: job.jobId,
+        employerId: job.employerId,
+        title: job.jobTitle,
+        company: job.employerName,
+        dates: formattedDates,
+        duration: `${job.workedHours.toFixed(1)} hours`,
+        earnings: job.salary,
+        status: "Completed",
+        rating: job.rating,
+        ratingId: job.ratingId,
+        comment: job.comment,
+      };
+    }) || [];
+
+  const handleAddRating = (job: Job) => {
+    setRatingDialog({
+      jobId: job.jobId,
+      employerId: job.employerId,
+    });
+  };
+
+  const handleEditRating = (job: Job) => {
+    if (job.ratingId) {
+      setRatingDialog({
+        jobId: job.jobId,
+        employerId: job.employerId,
+        existingRating: {
+          id: job.ratingId,
+          rating: job.rating,
+          comment: job.comment || undefined,
+        },
+      });
+    }
+  };
 
   return (
-   
-    <div className="min-h-screen flex flex-col transition-colors duration-300 bg-[#f8fafc] dark:bg-[#020419]">
-      <div className="flex-grow pt-12 pb-20">
-        <div className="max-w-6xl mx-auto px-12">
-          
-          
-          <h1 className="text-[36px] font-[900] mb-10 tracking-tight leading-none text-slate-900 dark:text-white">
+    <div className="min-h-screen flex flex-col transition-colors duration-300 bg-background text-secondary dark:text-primary">
+      <div className="grow pt-14 pb-20">
+        <div className="mx-8 md:mx-20">
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-8 tracking-tight text-slate-900 dark:text-white">
             Job History
           </h1>
-          
+
           {/* Stats Cards Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <StatsCard label="Jobs Completed" value="3" icon={Briefcase} />
-            <StatsCard label="Total Earnings" value="LKR 6,700" icon={CircleDollarSign} />
-            <StatsCard label="Average Rating" value="0.0" icon={Star} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <StatsCard
+              label="Jobs Completed"
+              value={jobHistoryData?.completedJobsCount || 0}
+              icon={Briefcase}
+            />
+            <StatsCard
+              label="Total Earnings"
+              value={`LKR ${(jobHistoryData?.totalEarnings || 0).toLocaleString()}`}
+              icon={CircleDollarSign}
+            />
+            <StatsCard
+              label="Average Rating"
+              value={(jobHistoryData?.averageRate || 0).toFixed(1)}
+              icon={Star}
+            />
           </div>
 
-         
-          <div className="bg-white dark:bg-[#0f192e] rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm overflow-hidden mb-10">
-            
+          <div className="border shadow-md rounded-xl p-3">
             {/* Header section inside the main card */}
-            <div className="p-8 border-b border-slate-100 dark:border-white/10 flex justify-between items-center bg-white dark:bg-[#0f192e]">
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Completed Jobs</h2>
-              
-              
-              <button className="px-6 py-2 border border-slate-300 dark:border-white/10 rounded-lg text-sm font-bold transition-all
-                                 text-slate-600 dark:text-slate-400 
-                                 hover:bg-[#ffc107] hover:border-[#ffc107] hover:text-black
-                                 dark:hover:bg-[#fbbd23] dark:hover:text-black">
-                Export History
-              </button>
+            <div className="p-3 md:p-5 border-b border-gray-400/50 dark:border-white/5 flex justify-between items-center">
+              <h2 className="text-2xl font-medium text-slate-800 dark:text-white">
+                Completed Jobs
+              </h2>
             </div>
-            
-           
-            <div className="flex flex-col divide-y divide-slate-100 dark:divide-white/10">
-              {dummyJobs.map(job => (
-                <JobItem  key={job.id} 
-                          job={job} 
-                          onAddRating={() => setOpenJobId(job.id)} />
-              ))}
+
+            <div className="flex flex-col divide-y divide-gray-400/50 dark:divide-white/5 p-3">
+              {transformedJobs.length > 0 ? (
+                transformedJobs.map((job) => (
+                  <JobItem
+                    key={job.id}
+                    job={job}
+                    onAddRating={() => handleAddRating(job)}
+                    onEditRating={() => handleEditRating(job)}
+                  />
+                ))
+              ) : (
+                <div className="p-10 text-center text-slate-500 dark:text-slate-400">
+                  No completed jobs yet
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-       {openJobId && (
+      {ratingDialog && (
         <AddRatingDialog
-          jobId={Number(openJobId)}
-          onClose={() => setOpenJobId(null)}
+          jobId={ratingDialog.jobId}
+          employerId={ratingDialog.employerId}
+          existingRating={ratingDialog.existingRating}
+          onClose={() => setRatingDialog(null)}
         />
       )}
-             
-      {/* Footer Section */}
-      <FooterSection />
     </div>
   );
 };
