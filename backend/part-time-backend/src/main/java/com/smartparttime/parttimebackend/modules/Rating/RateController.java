@@ -16,6 +16,7 @@ import java.util.UUID;
 @RequestMapping("/ratings")
 public class RateController {
    private final RateService rateService;
+   private final RateRepository rateRepository;
 
     @PostMapping
     public RatingResponse submitRate(
@@ -84,6 +85,31 @@ public class RateController {
             @RequestParam(defaultValue = "10") int size
     ){
         return rateService.getRatingsByUserWithDetails(id, page, size);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<RatingResponse> getRatingByRaterReceiverAndJob(
+            @RequestParam UUID raterId,
+            @RequestParam UUID rateReceiverId,
+            @RequestParam UUID jobId
+    ){
+        Rate rate = rateRepository.findByRateReceiver_IdAndRater_IdAndJob_Id(
+                rateReceiverId, raterId, jobId
+        );
+
+        if (rate == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        RatingResponse response = new RatingResponse();
+        response.setId(rate.getId());
+        response.setJobId(rate.getJob().getId());
+        response.setRaterId(rate.getRater().getId());
+        response.setRateReceiverId(rate.getRateReceiver().getId());
+        response.setRating(rate.getRating());
+        response.setComment(rate.getComment());
+
+        return ResponseEntity.ok(response);
     }
 
 }
