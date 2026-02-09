@@ -1,9 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Rating;
 
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingResponse;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateRequest;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.UserAverageRateResponse;
+import com.smartparttime.parttimebackend.modules.Rating.RateDtos.*;
 import com.smartparttime.parttimebackend.modules.Rating.service.RateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -78,6 +75,15 @@ public class RateController {
             @PathVariable UUID id
     ){
         return rateService.deleteRateById(userId,id);
+    }
+
+    @GetMapping("/user/{id}/details")
+    public Page<RatingWithDetailsResponse> getRatingsByUserWithDetails(
+            @PathVariable UUID id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return rateService.getRatingsByUserWithDetails(id, page, size);
     }
 
 }
