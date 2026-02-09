@@ -32,11 +32,19 @@ const EmployerDashboard = () => {
             Manage your job postings and applicants
           </span>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 flex gap-5">
           <Button asChild className="gap-2 p-5 cursor-pointer">
             <Link to={"/postJob"}>
               <Plus /> <span className="">Post New Job</span>
             </Link>
+          </Button>
+          <Button
+            variant="outline"
+            asChild
+            className="w-full text-secondary dark:text-primary hover:bg-gray-500/10 p-5
+                               transition-all duration-300 hover:scale-105 active:scale-95"
+          >
+            <Link to="/empProfile">View Full Profile</Link>
           </Button>
         </div>
       </div>

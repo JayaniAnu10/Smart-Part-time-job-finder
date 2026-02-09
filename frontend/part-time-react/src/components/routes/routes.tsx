@@ -8,7 +8,6 @@ import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
 import EmployerStep2 from "@/pages/employer-registration/EmployerStep2";
 import EmployerDashboard from "@/pages/EmployerDashboard/EmployerDashboard";
 import JobApplicants from "@/pages/EmployerDashboard/JobApplicants";
-import SeekerProfile from "@/pages/EmployerDashboard/SeekerProfile";
 import FindJob from "@/pages/FindYourJob/FindJob";
 import JobProfile from "@/pages/FindYourJob/JobProfile";
 import GetStarted from "@/pages/GetStarted";
@@ -33,6 +32,7 @@ import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
 import ReviewReports from "@/pages/adminActions/ReviewReports";
 import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
 import EmployerProfile from "@/pages/EmployerProfile";
+import ApplicantProfile from "@/pages/EmployerDashboard/ApplicantProfile";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +71,31 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="employer">
             <EmployerProfile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "seekerDashboard",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobseekerDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: ":jobId/applicants",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <JobApplicants />
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: "seekerProfile/:id",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <ApplicantProfile />
           </PrivateRoute>
         ),
       },
@@ -114,31 +139,6 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute requiredRole="employer">
             <PromoSuccess />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "seekerDashboard",
-        element: (
-          <PrivateRoute requiredRole="jobseeker">
-            <JobseekerDashboard />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: ":jobId/applicants",
-        element: (
-          <PrivateRoute requiredRole="employer">
-            <JobApplicants />
-          </PrivateRoute>
-        ),
-      },
-
-      {
-        path: "seekerProfile/:id",
-        element: (
-          <PrivateRoute requiredRole="employer">
-            <SeekerProfile />
           </PrivateRoute>
         ),
       },

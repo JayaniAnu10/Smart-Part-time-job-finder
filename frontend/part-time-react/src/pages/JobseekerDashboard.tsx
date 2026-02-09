@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +12,6 @@ import ClockIcon from "@/assets/clock.svg";
 import ClockIconDark from "@/assets/clock-yellow.svg";
 import MoneyIconDark from "@/assets/money-darkmode.svg";
 import StarIconYellow from "@/assets/star.svg";
-import BadgeIcon from "@/assets/badge.svg";
 import FindJobsIcon from "@/assets/jobs-lightmode.svg";
 import FindJobsIconDarkMode from "@/assets/jobs-darkmode.svg";
 import ScheduleIcon from "@/assets/schedule-lightmode.svg";
@@ -326,10 +325,11 @@ const JobseekerDashboard = () => {
 
                 <Button
                   variant="outline"
+                  asChild
                   className="w-full text-secondary dark:text-primary hover:bg-yellow-400 hover:text-secondary
                                transition-all duration-300 hover:scale-105 active:scale-95"
                 >
-                  View Full Profile
+                  <Link to="/seekerProfile">View Full Profile</Link>
                 </Button>
               </CardContent>
             </Card>

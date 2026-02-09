@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import useJobSeekerRatings from "@/hooks/useJobSeekerRatings";
+import useEmployerRatings from "@/hooks/useEmployerRatings";
 import { useAuthStore } from "@/store/AuthStore";
 
 // Simple function to get time ago without date-fns
@@ -24,13 +24,13 @@ function getTimeAgo(dateString: string): string {
   return years === 1 ? "1 year ago" : `${years} years ago`;
 }
 
-export default function ReviewsTab() {
+export default function EmployerReviewsTab() {
   const { user } = useAuthStore();
   const {
     data: ratingsData,
     isLoading,
     error,
-  } = useJobSeekerRatings(
+  } = useEmployerRatings(
     user?.id || "",
     0,
     50, // Get first 50 ratings
@@ -79,10 +79,10 @@ export default function ReviewsTab() {
             key={review.id}
             className="rounded-xl p-4 bg-[#FAFAFA] dark:bg-background shadow-md"
           >
-            {/* Stars + employer */}
+            {/* Stars + job seeker name */}
             <div className="flex items-center justify-between mb-2">
               <span className="text-lg font-semibold text-secondary dark:text-primary">
-                {review.raterName}
+                {review.raterName || "Job Seeker"}
               </span>
 
               <div className="flex gap-1">
