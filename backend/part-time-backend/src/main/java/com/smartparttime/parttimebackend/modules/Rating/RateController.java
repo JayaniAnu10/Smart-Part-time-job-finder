@@ -1,9 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Rating;
 
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingResponse;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateRequest;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.UserAverageRateResponse;
+import com.smartparttime.parttimebackend.modules.Rating.RateDtos.*;
 import com.smartparttime.parttimebackend.modules.Rating.service.RateService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,6 +16,7 @@ import java.util.UUID;
 @RequestMapping("/ratings")
 public class RateController {
    private final RateService rateService;
+   private final RateRepository rateRepository;
 
     @PostMapping
     public RatingResponse submitRate(
@@ -78,6 +76,40 @@ public class RateController {
             @PathVariable UUID id
     ){
         return rateService.deleteRateById(userId,id);
+    }
+
+    @GetMapping("/user/{id}/details")
+    public Page<RatingWithDetailsResponse> getRatingsByUserWithDetails(
+            @PathVariable UUID id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return rateService.getRatingsByUserWithDetails(id, page, size);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<RatingResponse> getRatingByRaterReceiverAndJob(
+            @RequestParam UUID raterId,
+            @RequestParam UUID rateReceiverId,
+            @RequestParam UUID jobId
+    ){
+        Rate rate = rateRepository.findByRateReceiver_IdAndRater_IdAndJob_Id(
+                rateReceiverId, raterId, jobId
+        );
+
+        if (rate == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        RatingResponse response = new RatingResponse();
+        response.setId(rate.getId());
+        response.setJobId(rate.getJob().getId());
+        response.setRaterId(rate.getRater().getId());
+        response.setRateReceiverId(rate.getRateReceiver().getId());
+        response.setRating(rate.getRating());
+        response.setComment(rate.getComment());
+
+        return ResponseEntity.ok(response);
     }
 
 }

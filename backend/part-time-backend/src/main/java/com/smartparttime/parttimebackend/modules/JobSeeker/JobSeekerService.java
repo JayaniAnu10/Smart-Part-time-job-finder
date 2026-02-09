@@ -103,8 +103,10 @@ public class JobSeekerService {
             throw new NotFoundException("JobSeeker not found");
         }
 
-        if (jobSeekerRepository.existsByNic(request.getNic())) {
-            throw new BadRequestException("Job seeker already exists");
+        if (request.getNic() != null &&
+                !request.getNic().equals(jobSeeker.getNic()) &&
+                jobSeekerRepository.existsByNic(request.getNic())) {
+            throw new BadRequestException("NIC already in use by another user");
         }
 
         jobSeekerMapper.update(request,jobSeeker);

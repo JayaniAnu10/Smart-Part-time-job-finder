@@ -6,6 +6,7 @@ import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
+import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.*;
 import com.smartparttime.parttimebackend.modules.Rating.RateMapper;
 import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -244,5 +246,38 @@ public class RateServiceImpl implements RateService {
                 : 0.0;
 
         userRepository.updateRatingStats(userId, total, average);
+    }
+
+    @Override
+    public Page<RatingWithDetailsResponse> getRatingsByUserWithDetails(UUID userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
+        Page<Rate> rates = rateRepository.findByRateReceiver_Id(userId, pageable);
+
+        return rates.map(rate -> {
+            String raterName = "Unknown";
+            String jobTitle = "N/A";
+
+            // Get rater name (employer)
+            if (rate.getRater() != null && rate.getRater().getEmployer() != null) {
+                raterName = rate.getRater().getEmployer().getCompanyName();
+            }
+
+            // Get job title
+            if (rate.getJob() != null) {
+                jobTitle = rate.getJob().getTitle();
+            }
+
+            return new RatingWithDetailsResponse(
+                    rate.getId(),
+                    rate.getJob() != null ? rate.getJob().getId() : null,
+                    jobTitle,
+                    rate.getRater().getId(),
+                    raterName,
+                    rate.getRateReceiver().getId(),
+                    rate.getRating(),
+                    rate.getComment(),
+                    rate.getCreatedDate()
+            );
+        });
     }
 }

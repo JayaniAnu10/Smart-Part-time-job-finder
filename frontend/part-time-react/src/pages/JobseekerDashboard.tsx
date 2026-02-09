@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +12,6 @@ import ClockIcon from "@/assets/clock.svg";
 import ClockIconDark from "@/assets/clock-yellow.svg";
 import MoneyIconDark from "@/assets/money-darkmode.svg";
 import StarIconYellow from "@/assets/star.svg";
-import BadgeIcon from "@/assets/badge.svg";
 import FindJobsIcon from "@/assets/jobs-lightmode.svg";
 import FindJobsIconDarkMode from "@/assets/jobs-darkmode.svg";
 import ScheduleIcon from "@/assets/schedule-lightmode.svg";
@@ -53,11 +52,14 @@ const JobseekerDashboard = () => {
           </div>
 
           <Button
+            asChild
             className="gap-2 text-secondary dark:bg-yellow-400 transition-all duration-300
                              hover:scale-105 active:scale-95 hover:bg-yellow-400 hover:shadow-[0_0_4px_rgba(250,204,21,0.5)]"
           >
-            <img src={BellIcon} alt="notifications" className="h-4 w-4 " />
-            View Notifications
+            <Link to="/notifications">
+              <img src={BellIcon} alt="notifications" className="h-4 w-4 " />
+              View Notifications
+            </Link>
           </Button>
         </div>
       </section>
@@ -326,10 +328,11 @@ const JobseekerDashboard = () => {
 
                 <Button
                   variant="outline"
+                  asChild
                   className="w-full text-secondary dark:text-primary hover:bg-yellow-400 hover:text-secondary
                                transition-all duration-300 hover:scale-105 active:scale-95"
                 >
-                  View Full Profile
+                  <Link to="/seekerProfile">View Full Profile</Link>
                 </Button>
               </CardContent>
             </Card>
