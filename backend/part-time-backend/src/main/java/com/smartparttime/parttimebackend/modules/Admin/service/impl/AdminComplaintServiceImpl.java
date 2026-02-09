@@ -138,6 +138,7 @@ public class AdminComplaintServiceImpl implements AdminComplaintService {
                         targetName,
                         complaintType
                 );
+
             }
 
             if (newStatus.equals("REJECTED")) {
