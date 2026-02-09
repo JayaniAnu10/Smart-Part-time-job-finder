@@ -25,11 +25,28 @@ const useUpdateRating = () => {
 
   return useMutation<RatingResponse, Error, RatingUpdateRequest>({
     mutationFn: async (data) => {
-      const response = await axiosInstance.patch<RatingResponse>("/ratings", data);
+      const response = await axiosInstance.patch<RatingResponse>(
+        "/ratings",
+        data,
+      );
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobseeker", "history"] });
+      // Invalidate rating-related queries so UI updates without refresh
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const key = query.queryKey as unknown as any[];
+          const root = key?.[0];
+          return (
+            root === "rating" ||
+            root === "ratings" ||
+            root === "jobseeker" ||
+            root === "employer" ||
+            root === "applicants"
+          );
+        },
+      });
+
       toast.success("Rating updated successfully", {
         position: "top-center",
       });

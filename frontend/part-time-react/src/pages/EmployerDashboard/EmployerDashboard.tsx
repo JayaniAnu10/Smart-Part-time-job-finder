@@ -41,7 +41,7 @@ const EmployerDashboard = () => {
           <Button
             variant="outline"
             asChild
-            className="w-full text-secondary dark:text-primary hover:bg-gray-500/10 p-5
+            className="w-full text-secondary hover:text-secondary dark:hover:text-white dark:text-primary hover:bg-gray-500/10 p-5
                                transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <Link to="/empProfile">View Full Profile</Link>

@@ -41,7 +41,10 @@ const router = createBrowserRouter([
     children: [
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
-      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
+      { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
+      { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
+      { path: "employer/register/step1", element: <EmployerStep1 /> },
+      { path: "employer/register/step2", element: <EmployerStep2 /> },
       {
         path: "empDashboard",
         element: (
@@ -99,12 +102,11 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "notifications",
+        element: <NotificationPage />,
+      },
     ],
-  },
-
-  {
-    path: "/notifications",
-    element: <NotificationPage />,
   },
 
   {
@@ -114,18 +116,10 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "find-your-job", element: <FindJob /> },
       { path: "nearby", element: <NearByJobPage /> },
-
       { path: "chatbot", element: <ChatBot /> },
       { path: "about", element: <AboutPage /> },
-      { path: "terms", element: <TermsPage /> },
       { path: "contact", element: <ContactPage /> },
-
-      { path: "/seekerProfile", element: <JobseekerProfile /> },
-      { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
-      { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
-      { path: "employer/register/step1", element: <EmployerStep1 /> },
-      { path: "employer/register/step2", element: <EmployerStep2 /> },
-
+      { path: "terms", element: <TermsPage /> },
       {
         path: "promotion/:jobId",
         element: (
@@ -142,19 +136,6 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-    ],
-  },
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { index: true, element: <HomePage /> },
-      { path: "find-your-job", element: <FindJob /> },
-      { path: "nearby", element: <NearByJobPage /> },
-      { path: "chatbot", element: <ChatBot /> },
-      { path: "about", element: <AboutPage /> },
-      { path: "contact", element: <ContactPage /> },
-      { path: "terms", element: <TermsPage /> },
       {
         path: "postJob",
         element: (

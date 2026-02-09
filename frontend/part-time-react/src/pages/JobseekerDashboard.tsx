@@ -52,11 +52,14 @@ const JobseekerDashboard = () => {
           </div>
 
           <Button
+            asChild
             className="gap-2 text-secondary dark:bg-yellow-400 transition-all duration-300
                              hover:scale-105 active:scale-95 hover:bg-yellow-400 hover:shadow-[0_0_4px_rgba(250,204,21,0.5)]"
           >
-            <img src={BellIcon} alt="notifications" className="h-4 w-4 " />
-            View Notifications
+            <Link to="/notifications">
+              <img src={BellIcon} alt="notifications" className="h-4 w-4 " />
+              View Notifications
+            </Link>
           </Button>
         </div>
       </section>
