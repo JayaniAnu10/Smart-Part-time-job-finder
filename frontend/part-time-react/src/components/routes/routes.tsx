@@ -33,6 +33,7 @@ import ReviewReports from "@/pages/adminActions/ReviewReports";
 import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
 import EmployerProfile from "@/pages/EmployerProfile";
 import ApplicantProfile from "@/pages/EmployerDashboard/ApplicantProfile";
+import EditJob from "@/pages/PostJobs/EditJob";
 
 const router = createBrowserRouter([
   {
@@ -105,6 +106,14 @@ const router = createBrowserRouter([
       {
         path: "notifications",
         element: <NotificationPage />,
+      },
+      {
+        path: "editJob/:jobId",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <EditJob />
+          </PrivateRoute>
+        ),
       },
     ],
   },
