@@ -12,12 +12,11 @@ import {
   Phone,
   Star,
   User,
-  X,
 } from "lucide-react";
 import RecentJobs from "./RecentJobs";
 import { useParams } from "react-router-dom";
 
-const SeekerProfile = () => {
+const ApplicantProfile = () => {
   const { id } = useParams<{ id: string }>();
   const { data, isLoading, isError } = useSeekerDetails(id!);
 
@@ -133,4 +132,4 @@ const SeekerProfile = () => {
   );
 };
 
-export default SeekerProfile;
+export default ApplicantProfile;

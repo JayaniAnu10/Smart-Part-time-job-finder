@@ -8,7 +8,6 @@ import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
 import EmployerStep2 from "@/pages/employer-registration/EmployerStep2";
 import EmployerDashboard from "@/pages/EmployerDashboard/EmployerDashboard";
 import JobApplicants from "@/pages/EmployerDashboard/JobApplicants";
-import SeekerProfile from "@/pages/EmployerDashboard/SeekerProfile";
 import FindJob from "@/pages/FindYourJob/FindJob";
 import JobProfile from "@/pages/FindYourJob/JobProfile";
 import GetStarted from "@/pages/GetStarted";
@@ -33,6 +32,7 @@ import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
 import ReviewReports from "@/pages/adminActions/ReviewReports";
 import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
 import EmployerProfile from "@/pages/EmployerProfile";
+import ApplicantProfile from "@/pages/EmployerDashboard/ApplicantProfile";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +41,10 @@ const router = createBrowserRouter([
     children: [
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
-      { path: "/seekerDashboard", element: <JobseekerDashboard /> },
+      { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
+      { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
+      { path: "employer/register/step1", element: <EmployerStep1 /> },
+      { path: "employer/register/step2", element: <EmployerStep2 /> },
       {
         path: "empDashboard",
         element: (
@@ -74,49 +77,6 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-    ],
-  },
-
-  {
-    path: "/notifications",
-    element: <NotificationPage />,
-  },
-
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { index: true, element: <HomePage /> },
-      { path: "find-your-job", element: <FindJob /> },
-      { path: "nearby", element: <NearByJobPage /> },
-
-      { path: "chatbot", element: <ChatBot /> },
-      { path: "about", element: <AboutPage /> },
-      { path: "terms", element: <TermsPage /> },
-      { path: "contact", element: <ContactPage /> },
-
-      { path: "/seekerProfile", element: <JobseekerProfile /> },
-      { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
-      { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
-      { path: "employer/register/step1", element: <EmployerStep1 /> },
-      { path: "employer/register/step2", element: <EmployerStep2 /> },
-
-      {
-        path: "promotion/:jobId",
-        element: (
-          <PrivateRoute requiredRole="employer">
-            <JobPromotion />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "checkout-success",
-        element: (
-          <PrivateRoute requiredRole="employer">
-            <PromoSuccess />
-          </PrivateRoute>
-        ),
-      },
       {
         path: "seekerDashboard",
         element: (
@@ -138,12 +98,17 @@ const router = createBrowserRouter([
         path: "seekerProfile/:id",
         element: (
           <PrivateRoute requiredRole="employer">
-            <SeekerProfile />
+            <ApplicantProfile />
           </PrivateRoute>
         ),
       },
+      {
+        path: "notifications",
+        element: <NotificationPage />,
+      },
     ],
   },
+
   {
     path: "/",
     element: <Layout />,
@@ -155,6 +120,22 @@ const router = createBrowserRouter([
       { path: "about", element: <AboutPage /> },
       { path: "contact", element: <ContactPage /> },
       { path: "terms", element: <TermsPage /> },
+      {
+        path: "promotion/:jobId",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <JobPromotion />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "checkout-success",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <PromoSuccess />
+          </PrivateRoute>
+        ),
+      },
       {
         path: "postJob",
         element: (
