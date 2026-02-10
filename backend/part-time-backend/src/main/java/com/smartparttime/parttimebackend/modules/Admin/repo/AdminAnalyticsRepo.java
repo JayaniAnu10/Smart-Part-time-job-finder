@@ -77,4 +77,14 @@ public interface AdminAnalyticsRepo extends JpaRepository<User, UUID> {
        """)
     List<Object[]> getDailyTraffic();
 
+
+    @Query("""
+       SELECT j.location, COUNT(j)
+       FROM Job j
+       GROUP BY j.location
+       ORDER BY COUNT(j) DESC
+       """)
+    List<Object[]> getJobsByLocation();
+
+
 }
