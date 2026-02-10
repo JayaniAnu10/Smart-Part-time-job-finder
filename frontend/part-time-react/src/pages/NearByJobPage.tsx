@@ -89,7 +89,7 @@ const NearByJobPage = () => {
   }
 
   return (
-    <div className="p-4 mt-25 mx-9 flex flex-col gap-3">
+    <div className="p-4 mt-15 mx-9 flex flex-col gap-3">
       <div>
         <span className="text-5xl font-bold  dark:text-white  text-secondary">
           Find{" "}

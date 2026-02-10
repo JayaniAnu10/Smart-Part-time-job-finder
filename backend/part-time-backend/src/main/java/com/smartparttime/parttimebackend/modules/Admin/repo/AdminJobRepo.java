@@ -35,4 +35,8 @@ public interface AdminJobRepo extends JpaRepository<Job, UUID> {
                OR LOWER(c.category) LIKE LOWER(CONCAT('%', :keyword, '%'))
             """)
     List<Job> searchJobs(String keyword);
+
+    List<Job> findTop5ByOrderByPostedDateDesc();
+
+
 }

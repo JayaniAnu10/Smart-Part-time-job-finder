@@ -6,28 +6,28 @@ import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
+import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import com.smartparttime.parttimebackend.modules.Rating.RateDtos.*;
 import com.smartparttime.parttimebackend.modules.Rating.RateMapper;
 import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
 import com.smartparttime.parttimebackend.modules.Rating.service.RateService;
-import com.smartparttime.parttimebackend.modules.User.Role;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
+@Transactional
 public class RateServiceImpl implements RateService {
     private final JobRepo jobRepository;
     private final RateRepository rateRepository;
@@ -45,19 +45,15 @@ public class RateServiceImpl implements RateService {
             throw new NotFoundException("User not found");
         }
 
-        if(request.getRateReceiverId().equals(request.getRaterId())){
+        /*if(request.getRateReceiverId().equals(request.getRaterId())){
             throw  new BadRequestException("Invalid rating request");
-        }
+        }*/
 
         var job =jobRepository.findById(request.getJobId()).orElse(null);
 
         if(job==null){
             throw new NotFoundException("Job not found");
         }
-
-        /*if(!job.getStatus().equalsIgnoreCase("COMPLETED")){
-            throw  new BadRequestException("Job is not COMPLETED");
-        }*/
 
         var rate= rateRepository.findByRateReceiver_IdAndRater_IdAndJob_Id(request.getRateReceiverId(),request.getRaterId(),job.getId());
 
@@ -128,11 +124,7 @@ public class RateServiceImpl implements RateService {
 
     }
 
-    private void updateUserRatingStats(UUID userId) {
-        RatingStats stats = rateRepository.getRatingStatsByUserId(userId);
-        userRepository.updateRatingStats(userId,stats.getTotalRating(),stats.getAverageRating());
 
-    }
 
     @Override
     public RatingResponse getRateById(UUID id) {
@@ -206,6 +198,8 @@ public class RateServiceImpl implements RateService {
         rate.setComment(request.getComment());
         rate.setCreatedDate(LocalDateTime.now());
         rateRepository.save(rate);
+        updateUserRatingStats(rate.getRateReceiver().getId());
+
 
         return  rateMapper.toDto(rate);
     }
@@ -221,7 +215,11 @@ public class RateServiceImpl implements RateService {
             throw  new BadRequestException("Invalid rate request");
         }
 
+        UUID rateReceiverId = rate.getRateReceiver().getId();
+
         rateRepository.delete(rate);
+
+        updateUserRatingStats(rateReceiverId);
         return ResponseEntity.ok().build();
     }
 
@@ -237,5 +235,49 @@ public class RateServiceImpl implements RateService {
         res.setAverageRate(user.getAverageRate());
 
         return res;
+    }
+
+    private void updateUserRatingStats(UUID userId) {
+        RatingStats stats = rateRepository.getRatingStatsByUserId(userId);
+
+        long total = stats.getTotalRating();
+        double average = stats.getAverageRating() != null
+                ? stats.getAverageRating()
+                : 0.0;
+
+        userRepository.updateRatingStats(userId, total, average);
+    }
+
+    @Override
+    public Page<RatingWithDetailsResponse> getRatingsByUserWithDetails(UUID userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
+        Page<Rate> rates = rateRepository.findByRateReceiver_Id(userId, pageable);
+
+        return rates.map(rate -> {
+            String raterName = "Unknown";
+            String jobTitle = "N/A";
+
+            // Get rater name (employer)
+            if (rate.getRater() != null && rate.getRater().getEmployer() != null) {
+                raterName = rate.getRater().getEmployer().getCompanyName();
+            }
+
+            // Get job title
+            if (rate.getJob() != null) {
+                jobTitle = rate.getJob().getTitle();
+            }
+
+            return new RatingWithDetailsResponse(
+                    rate.getId(),
+                    rate.getJob() != null ? rate.getJob().getId() : null,
+                    jobTitle,
+                    rate.getRater().getId(),
+                    raterName,
+                    rate.getRateReceiver().getId(),
+                    rate.getRating(),
+                    rate.getComment(),
+                    rate.getCreatedDate()
+            );
+        });
     }
 }

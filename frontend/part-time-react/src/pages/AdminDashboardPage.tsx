@@ -1,7 +1,8 @@
 import AdminSidebar from "@/components/adminDashboard/AdminSidebar";
 import StatsSection from "@/components/adminDashboard/StatsSection";
-import RecentActivities from "@/components/adminDashboard/RecentActivities";
+import RecentActivities from "@/components/adminDashboard/RecentPostedJobs";
 import { motion } from "framer-motion";
+import RecentPostedJobs from "@/components/adminDashboard/RecentPostedJobs";
 
 export default function AdminDashboardPage() {
   return (
@@ -51,7 +52,7 @@ export default function AdminDashboardPage() {
           transition={{ delay: 0.2 }}
           className="bg-white dark:bg-[#0f172a]/40 backdrop-blur-md rounded-[2.5rem] border border-slate-200 dark:border-slate-800/50 p-1 shadow-sm dark:shadow-2xl"
         >
-          <RecentActivities />
+          <RecentPostedJobs />
         </motion.section>
       </main>
     </div>

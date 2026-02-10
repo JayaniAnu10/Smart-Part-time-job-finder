@@ -46,7 +46,7 @@ const JobProfile = () => {
             toast.success("Application submitted successfully!");
             setOpen(false);
           },
-        }
+        },
       );
     }
   };
@@ -80,7 +80,7 @@ const JobProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="pt-20 pb-12">
+      <div className="pt-8 pb-12">
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Back Button */}
           <div className="py-4 md:py-6">
@@ -127,15 +127,6 @@ const JobProfile = () => {
                 <Badge className="bg-yellow-400 text-[#0f1f3d] text-sm">
                   {data?.status}
                 </Badge>
-                {/*<SaveJobButton
-                  jobId={jobId}
-                  isSaved={isSaved}
-                  onToggle={toggleSaveJob}
-                  variant="full"
-                />
-                <Button variant="outline" size="icon">
-                  <Share2 className="w-4 h-4" />
-                </Button>*/}
               </div>
             </div>
 
@@ -245,7 +236,7 @@ const JobProfile = () => {
                 onClick={() =>
                   window.open(
                     `https://www.google.com/maps/search/?api=1&query=${data?.latitude},${data?.longitude}`,
-                    "_blank"
+                    "_blank",
                   )
                 }
                 className="flex-1 flex hover:bg-[#0f1f3d] hover:text-white"
@@ -267,14 +258,6 @@ const JobProfile = () => {
                 isLoading={jobApplyMutation.isPending}
                 onApply={handleApply}
               />
-
-              {/*<SaveJobButton
-                jobId={jobId}
-                isSaved={isSaved}
-                onToggle={toggleSaveJob}
-                variant="full"
-                className="flex-1 sm:hidden"
-              />*/}
             </div>
           </Card>
 

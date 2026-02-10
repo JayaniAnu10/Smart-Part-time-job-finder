@@ -1,6 +1,16 @@
-export const dateFormater = (start: string, end: string) => {
+export const dateFormater = (start: string | null, end: string | null) => {
+  // Handle null or undefined inputs
+  if (!start || !end) {
+    return "Date not available";
+  }
+
   const startDate = new Date(start);
   const endDate = new Date(end);
+
+  // Check if dates are valid
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    return "Invalid date";
+  }
 
   const sameDay = startDate.toDateString() === endDate.toDateString();
 

@@ -161,4 +161,9 @@ public class JobController {
         return ResponseEntity.ok(response.getBody());
     }
 
+    @GetMapping("/stats")
+    public PublicStatsDto getPublicStats() {
+        return jobService.getPublicStats();
+    }
+
 }

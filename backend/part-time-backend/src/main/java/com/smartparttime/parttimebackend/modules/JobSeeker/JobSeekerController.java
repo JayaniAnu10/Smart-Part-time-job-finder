@@ -97,4 +97,18 @@ public class JobSeekerController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/history/{id}")
+    public ResponseEntity<JobHistoryResponseDto> getJobHistory(@PathVariable UUID id) {
+        return ResponseEntity.ok(jobSeekerService.getJobHistory(id));
+    }
+
+    @GetMapping("/upcoming-job/{applicationId}")
+    public ResponseEntity<UpcomingJobDetailsDto> getUpcomingJobDetails(
+            @PathVariable UUID applicationId,
+            @RequestParam UUID jobseekerId
+    ) {
+        UpcomingJobDetailsDto jobDetails = jobSeekerService.getUpcomingJobDetails(applicationId, jobseekerId);
+        return ResponseEntity.ok(jobDetails);
+    }
 }

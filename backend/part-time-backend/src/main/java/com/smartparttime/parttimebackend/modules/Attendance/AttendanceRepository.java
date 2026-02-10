@@ -34,7 +34,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     @Query("""
     SELECT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpcomingJobsDto(
-        j.id,
+        a.id,
         j.title,
         j.employer.companyName,
         j.minSalary,
@@ -46,12 +46,15 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     JOIN a.schedule s
     JOIN s.job j
     WHERE a.jobseeker.id = :jobseekerId
-    AND a.status != "REJECTED"
+    AND a.status = :approvedStatus
     AND s.startDatetime >= CURRENT_TIMESTAMP
 """)
     List<UpcomingJobsDto> jobsTo(
-            @Param("jobseekerId") UUID jobseekerId
+            @Param("jobseekerId") UUID jobseekerId,
+            @Param("approvedStatus") ApplicationStatus approvedStatus
     );
+
+    List<Attendance> findByUser_IdAndStatus(UUID userId, AttendanceStatus status);
 
 
 }

@@ -9,6 +9,7 @@ import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -31,10 +32,13 @@ public class RecommendationService {
                 seeker.getEmbedding(), new TypeReference<List<Float>>() {}
         );
 
-        //List<Job> candidates = jobRepo.findAllByStatusAndRequiredGenderContainingIgnoreCase(JobStatus.ACTIVE, seeker.getGender());
+        // Fetch all jobs and filter out expired ones
+        List<Job> candidates = jobRepo.findAll();
+        LocalDateTime now = LocalDateTime.now();
 
-        List<Job> candidates =jobRepo.findAll();
         return candidates.stream()
+                // Filter out jobs that have passed their deadline
+                .filter(job -> job.getDeadline() != null && job.getDeadline().isAfter(now))
                 .map(job -> {
                     List<Float> jobVec = jobEmbeddingCache.get(job.getId());
                     double score = 0.0;
