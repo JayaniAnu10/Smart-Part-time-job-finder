@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,24 +6,27 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
+import { useRouter } from "expo-router";
 
-const EmployerRegisterStep2 = ({ navigation }: any) => {
-  const [industry, setIndustry] = useState('');
-  const [website, setWebsite] = useState('');
-  const [description, setDescription] = useState('');
+const EmployerRegisterStep2 = () => {
+  const router = useRouter();
+
+  const [industry, setIndustry] = useState("");
+  const [website, setWebsite] = useState("");
+  const [description, setDescription] = useState("");
   const [agree, setAgree] = useState(false);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
-      <Text style={styles.logo}>Day<Text style={{ color: '#FACC15' }}>Bee.lk</Text></Text>
+      <Text style={styles.logo}>
+        Day<Text style={{ color: "#FACC15" }}>Bee.lk</Text>
+      </Text>
       <Text style={styles.title}>Employer Registration</Text>
       <Text style={styles.subtitle}>Create your company profile</Text>
-
-      
 
       {/* Card */}
       <View style={styles.card}>
@@ -33,7 +36,11 @@ const EmployerRegisterStep2 = ({ navigation }: any) => {
         <Text style={styles.label}>Company Logo</Text>
         <View style={styles.logoRow}>
           <View style={styles.logoPlaceholder}>
-            <Ionicons name="document-text-outline" size={26} color="#64748B" />
+            <Ionicons
+              name="document-text-outline"
+              size={26}
+              color="#64748B"
+            />
           </View>
           <TouchableOpacity style={styles.uploadBtn}>
             <Ionicons name="cloud-upload-outline" size={16} color="#1E293B" />
@@ -89,7 +96,7 @@ const EmployerRegisterStep2 = ({ navigation }: any) => {
             {agree && <Ionicons name="checkmark" size={14} color="#fff" />}
           </View>
           <Text style={styles.checkboxText}>
-            I agree to the <Text style={styles.link}>Terms & Conditions</Text> and{' '}
+            I agree to the <Text style={styles.link}>Terms & Conditions</Text> and{" "}
             <Text style={styles.link}>Privacy Policy</Text>
           </Text>
         </TouchableOpacity>
@@ -98,13 +105,16 @@ const EmployerRegisterStep2 = ({ navigation }: any) => {
         <View style={styles.buttonRow}>
           <TouchableOpacity
             style={styles.backBtn}
-            onPress={() => navigation.goBack()}
+            onPress={() => router.back()}
           >
             <Ionicons name="arrow-back" size={16} />
             <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.primaryBtn}>
+          <TouchableOpacity
+            style={styles.primaryBtn}
+            onPress={() => router.replace("/(tabs)")}
+          >
             <Text style={styles.primaryText}>Create Account</Text>
           </TouchableOpacity>
         </View>
@@ -112,7 +122,10 @@ const EmployerRegisterStep2 = ({ navigation }: any) => {
 
       {/* Footer */}
       <Text style={styles.footer}>
-        Already have an account? <Text style={styles.link}>Sign in</Text>
+        Already have an account?{" "}
+        <Text style={styles.link} onPress={() => router.push("/LoginScreen")}>
+          Sign in
+        </Text>
       </Text>
     </ScrollView>
   );
@@ -123,62 +136,32 @@ export default EmployerRegisterStep2;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: "#F8FAFC",
   },
 
   logo: {
     fontSize: 22,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
     marginTop: 40,
-    color: '#0F172A',
+    color: "#0F172A",
   },
 
   title: {
     fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
     marginTop: 12,
   },
 
   subtitle: {
-    textAlign: 'center',
-    color: '#64748B',
+    textAlign: "center",
+    color: "#64748B",
     marginBottom: 20,
-  },
-
-  steps: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-
-  stepCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#E5E7EB',
-  },
-
-  stepDone: {
-    backgroundColor: '#FACC15',
-  },
-
-  stepTextActive: {
-    fontWeight: '700',
-  },
-
-  stepLine: {
-    width: 40,
-    height: 2,
-    backgroundColor: '#CBD5E1',
   },
 
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 16,
     elevation: 3,
@@ -186,20 +169,20 @@ const styles = StyleSheet.create({
 
   cardTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 12,
   },
 
   label: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: "600",
     marginTop: 14,
     marginBottom: 6,
   },
 
   logoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
 
@@ -207,19 +190,19 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 8,
-    backgroundColor: '#E5E7EB',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#E5E7EB",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   uploadBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: "#CBD5E1",
   },
 
   uploadText: {
@@ -229,15 +212,15 @@ const styles = StyleSheet.create({
 
   pickerWrapper: {
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: "#CBD5E1",
     borderRadius: 8,
   },
 
   inputWithIcon: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: "#CBD5E1",
     borderRadius: 8,
     paddingHorizontal: 10,
   },
@@ -250,12 +233,12 @@ const styles = StyleSheet.create({
 
   textArea: {
     height: 90,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
 
   checkboxRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     marginTop: 14,
   },
 
@@ -264,39 +247,39 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#94A3B8',
+    borderColor: "#94A3B8",
     marginRight: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   checkboxChecked: {
-    backgroundColor: '#FACC15',
-    borderColor: '#FACC15',
+    backgroundColor: "#FACC15",
+    borderColor: "#FACC15",
   },
 
   checkboxText: {
     flex: 1,
     fontSize: 12,
-    color: '#334155',
+    color: "#334155",
   },
 
   link: {
-    color: '#F59E0B',
-    fontWeight: '600',
+    color: "#F59E0B",
+    fontWeight: "600",
   },
 
   buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
   },
 
   backBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: "#CBD5E1",
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 10,
@@ -307,21 +290,21 @@ const styles = StyleSheet.create({
   },
 
   primaryBtn: {
-    backgroundColor: '#FACC15',
+    backgroundColor: "#FACC15",
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 10,
   },
 
   primaryText: {
-    fontWeight: '700',
-    color: '#000',
+    fontWeight: "700",
+    color: "#000",
   },
 
   footer: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 18,
     fontSize: 13,
-    color: '#64748B',
+    color: "#64748B",
   },
 });
