@@ -256,6 +256,104 @@ public class EmailService {
     }
 
 
+    public void sendComplaintResolvedReporterEmail(
+            String toEmail,
+            String reporterName,
+            String complaintType,
+            String createdAt
+    ) {
+
+        String subject = "Your Complaint Has Been Resolved";
+
+        String body = """
+        <h2>Complaint Update</h2>
+        <p>Dear %s,</p>
+
+        <p>Thank you for reporting a <strong>%s</strong> complaint on <strong>%s</strong>.</p>
+
+        <p>We want to inform you that this complaint has been <strong>reviewed and resolved</strong> by our admin team.</p>
+
+        <p>Your feedback helps us keep the platform safe and fair for everyone.</p>
+
+        <br/>
+        <p>Best regards,<br/>
+        <strong>DayBee.lk Admin Team</strong></p>
+        """.formatted(
+                reporterName,
+                complaintType,
+                createdAt
+        );
+
+        sendSimpleEmail(toEmail, subject, body);
+    }
+
+
+    public void sendComplaintRejectedReporterEmail(
+            String toEmail,
+            String reporterName,
+            String complaintType,
+            String createdAt
+    ) {
+
+        String subject = "Update on Your Complaint";
+
+        String body = """
+        <h2>Complaint Review Update</h2>
+        <p>Dear %s,</p>
+
+        <p>We have carefully reviewed your <strong>%s</strong> complaint submitted on <strong>%s</strong>.</p>
+
+        <p>After evaluation, we found that this complaint does not meet our review criteria and has been <strong>closed</strong>.</p>
+
+        <p>If you believe there is a serious issue, you are welcome to submit a new complaint with more details.</p>
+
+        <br/>
+        <p>Thank you for understanding,<br/>
+        <strong>DayBee.lk Admin Team</strong></p>
+        """.formatted(
+                reporterName,
+                complaintType,
+                createdAt
+        );
+
+        sendSimpleEmail(toEmail, subject, body);
+    }
+
+
+
+    public void sendComplaintResolvedTargetEmail(
+            String toEmail,
+            String targetName,
+            String complaintType
+    ) {
+
+        String subject = "Account Notice from DayBee.lk";
+
+        String body = """
+        <h2>Account Notice</h2>
+        <p>Dear %s,</p>
+
+        <p>A <strong>%s</strong> complaint related to your account was reviewed by our admin team.</p>
+
+        <p>The issue has now been <strong>resolved</strong>.</p>
+
+        <p>Please make sure to follow our community guidelines to avoid future actions.</p>
+
+        <br/>
+        <p>Regards,<br/>
+        <strong>DayBee.lk Admin Team</strong></p>
+        """.formatted(
+                targetName,
+                complaintType
+        );
+
+        sendSimpleEmail(toEmail, subject, body);
+    }
+
+
+
+
+
 
 
 
