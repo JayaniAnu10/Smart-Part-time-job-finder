@@ -5,7 +5,7 @@ import HelpCard from "../../components/Contact/HelpCard";
 
 const ContactPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8 mt-20">
+    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8 mt-10">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tight dark:">
           Get in Touch
@@ -17,11 +17,9 @@ const ContactPage: React.FC = () => {
       </div>
 
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-          <ContactForm />
+        <div className="grid grid-cols-1  gap-8 items-stretch">
           <div className="flex flex-col h-full gap-6">
             <ContactDetails />
-            <HelpCard />
           </div>
         </div>
       </div>

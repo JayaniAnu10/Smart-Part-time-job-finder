@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartparttime.parttimebackend.common.Services.EmailService;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.modules.Admin.repo.AdminAnalyticsRepo;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class JobServiceImpl implements JobService {
-
+    private final AdminAnalyticsRepo analyticsRepo;
     private final EmbeddingService  embeddingService;
     @Autowired
     private final JobRepo jobRepo;
@@ -329,8 +330,17 @@ public class JobServiceImpl implements JobService {
         return jobCategoryMapper.toDto(categories);
     }
 
+    @Override
+    public PublicStatsDto getPublicStats() {
+        PublicStatsDto dto = new PublicStatsDto();
 
+        dto.setTotalJobs(analyticsRepo.getTotalJobs());
+        dto.setActiveJobs(analyticsRepo.getActiveJobs());
+        dto.setTotalJobSeekers(analyticsRepo.getTotalJobSeekers());
+        dto.setTotalEmployers(analyticsRepo.getTotalEmployers());
 
+        return dto;
+    }
 
 
 }

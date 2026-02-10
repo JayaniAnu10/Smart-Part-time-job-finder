@@ -19,6 +19,7 @@ import ScheduleIconDarkMode from "@/assets/schedule-darkmode.svg";
 import MapIcon from "@/assets/map-icon.svg";
 import MapIconDarkMode from "@/assets/map-darkmode.svg";
 import useSeekerStat from "@/hooks/useSeekerStat";
+import useUserRate from "@/hooks/useUserRate";
 import { useAuthStore } from "@/store/AuthStore";
 import { dateFormater } from "@/utils/dateFormater";
 import { Spinner } from "@/components/ui/spinner";
@@ -26,13 +27,25 @@ import { Spinner } from "@/components/ui/spinner";
 const JobseekerDashboard = () => {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const { data, isLoading, isError } = useSeekerStat(user?.id!);
 
-  if (isLoading) <Spinner className="flex items-center justify-center" />;
+  const { data, isLoading, isError } = useSeekerStat(user?.id!, {
+    enabled: !!user?.id,
+  });
+  const { data: ratingData } = useUserRate(user?.id);
+
+  if (!user || isLoading) {
+    return <Spinner className="flex items-center justify-center" />;
+  }
 
   if (isError) {
-    <p>Something went wrong</p>;
+    return <p>Something went wrong</p>;
   }
+
+  const displayRating = ratingData?.averageRate
+    ? Number(ratingData.averageRate.toFixed(1))
+    : 0;
+
+  const filledStars = Math.floor(displayRating);
 
   return (
     <div className="relative  min-h-screen bg-background">
@@ -44,7 +57,7 @@ const JobseekerDashboard = () => {
               <span className="text-primary dark:text-yellow-400">
                 {data?.name}
               </span>
-              ! 👋
+              !
             </h1>
             <p className="mt-2 text-secondary/70 dark:text-primary/70">
               You have {data?.countUpcomingJobs} upcoming jobs
@@ -80,7 +93,11 @@ const JobseekerDashboard = () => {
               label: "Jobs Completed",
               value: data?.earning.totalJobs,
             },
-            { icon: StarIcon, label: "Trust Score", value: data?.trustScore },
+            {
+              icon: StarIcon,
+              label: "Average Rating",
+              value: displayRating > 0 ? displayRating.toFixed(1) : "N/A",
+            },
             {
               icon: ApplicationIcon,
               label: "Active Applications",
@@ -160,18 +177,23 @@ const JobseekerDashboard = () => {
                                   className="h-4 w-4 hidden dark:block"
                                 />
                                 <span>
-                                  {dateFormater(job.startTime, job.endTime)}
+                                  {dateFormater(
+                                    job.startDatetime,
+                                    job.endDatetime,
+                                  )}
                                 </span>
                               </div>
 
-                              <div className="flex items-center gap-1 text-yellow-400 font-medium">
+                              <div className="flex items-center gap-1">
                                 <img
                                   src={MoneyIcon}
                                   className="h-4 w-4 dark:hidden"
+                                  alt="money"
                                 />
                                 <img
                                   src={MoneyIconDark}
                                   className="h-4 w-4 hidden dark:block"
+                                  alt="money"
                                 />
                                 <span>{job.minSalary}</span>
                               </div>
@@ -191,6 +213,7 @@ const JobseekerDashboard = () => {
 
                           <Button
                             variant="outline"
+                            onClick={() => navigate(`/upcoming-job/${job.id}`)}
                             className="text-secondary dark:text-primary transition-all duration-300 hover:scale-105 active:scale-95
                                                              hover:text-secondary hover:bg-yellow-400"
                           >
@@ -291,39 +314,47 @@ const JobseekerDashboard = () => {
             <Card className="w-full mx-auto rounded-2xl">
               <CardContent className="p-8 text-center space-y-5">
                 <div className="flex items-start gap-2">
-                  <img
-                    src={StarIconYellow}
-                    alt="trust score"
-                    className="h-6 w-6"
-                  />
+                  <img src={StarIconYellow} alt="rating" className="h-6 w-6" />
                   <h3 className="text-lg font-semibold text-secondary dark:text-primary">
-                    Trust Score
+                    Average Rating
                   </h3>
                 </div>
 
                 <div className="text-5xl font-bold text-yellow-400">
-                  {data?.trustScore}
+                  {displayRating > 0 ? displayRating.toFixed(1) : "N/A"}
                 </div>
 
                 <div className="flex justify-center gap-1">
                   {[...Array(5)].map((_, index) => (
                     <div key={index} className="relative">
-                      <img
-                        src={StarIcon}
-                        alt="rating star"
-                        className="h-5 w-5 dark:hidden"
-                      />
-                      <img
-                        src={StarIconYellow}
-                        alt="rating star"
-                        className="h-5 w-5 hidden dark:block"
-                      />
+                      {index < filledStars ? (
+                        <img
+                          src={StarIconYellow}
+                          alt="filled star"
+                          className="h-5 w-5"
+                        />
+                      ) : (
+                        <>
+                          <img
+                            src={StarIcon}
+                            alt="empty star"
+                            className="h-5 w-5 dark:hidden"
+                          />
+                          <img
+                            src={StarIconYellow}
+                            alt="empty star"
+                            className="h-5 w-5 hidden dark:block opacity-30"
+                          />
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
 
                 <p className="text-sm text-secondary dark:text-primary">
-                  No ratings yet
+                  {ratingData && ratingData.reviews > 0
+                    ? `Based on ${ratingData.reviews} review${ratingData.reviews !== 1 ? "s" : ""}`
+                    : "No ratings yet"}
                 </p>
 
                 <Button

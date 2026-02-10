@@ -18,10 +18,12 @@ import { useParams } from "react-router-dom";
 
 const ApplicantProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const { data, isLoading, isError } = useSeekerDetails(id!);
+  const { data, isLoading, isError } = useSeekerDetails(id!, {
+    enabled: !!id,
+  });
 
-  if (isLoading) <Spinner />;
-  if (isError) <p>Error loading the profile</p>;
+  if (isLoading) return <Spinner />;
+  if (isError) return <p>Error loading the profile</p>;
 
   return (
     <div className="min-h-screen bg-background py-9 ">
@@ -75,25 +77,60 @@ const ApplicantProfile = () => {
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Star className="w-4 h-4 fill-yellow-400 text-[#fbbd23]" />
                   <span>
-                    {data?.profileDetails.rate.toPrecision(2)} Rating{" "}
+                    {data?.profileDetails.rate
+                      ? Number(data.profileDetails.rate).toFixed(1)
+                      : "0.0"}{" "}
+                    Rating
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-8 ">
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             <Card className="p-4 border border-border hover:scale-105 transition-transform duration-300">
-              <Briefcase className="w-6 h-6 text-yellow-400 mb-2" />
-              <p className="text-2xl font-bold text-foreground">
-                {data?.profileDetails.completedJobs}
-              </p>
-              <p className="text-sm text-muted-foreground">Jobs Completed</p>
+              <div className="flex items-start gap-4">
+                <Briefcase className="w-6 h-6 text-yellow-400 mt-1" />
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    {data?.profileDetails.completedJobs ?? 0}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Jobs Completed
+                  </p>
+                </div>
+              </div>
             </Card>
+
             <Card className="p-4 border border-border hover:scale-105 transition-transform duration-300">
-              <Award className="w-6 h-6 text-yellow-400 mb-2" />
-              <p className="text-2xl font-bold text-foreground">3</p>
-              <p className="text-sm text-muted-foreground">Badges Earned</p>
+              <div className="flex items-start gap-4">
+                <Award className="w-6 h-6 text-yellow-400 mt-1" />
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    {data?.profileDetails.rate
+                      ? Number(data.profileDetails.rate).toFixed(1)
+                      : "0.0"}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Average Rating
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-4 border border-border hover:scale-105 transition-transform duration-300">
+              <div className="flex items-start gap-4">
+                <User className="w-6 h-6 text-yellow-400 mt-1" />
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    {data?.profileDetails.skills
+                      ? data.profileDetails.skills.split(",").filter(Boolean)
+                          .length
+                      : 0}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Skills</p>
+                </div>
+              </div>
             </Card>
           </div>
 

@@ -23,6 +23,8 @@ public class JobResponseDto {
 
     private String category;
 
+    private Integer categoryId;
+
     private String location;
 
     private String jobType;
