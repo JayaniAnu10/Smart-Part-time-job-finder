@@ -70,10 +70,11 @@ public interface AdminAnalyticsRepo extends JpaRepository<User, UUID> {
 
 
     @Query("""
-           SELECT j.postedDate, COUNT(j)
-           FROM Job j
-           GROUP BY j.postedDate
-           ORDER BY j.postedDate ASC
-           """)
+       SELECT u.createdAt, COUNT(u)
+       FROM User u
+       GROUP BY u.createdAt
+       ORDER BY u.createdAt ASC
+       """)
     List<Object[]> getDailyTraffic();
+
 }
