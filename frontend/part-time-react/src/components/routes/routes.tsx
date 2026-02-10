@@ -8,6 +8,7 @@ import EmployerStep1 from "@/pages/employer-registration/EmployerStep1";
 import EmployerStep2 from "@/pages/employer-registration/EmployerStep2";
 import EmployerDashboard from "@/pages/EmployerDashboard/EmployerDashboard";
 import JobApplicants from "@/pages/EmployerDashboard/JobApplicants";
+import ApplicantProfile from "@/pages/EmployerDashboard/ApplicantProfile";
 import FindJob from "@/pages/FindYourJob/FindJob";
 import JobProfile from "@/pages/FindYourJob/JobProfile";
 import GetStarted from "@/pages/GetStarted";
@@ -23,6 +24,8 @@ import JobPromotion from "@/pages/PostJobs/JobPromotion";
 import PostJob from "@/pages/PostJobs/PostJob";
 import PromoSuccess from "@/pages/PostJobs/PromoSuccess";
 import TermsPage from "@/pages/Terms/TermsPage";
+import EditJob from "@/pages/PostJobs/EditJob";
+import UpcomingJobDetails from "@/pages/UpcomingJobDetails";
 import { createBrowserRouter } from "react-router-dom";
 import ChatBot from "../chat/ChatBot";
 import PrivateRoute from "./PrivateRoute";
@@ -32,9 +35,6 @@ import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
 import ReviewReports from "@/pages/adminActions/ReviewReports";
 import ViewAnalytics from "@/pages/adminActions/ViewAnalytics";
 import EmployerProfile from "@/pages/EmployerProfile";
-import ApplicantProfile from "@/pages/EmployerDashboard/ApplicantProfile";
-import EditJob from "@/pages/PostJobs/EditJob";
-import UpcomingJobDetails from "@/pages/UpcomingJobDetails";
 
 const router = createBrowserRouter([
   {
@@ -43,10 +43,12 @@ const router = createBrowserRouter([
     children: [
       { path: "auth", element: <Auth /> },
       { path: "getstarted", element: <GetStarted /> },
+
       { path: "jobseeker/register/step1", element: <JobSeekerStep1 /> },
       { path: "jobseeker/register/step2", element: <JobSeekerStep2 /> },
       { path: "employer/register/step1", element: <EmployerStep1 /> },
       { path: "employer/register/step2", element: <EmployerStep2 /> },
+
       {
         path: "empDashboard",
         element: (
@@ -96,15 +98,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "upcoming-job/:applicationId",
-        element: (
-          <PrivateRoute requiredRole="jobseeker">
-            <UpcomingJobDetails />
-          </PrivateRoute>
-        ),
-      },
-
-      {
         path: "seekerProfile/:id",
         element: (
           <PrivateRoute requiredRole="employer">
@@ -113,8 +106,12 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "notifications",
-        element: <NotificationPage />,
+        path: "upcoming-job/:applicationId",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <UpcomingJobDetails />
+          </PrivateRoute>
+        ),
       },
       {
         path: "editJob/:jobId",
@@ -124,6 +121,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      { path: "notifications", element: <NotificationPage /> },
     ],
   },
 
@@ -136,8 +134,9 @@ const router = createBrowserRouter([
       { path: "nearby", element: <NearByJobPage /> },
       { path: "chatbot", element: <ChatBot /> },
       { path: "about", element: <AboutPage /> },
-      { path: "contact", element: <ContactPage /> },
       { path: "terms", element: <TermsPage /> },
+      { path: "contact", element: <ContactPage /> },
+
       {
         path: "promotion/:jobId",
         element: (
@@ -170,42 +169,14 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      {
-        path: "job-history",
-        element: (
-          <PrivateRoute requiredRole="jobseeker">
-            <JobHistory />
-          </PrivateRoute>
-        ),
-      },
-
-      {
-        path: "admin/dashboard",
-        element: <AdminDashboardPage />,
-      },
-
-      {
-        path: "/admin/dashboard",
-        element: <AdminDashboardPage />,
-      },
-      {
-        path: "/admin/manage-users",
-        element: <ManageUsers />,
-      },
-      {
-        path: "/admin/moderate-job-posts",
-        element: <ModerateJobPosts />,
-      },
-      {
-        path: "/admin/review-reports",
-        element: <ReviewReports />,
-      },
-      {
-        path: "/admin/view-analytics",
-        element: <ViewAnalytics />,
-      },
     ],
   },
+
+  { path: "/admin/dashboard", element: <AdminDashboardPage /> },
+  { path: "/admin/manage-users", element: <ManageUsers /> },
+  { path: "/admin/moderate-job-posts", element: <ModerateJobPosts /> },
+  { path: "/admin/review-reports", element: <ReviewReports /> },
+  { path: "/admin/view-analytics", element: <ViewAnalytics /> },
 ]);
 
 export default router;

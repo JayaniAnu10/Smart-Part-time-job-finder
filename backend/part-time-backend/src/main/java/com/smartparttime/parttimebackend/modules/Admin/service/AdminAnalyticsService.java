@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Admin.service;
 
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminOverviewDto;
+import com.smartparttime.parttimebackend.modules.Admin.dto.LocationCountDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.TopCategoryDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.TrafficDto;
 
@@ -16,4 +17,6 @@ public interface AdminAnalyticsService {
 
 
     List<TrafficDto> getDailyTraffic();
+
+    List<LocationCountDto> getJobsByLocation();
 }
