@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import APIClient from "@/services/apiClient";
 
-
+/* =======================
+   Interfaces
+======================= */
 
 export interface AdminOverview {
   totalUsers: number;
@@ -26,7 +28,14 @@ export interface Traffic {
   count: number;
 }
 
+export interface LocationCount {
+  location: string;
+  count: number;
+}
 
+/* =======================
+   API Clients
+======================= */
 
 const overviewClient = new APIClient<AdminOverview>(
   "/admin/analytics/overview"
@@ -40,7 +49,13 @@ const trafficClient = new APIClient<Traffic[]>(
   "/admin/analytics/daily-traffic"
 );
 
+const locationClient = new APIClient<LocationCount[]>(
+  "/admin/analytics/jobs-by-location"
+);
 
+/* =======================
+   Hook
+======================= */
 
 export const useAdminAnalytics = () => {
   const overviewQuery = useQuery({
@@ -58,19 +73,27 @@ export const useAdminAnalytics = () => {
     queryFn: trafficClient.get,
   });
 
+  const locationQuery = useQuery({
+    queryKey: ["admin", "analytics", "locations"],
+    queryFn: locationClient.get,
+  });
+
   return {
     overview: overviewQuery.data,
     topCategories: categoriesQuery.data ?? [],
     dailyTraffic: trafficQuery.data ?? [],
+    jobsByLocation: locationQuery.data ?? [],
 
     loading:
       overviewQuery.isLoading ||
       categoriesQuery.isLoading ||
-      trafficQuery.isLoading,
+      trafficQuery.isLoading ||
+      locationQuery.isLoading,
 
     error:
       overviewQuery.error ||
       categoriesQuery.error ||
-      trafficQuery.error,
+      trafficQuery.error ||
+      locationQuery.error,
   };
 };
