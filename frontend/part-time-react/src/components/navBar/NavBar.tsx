@@ -84,7 +84,7 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/75 backdrop-blur-lg w-full px-4 lg:px-6 min-h-16 flex items-center justify-between flex-wrap lg:flex-nowrap">
+    <nav className="text-sm fixed top-0 left-0 right-0 z-50 bg-background/75 backdrop-blur-lg w-full px-4 lg:px-6 min-h-16 flex items-center justify-between flex-wrap lg:flex-nowrap">
       <Logo />
 
       {/* Desktop nav links */}
@@ -137,7 +137,7 @@ const NavBar = () => {
           .filter(
             (btn) =>
               btn.label !== t("seekerDashboard") &&
-              btn.label !== t("employerDashboard")
+              btn.label !== t("employerDashboard"),
           )
           .map((btn) =>
             btn.to ? (
@@ -167,7 +167,7 @@ const NavBar = () => {
                 <LogOut />
                 {btn.label}
               </Button>
-            )
+            ),
           )}
       </div>
 
@@ -245,7 +245,7 @@ const NavBar = () => {
                 <LogOut size={16} />
                 {btn.label}
               </Button>
-            )
+            ),
           )}
         </div>
       </div>

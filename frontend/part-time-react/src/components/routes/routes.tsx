@@ -24,10 +24,11 @@ import JobPromotion from "@/pages/PostJobs/JobPromotion";
 import PostJob from "@/pages/PostJobs/PostJob";
 import PromoSuccess from "@/pages/PostJobs/PromoSuccess";
 import TermsPage from "@/pages/Terms/TermsPage";
+import EditJob from "@/pages/PostJobs/EditJob";
+import UpcomingJobDetails from "@/pages/UpcomingJobDetails";
 import { createBrowserRouter } from "react-router-dom";
 import ChatBot from "../chat/ChatBot";
 import PrivateRoute from "./PrivateRoute";
-
 
 import ManageUsers from "@/pages/adminActions/ManageUsers";
 import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
@@ -80,6 +81,47 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "seekerDashboard",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <JobseekerDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: ":jobId/applicants",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <JobApplicants />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "seekerProfile/:id",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <ApplicantProfile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "upcoming-job/:applicationId",
+        element: (
+          <PrivateRoute requiredRole="jobseeker">
+            <UpcomingJobDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "editJob/:jobId",
+        element: (
+          <PrivateRoute requiredRole="employer">
+            <EditJob />
+          </PrivateRoute>
+        ),
+      },
+      { path: "notifications", element: <NotificationPage /> },
     ],
   },
 
@@ -94,8 +136,6 @@ const router = createBrowserRouter([
       { path: "about", element: <AboutPage /> },
       { path: "terms", element: <TermsPage /> },
       { path: "contact", element: <ContactPage /> },
-
-     
 
       {
         path: "promotion/:jobId",
@@ -129,41 +169,10 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      {
-        path: "seekerDashboard",
-        element: (
-          <PrivateRoute requiredRole="jobseeker">
-            <JobseekerDashboard />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: ":jobId/applicants",
-        element: (
-          <PrivateRoute requiredRole="employer">
-            <JobApplicants />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "seekerProfile/:id",
-        element: (
-          <PrivateRoute requiredRole="employer">
-            <ApplicantProfile />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: "notifications",
-        element: <NotificationPage />,
-      },
     ],
   },
 
-  {
-    path: "/admin/dashboard",
-    element: <AdminDashboardPage />,
-  },
+  { path: "/admin/dashboard", element: <AdminDashboardPage /> },
   { path: "/admin/manage-users", element: <ManageUsers /> },
   { path: "/admin/moderate-job-posts", element: <ModerateJobPosts /> },
   { path: "/admin/review-reports", element: <ReviewReports /> },

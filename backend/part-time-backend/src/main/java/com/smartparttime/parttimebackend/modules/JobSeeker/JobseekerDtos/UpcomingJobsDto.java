@@ -15,7 +15,7 @@ public class UpcomingJobsDto {
     private String title;
     private String name;
     private BigDecimal minSalary;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDateTime startDatetime;
+    private LocalDateTime endDatetime;
     private ApplicationStatus status;
 }

@@ -17,6 +17,7 @@ public interface JobMapper {
     @Mapping(source = "employer.companyName" ,target = "employer")
     @Mapping(source = "employer.id" ,target = "employerId")
     @Mapping(source = "category.category",target = "category")
+    @Mapping(source = "category.id",target = "categoryId")  // ADDED: Map categoryId
     JobResponseDto toDto(Job savedJob);
 
     @Mapping(source = "employer.companyName" ,target = "employer")

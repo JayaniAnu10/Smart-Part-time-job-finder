@@ -59,7 +59,7 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
           </div>
         </div>
       ),
-      { position: "top-center" }
+      { position: "top-center" },
     );
   };
 
@@ -88,8 +88,14 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
                 </div>
               </div>
               <div className="flex items-center gap-3 md:flex-row flex-col">
+                {/* Status Badge with conditional styling */}
                 <Badge
                   variant={job.status === "ACTIVE" ? "default" : "secondary"}
+                  className={
+                    job.status === "CLOSED"
+                      ? "bg-red-500 text-white hover:bg-red-600"
+                      : ""
+                  }
                 >
                   {job.status}
                 </Badge>
@@ -99,6 +105,7 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
                     variant="ghost"
                     className="cursor-pointer dark:hover:text-[#0f1f3d]"
                     onClick={() => navigate(`/${job.id}/applicants`)}
+                    title="View Applicants"
                   >
                     <Eye className="w-4 h-4 " />
                   </Button>
@@ -106,6 +113,8 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
                     size="icon"
                     variant="ghost"
                     className="cursor-pointer dark:hover:text-[#0f1f3d]"
+                    onClick={() => navigate(`/editJob/${job.id}`)}
+                    title="Edit Job"
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
@@ -115,6 +124,7 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
                     size="icon"
                     variant="ghost"
                     className="cursor-pointer dark:hover:text-[#0f1f3d]"
+                    title="Delete Job"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

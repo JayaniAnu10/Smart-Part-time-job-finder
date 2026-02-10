@@ -34,7 +34,6 @@ const ApplicantProfile = () => {
   const loggedUser = useAuthStore((state) => state.user);
   const { mutate, isLoading: isSubmitting } = useCreateComplaint();
 
-  // popup state
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [typeId, setTypeId] = useState<number | "">("");
@@ -121,7 +120,7 @@ const ApplicantProfile = () => {
             <Info icon={Mail} text={data.profileDetails.email} />
             <Info
               icon={Star}
-              text={`${data.profileDetails.rate.toPrecision(2)} Rating`}
+              text={`${Number(data.profileDetails.rate).toFixed(1)} Rating`}
             />
           </div>
 
@@ -132,29 +131,22 @@ const ApplicantProfile = () => {
       {/* Complaint Modal */}
       {open && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white text-slate-900 rounded-xl w-full max-w-[450px] relative shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in duration-200">
-            
-            <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50/50">
+          <div className="bg-white text-slate-900 rounded-xl w-full max-w-[450px] relative shadow-2xl border border-slate-200">
+            <div className="flex items-center justify-between p-5 border-b bg-slate-50">
               <div className="flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 text-red-500" />
                 <h2 className="text-lg font-semibold">Submit a Complaint</h2>
               </div>
-              <button
-                onClick={() => setOpen(false)}
-                className="p-1.5 hover:bg-slate-200 rounded-full"
-              >
+              <button onClick={() => setOpen(false)}>
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="p-6">
-              <label className="block text-sm font-medium mb-2">
-                Complaint Category
-              </label>
               <select
                 value={typeId}
                 onChange={(e) => setTypeId(Number(e.target.value))}
-                className="w-full border p-2.5 rounded-lg mb-5"
+                className="w-full border p-2.5 rounded-lg mb-4"
               >
                 <option value="">Choose a type...</option>
                 {complaintTypes?.map((ct) => (
@@ -164,14 +156,12 @@ const ApplicantProfile = () => {
                 ))}
               </select>
 
-              <label className="block text-sm font-medium mb-2">
-                Detailed Description
-              </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={5}
-                className="w-full border p-3 rounded-lg mb-6 resize-none"
+                className="w-full border p-3 rounded-lg mb-5 resize-none"
+                placeholder="Describe the issue..."
               />
 
               <div className="flex justify-end gap-3">
