@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons"; 
 import { useLocalSearchParams, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -9,9 +9,83 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { COLORS } from "../../constants/colors";
-import { Job } from "../../constants/types";
-import { jobAPI } from "../../scripts/api";
+
+// Brand colors from WelcomeScreen
+const COLORS = {
+  primary: "#FDB022",
+  dark: "#1a1a2e",
+  background: "#FFCA5D20", // subtle light yellow background
+  white: "#fff",
+  text: "#1a1a2e",
+  textLight: "#555",
+  success: "#22c55e",
+};
+
+// Job type
+type Job = {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  salary: number;
+  type: string;
+  category: string;
+  postedDate: string;
+  description: string;
+  requirements: string[];
+};
+
+// 🔹 MOCK JOBS
+const mockJobs: Job[] = [
+  {
+    id: "1",
+    title: "Junior .NET Developer",
+    company: "DayBee.lk",
+    location: "Colombo, Sri Lanka",
+    salary: 1500,
+    type: "Full-Time",
+    category: "Software Development",
+    postedDate: "2025-02-01",
+    description: "We are looking for a Junior .NET Developer to join our team.",
+    requirements: [
+      "Basic knowledge of C#",
+      ".NET Framework or .NET Core",
+      "SQL basics"
+    ],
+  },
+  {
+    id: "2",
+    title: "Frontend React Developer",
+    company: "TechHive",
+    location: "Kandy, Sri Lanka",
+    salary: 1300,
+    type: "Part-Time",
+    category: "Software Development",
+    postedDate: "2025-01-28",
+    description: "Join our team as a Frontend Developer to build responsive React applications.",
+    requirements: [
+      "Good knowledge of React.js",
+      "HTML, CSS, JavaScript",
+      "Basic understanding of REST APIs"
+    ],
+  },
+  {
+    id: "3",
+    title: "Digital Marketing Intern",
+    company: "BrightAds",
+    location: "Galle, Sri Lanka",
+    salary: 500,
+    type: "Internship",
+    category: "Marketing",
+    postedDate: "2025-02-05",
+    description: "We are looking for a creative Digital Marketing Intern to support our campaigns.",
+    requirements: [
+      "Familiarity with social media platforms",
+      "Basic knowledge of SEO/SEM",
+      "Good communication skills"
+    ],
+  },
+];
 
 export default function JobDetailsScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -24,33 +98,28 @@ export default function JobDetailsScreen() {
 
   const fetchJob = async () => {
     try {
-      // 🔴 If id is missing → use mock data
       if (!id) {
-        setJob(mockJob);
+        setJob(mockJobs[0]); // default first job
         return;
       }
 
       const jobId = Number(id);
-
-      // 🔴 If id is invalid → use mock data
       if (isNaN(jobId)) {
-        setJob(mockJob);
+        setJob(mockJobs[0]);
         return;
       }
 
-      // ✅ Try backend
-      const data = await jobAPI.getJobById(jobId);
-
-      // 🔴 If backend returns null
-      if (!data) {
-        setJob(mockJob);
+      const jobData = mockJobs.find(job => Number(job.id) === jobId);
+      if (!jobData) {
+        setJob(mockJobs[0]);
         return;
       }
 
-      setJob(data);
+      setJob(jobData);
+
     } catch (error) {
-      console.log("API error, using mock job:", error);
-      setJob(mockJob);
+      console.log("Error loading job:", error);
+      setJob(mockJobs[0]);
     } finally {
       setLoading(false);
     }
@@ -67,7 +136,7 @@ export default function JobDetailsScreen() {
   if (!job) {
     return (
       <View style={styles.center}>
-        <Text>Job not found</Text>
+        <Text style={{ color: COLORS.text }}>Job not found</Text>
       </View>
     );
   }
@@ -119,6 +188,16 @@ export default function JobDetailsScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Job Description</Text>
         <Text style={styles.description}>{job.description}</Text>
+
+        {/* REQUIREMENTS */}
+        {job.requirements && job.requirements.length > 0 && (
+          <View style={{ marginTop: 12 }}>
+            <Text style={[styles.sectionTitle, { fontSize: 16 }]}>Requirements:</Text>
+            {job.requirements.map((req, i) => (
+              <Text key={i} style={styles.description}>• {req}</Text>
+            ))}
+          </View>
+        )}
       </View>
 
       {/* APPLY BUTTON */}
@@ -129,27 +208,7 @@ export default function JobDetailsScreen() {
   );
 }
 
-/* 🔹 MOCK JOB (backend naththama UI test karanna) */
-const mockJob: Job = {
-  id: "1",
-  title: "Junior .NET Developer",
-  company: "DayBee.lk",
-  location: "Colombo, Sri Lanka",
-  salary: 1500,
-  type: "full-time",
-  category: "Software Development",
-  postedDate: "2025-02-01",
-  description: "We are looking for a Junior .NET Developer to join our team.",
-  requirements: [
-    "Basic knowledge of C#",
-    ".NET Framework or .NET Core",
-    "SQL basics"
-  ],
-};
-
-
 /* ================= STYLES ================= */
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -171,22 +230,26 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "700",
-    color: COLORS.text,
+    color: COLORS.dark,
   },
 
   card: {
     backgroundColor: COLORS.white,
-    padding: 16,
-    borderRadius: 14,
+    padding: 20,
+    borderRadius: 20,
     marginBottom: 20,
+    shadowColor: COLORS.dark,
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
   },
 
   title: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: COLORS.text,
+    fontSize: 24,
+    fontWeight: "800",
+    color: COLORS.dark,
   },
 
   company: {
@@ -200,14 +263,14 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 6,
+    borderRadius: 10,
     marginBottom: 12,
   },
 
   badgeText: {
     fontSize: 12,
     color: COLORS.primary,
-    fontWeight: "600",
+    fontWeight: "700",
   },
 
   row: {
@@ -235,13 +298,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     marginBottom: 8,
-    color: COLORS.text,
+    color: COLORS.dark,
   },
 
   description: {
-    fontSize: 14,
+    fontSize: 15,
     color: COLORS.textLight,
-    lineHeight: 22,
+    lineHeight: 24,
   },
 
   applyButton: {
