@@ -14,20 +14,43 @@ import { Job } from "../../constants/types";
 import { jobAPI } from "../../scripts/api";
 
 export default function JobDetailsScreen() {
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id?: string }>();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchJob();
-  }, []);
+  }, [id]);
 
   const fetchJob = async () => {
     try {
-      const data = await jobAPI.getJobById(Number(id));
+      // 🔴 If id is missing → use mock data
+      if (!id) {
+        setJob(mockJob);
+        return;
+      }
+
+      const jobId = Number(id);
+
+      // 🔴 If id is invalid → use mock data
+      if (isNaN(jobId)) {
+        setJob(mockJob);
+        return;
+      }
+
+      // ✅ Try backend
+      const data = await jobAPI.getJobById(jobId);
+
+      // 🔴 If backend returns null
+      if (!data) {
+        setJob(mockJob);
+        return;
+      }
+
       setJob(data);
     } catch (error) {
-      console.log(error);
+      console.log("API error, using mock job:", error);
+      setJob(mockJob);
     } finally {
       setLoading(false);
     }
@@ -69,7 +92,6 @@ export default function JobDetailsScreen() {
           <Text style={styles.badgeText}>{job.type}</Text>
         </View>
 
-        {/* INFO */}
         <View style={styles.row}>
           <Ionicons name="location-outline" size={18} color={COLORS.textLight} />
           <Text style={styles.meta}>{job.location}</Text>
@@ -106,6 +128,27 @@ export default function JobDetailsScreen() {
     </ScrollView>
   );
 }
+
+/* 🔹 MOCK JOB (backend naththama UI test karanna) */
+const mockJob: Job = {
+  id: "1",
+  title: "Junior .NET Developer",
+  company: "DayBee.lk",
+  location: "Colombo, Sri Lanka",
+  salary: 1500,
+  type: "full-time",
+  category: "Software Development",
+  postedDate: "2025-02-01",
+  description: "We are looking for a Junior .NET Developer to join our team.",
+  requirements: [
+    "Basic knowledge of C#",
+    ".NET Framework or .NET Core",
+    "SQL basics"
+  ],
+};
+
+
+/* ================= STYLES ================= */
 
 const styles = StyleSheet.create({
   container: {
@@ -215,5 +258,3 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
-
-
