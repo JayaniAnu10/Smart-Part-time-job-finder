@@ -27,7 +27,7 @@ import TermsPage from "@/pages/Terms/TermsPage";
 import { createBrowserRouter } from "react-router-dom";
 import ChatBot from "../chat/ChatBot";
 import PrivateRoute from "./PrivateRoute";
-import ComplaintTest from "@/pages/ComplaintTest";
+
 
 import ManageUsers from "@/pages/adminActions/ManageUsers";
 import ModerateJobPosts from "@/pages/adminActions/ModerateJobPosts";
@@ -95,7 +95,7 @@ const router = createBrowserRouter([
       { path: "terms", element: <TermsPage /> },
       { path: "contact", element: <ContactPage /> },
 
-      { path: "complaint-test", element: <ComplaintTest /> },
+     
 
       {
         path: "promotion/:jobId",
