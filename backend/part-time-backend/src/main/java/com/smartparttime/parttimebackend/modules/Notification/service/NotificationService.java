@@ -1,6 +1,8 @@
 package com.smartparttime.parttimebackend.modules.Notification.service;
 
 import com.smartparttime.parttimebackend.common.Services.EmailService;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.Notification.dto.NotificationResponse;
 import com.smartparttime.parttimebackend.modules.Notification.entity.Message;
 import com.smartparttime.parttimebackend.modules.Notification.entity.Notification;
@@ -23,6 +25,7 @@ public class NotificationService {
     private final MessageRepo messageRepo;
     private final UserRepository userRepo;
     private final EmailService emailService;
+    private final JobSeekerRepository jobSeekerRepository;
 
 
     private void saveNotification(UUID userId, String messageText) {
@@ -50,24 +53,45 @@ public class NotificationService {
 
 
     public void notifyStatusChanged(UUID jobSeekerUserId, String jobTitle, String status) {
-        String message = "Your application for \"" + jobTitle + "\" is now " + status;
-        String subject = "Application Status Update";
 
-        saveNotification(jobSeekerUserId, message);
 
-        emailService.sendSimpleEmail(
-                userRepo.findById(jobSeekerUserId)
-                        .orElseThrow()
-                        .getEmail(),
-                subject,
-                message
-        );
+        JobSeeker jobSeeker = jobSeekerRepository.findById(jobSeekerUserId)
+                .orElseThrow(() -> new RuntimeException("JobSeeker not found"));
+
+
+        Message template = messageRepo.findById(17L)
+                .orElseThrow(() -> new RuntimeException("Template not found"));
+
+
+        String finalMessage = template.getDescription()
+                .replace("{{firstName}}", jobSeeker.getFirstName())
+                .replace("{{jobTitle}}", jobTitle)
+                .replace("{{status}}", status);
+
+
+        saveNotification(jobSeekerUserId, finalMessage);
     }
+
+
+
 
 
     public List<NotificationResponse> getUserNotifications(UUID userId) {
-        return notificationRepo.findByUserId(userId);
+
+        var notifications = notificationRepo.findByUser_IdOrderByCreatedAtDesc(userId);
+
+        return notifications.stream()
+                .map(notification -> {
+                    NotificationResponse response = new NotificationResponse();
+                    response.setId(notification.getId());
+                    response.setMessage(notification.getMessage().getDescription());
+                    response.setCreatedAt(notification.getCreatedAt());
+                    response.setRead(notification.isRead());
+                    return response;
+                })
+                .toList();
     }
+
 
 
     public void markAsRead(UUID notificationId) {
