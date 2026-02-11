@@ -54,12 +54,12 @@ public class NotificationService {
 
     public void notifyStatusChanged(UUID jobSeekerUserId, String jobTitle, String status) {
 
-
+        
         JobSeeker jobSeeker = jobSeekerRepository.findById(jobSeekerUserId)
                 .orElseThrow(() -> new RuntimeException("JobSeeker not found"));
 
 
-        Message template = messageRepo.findById(17L)
+        Message template = messageRepo.findByTemplateKey("APPLICATION_STATUS_CHANGED")
                 .orElseThrow(() -> new RuntimeException("Template not found"));
 
 
@@ -71,6 +71,7 @@ public class NotificationService {
 
         saveNotification(jobSeekerUserId, finalMessage);
     }
+
 
 
 
