@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Notification.controller;
 
+import com.smartparttime.parttimebackend.modules.Notification.dto.NotificationResponse;
 import com.smartparttime.parttimebackend.modules.Notification.entity.Notification;
 import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +18,10 @@ public class NotificationController {
 
 
     @GetMapping("/user/{userId}")
-    public List<Notification> getUserNotifications(@PathVariable UUID userId) {
+    public List<NotificationResponse> getUserNotifications(@PathVariable UUID userId) {
         return notificationService.getUserNotifications(userId);
     }
+
 
 
     @PutMapping("/{id}/read")
