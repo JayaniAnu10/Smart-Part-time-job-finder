@@ -4,7 +4,7 @@ import useAuth from "@/hooks/useAuth";
 import { Spinner } from "../ui/spinner";
 
 type PrivateRouteProps = {
-  requiredRole?: "employer" | "jobseeker";
+  requiredRole?: "employer" | "jobseeker" | "admin";
   children: ReactNode;
 };
 
@@ -15,6 +15,7 @@ export default function PrivateRoute({
   const location = useLocation();
   const { data: user, isLoading, error } = useAuth();
 
+  
   if (isLoading)
     return (
       <div className="mt-30 flex justify-center items-center">
@@ -22,23 +23,28 @@ export default function PrivateRoute({
       </div>
     );
 
-  if (error) {
+  
+  if (error || !user) {
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
-  try {
-    if (requiredRole) {
-      if (requiredRole === "employer" && !user?.isEmployer) {
-        return <Navigate to="/getstarted" replace />;
-      }
-      if (requiredRole === "jobseeker" && !user?.isJobseeker) {
-        return <Navigate to="/getstarted" replace />;
-      }
+  
+  if (requiredRole) {
+    
+    if (requiredRole === "employer" && !user.isEmployer) {
+      return <Navigate to="/getstarted" replace />;
     }
 
-    return children;
-  } catch {
-    // token is invalid
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    
+    if (requiredRole === "jobseeker" && !user.isJobseeker) {
+      return <Navigate to="/getstarted" replace />;
+    }
+
+    
+    if (requiredRole === "admin" && user.role !== "ADMIN") {
+      return <Navigate to="/" replace />;
+    }
   }
+
+  return children;
 }

@@ -3,6 +3,7 @@ import { create } from "zustand";
 export type User = {
   id: string;
   email: string;
+  role: "ADMIN" | "USER";   
   isEmployer: boolean;
   isJobseeker: boolean;
 };
