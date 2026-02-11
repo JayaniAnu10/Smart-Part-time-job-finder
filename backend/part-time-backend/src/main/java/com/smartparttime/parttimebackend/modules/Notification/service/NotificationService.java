@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Notification.service;
 
 import com.smartparttime.parttimebackend.common.Services.EmailService;
+import com.smartparttime.parttimebackend.modules.Notification.dto.NotificationResponse;
 import com.smartparttime.parttimebackend.modules.Notification.entity.Message;
 import com.smartparttime.parttimebackend.modules.Notification.entity.Notification;
 import com.smartparttime.parttimebackend.modules.Notification.repo.MessageRepo;
@@ -64,7 +65,7 @@ public class NotificationService {
     }
 
 
-    public List<Notification> getUserNotifications(UUID userId) {
+    public List<NotificationResponse> getUserNotifications(UUID userId) {
         return notificationRepo.findByUserId(userId);
     }
 
