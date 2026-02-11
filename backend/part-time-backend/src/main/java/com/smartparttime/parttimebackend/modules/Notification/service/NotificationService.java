@@ -28,13 +28,15 @@ public class NotificationService {
     private final JobSeekerRepository jobSeekerRepository;
 
 
-    private void saveNotification(UUID userId, String messageText) {
+    private void saveNotification(UUID userId, String finalMessageText) {
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+
         Message message = new Message();
-        message.setDescription(messageText);
+        message.setDescription(finalMessageText);
+
         Message savedMessage = messageRepo.save(message);
 
         Notification notification = new Notification();
@@ -46,6 +48,8 @@ public class NotificationService {
     }
 
 
+
+
     public void notifyJobApplied(UUID employerUserId, String jobTitle) {
         String message = "A new candidate has applied for your job: " + jobTitle;
         saveNotification(employerUserId, message);
@@ -54,23 +58,20 @@ public class NotificationService {
 
     public void notifyStatusChanged(UUID jobSeekerUserId, String jobTitle, String status) {
 
-        
         JobSeeker jobSeeker = jobSeekerRepository.findById(jobSeekerUserId)
                 .orElseThrow(() -> new RuntimeException("JobSeeker not found"));
 
-
         Message template = messageRepo.findByTemplateKey("APPLICATION_STATUS_CHANGED")
                 .orElseThrow(() -> new RuntimeException("Template not found"));
-
 
         String finalMessage = template.getDescription()
                 .replace("{{firstName}}", jobSeeker.getFirstName())
                 .replace("{{jobTitle}}", jobTitle)
                 .replace("{{status}}", status);
 
-
         saveNotification(jobSeekerUserId, finalMessage);
     }
+
 
 
 
