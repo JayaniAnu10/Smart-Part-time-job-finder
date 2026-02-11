@@ -172,11 +172,47 @@ const router = createBrowserRouter([
     ],
   },
 
-  { path: "/admin/dashboard", element: <AdminDashboardPage /> },
-  { path: "/admin/manage-users", element: <ManageUsers /> },
-  { path: "/admin/moderate-job-posts", element: <ModerateJobPosts /> },
-  { path: "/admin/review-reports", element: <ReviewReports /> },
-  { path: "/admin/view-analytics", element: <ViewAnalytics /> },
+ 
+  {
+    path: "/admin/dashboard",
+    element: (
+      <PrivateRoute requiredRole="admin">
+        <AdminDashboardPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/admin/manage-users",
+    element: (
+      <PrivateRoute requiredRole="admin">
+        <ManageUsers />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/admin/moderate-job-posts",
+    element: (
+      <PrivateRoute requiredRole="admin">
+        <ModerateJobPosts />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/admin/review-reports",
+    element: (
+      <PrivateRoute requiredRole="admin">
+        <ReviewReports />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/admin/view-analytics",
+    element: (
+      <PrivateRoute requiredRole="admin">
+        <ViewAnalytics />
+      </PrivateRoute>
+    ),
+  },
 ]);
 
 export default router;
