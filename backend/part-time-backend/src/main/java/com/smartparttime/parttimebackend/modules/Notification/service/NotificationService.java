@@ -51,10 +51,7 @@ public class NotificationService {
 
 
 
-    public void notifyJobApplied(UUID employerUserId, String jobTitle) {
-        String message = "A new candidate has applied for your job: " + jobTitle;
-        saveNotification(employerUserId, message);
-    }
+
 
 
     public void notifyStatusChanged(UUID jobSeekerUserId, String jobTitle, String status) {
@@ -97,27 +94,32 @@ public class NotificationService {
 
 
 
-    public void markAsRead(UUID notificationId) {
-        Notification notification = notificationRepo.findById(notificationId)
-                .orElseThrow(() -> new RuntimeException("Notification not found"));
-
-        notification.setRead(true);
-        notificationRepo.save(notification);
-    }
 
     public void notifyUrgentJobToSeekers(
             List<UUID> jobSeekerUserIds,
             String jobTitle,
             String location
     ) {
-        String message = "🚨 Urgent Job Alert!\n\n"
-                + "Job: " + jobTitle + "\n"
-                + "Location: " + location;
+
+        System.out.println("Urgent job triggered");
+        System.out.println("Matched seekers count: " + jobSeekerUserIds.size());
+
+        Message template = messageRepo.findByTemplateKey("URGENT_JOB_ALERT")
+                .orElseThrow(() -> new RuntimeException("Template not found"));
 
         for (UUID userId : jobSeekerUserIds) {
-            saveNotification(userId, message);
+
+            JobSeeker jobSeeker = jobSeekerRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("JobSeeker not found"));
+
+            String finalMessage = template.getDescription()
+                    .replace("{{jobTitle}}", jobTitle)
+                    .replace("{{location}}", location);
+
+            saveNotification(userId, finalMessage);
         }
     }
+
 
     @Transactional
     public void markAllAsRead(UUID userId) {
