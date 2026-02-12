@@ -1,8 +1,18 @@
 import NotificationItem from "@/components/Notifications/NotificationItem";
 import { useNotifications } from "@/hooks/useNotifications";
+import { axiosInstance } from "@/services/apiClient";
 
 const NotificationPage = () => {
-  const { notifications, loading, error } = useNotifications();
+  const { notifications, loading, error, refetch } = useNotifications();
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await axiosInstance.put("/notifications/read-all");
+      refetch(); 
+    } catch (err) {
+      console.error("Failed to mark all as read");
+    }
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen w-full overflow-x-hidden">
@@ -19,7 +29,10 @@ const NotificationPage = () => {
             </p>
           </div>
 
-          <button className="text-slate-600 border-2 font-medium border-slate-200 bg-white px-6 py-2.5 rounded-xl hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all shadow-sm">
+          <button
+            onClick={handleMarkAllAsRead}
+            className="text-slate-600 border-2 font-medium border-slate-200 bg-white px-6 py-2.5 rounded-xl hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition-all shadow-sm"
+          >
             Mark All as Read
           </button>
         </div>
