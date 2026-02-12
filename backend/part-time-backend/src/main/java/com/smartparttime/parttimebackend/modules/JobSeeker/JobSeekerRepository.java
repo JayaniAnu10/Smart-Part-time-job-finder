@@ -68,13 +68,10 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
     @Query("""
     SELECT js
     FROM JobSeeker js
-    WHERE 
-        LOWER(js.skills) LIKE LOWER(CONCAT('%', :skills, '%'))
-        AND LOWER(js.address) LIKE LOWER(CONCAT('%', :location, '%'))
-        """)
-    List<JobSeeker> findMatchingJobSeekers(
-            @Param("skills") String skills,
-            @Param("location") String location
-    );
+    WHERE LOWER(js.address) LIKE LOWER(CONCAT('%', :location, '%'))
+""")
+    List<JobSeeker> findByLocation(@Param("location") String location);
+
+
 
 }
