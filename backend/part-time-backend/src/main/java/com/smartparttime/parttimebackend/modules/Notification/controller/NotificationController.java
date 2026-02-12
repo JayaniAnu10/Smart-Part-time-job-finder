@@ -32,10 +32,12 @@ public class NotificationController {
 
 
 
-    @PutMapping("/{id}/read")
-    public void markAsRead(@PathVariable UUID id) {
-        notificationService.markAsRead(id);
+    @PutMapping("/read-all")
+    public void markAllAsRead(Authentication authentication) {
+        UUID userId = UUID.fromString(authentication.getName());
+        notificationService.markAllAsRead(userId);
     }
+
 
 
     @GetMapping("/unread-count")

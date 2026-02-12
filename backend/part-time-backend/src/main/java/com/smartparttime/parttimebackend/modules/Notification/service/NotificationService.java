@@ -10,6 +10,7 @@ import com.smartparttime.parttimebackend.modules.Notification.repo.MessageRepo;
 import com.smartparttime.parttimebackend.modules.Notification.repo.NotificationRepo;
 import com.smartparttime.parttimebackend.modules.User.entities.User;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -117,6 +118,19 @@ public class NotificationService {
             saveNotification(userId, message);
         }
     }
+
+    @Transactional
+    public void markAllAsRead(UUID userId) {
+        List<Notification> notifications =
+                notificationRepo.findByUserIdAndIsReadFalse(userId);
+
+        for (Notification notification : notifications) {
+            notification.setRead(true);
+        }
+
+        notificationRepo.saveAll(notifications);
+    }
+
 
 
 
