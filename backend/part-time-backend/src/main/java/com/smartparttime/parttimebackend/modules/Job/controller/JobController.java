@@ -134,7 +134,7 @@ public class JobController {
     }
 
 
- 
+
 
     @GetMapping("/category")
     public List<JobCategoryDto> getCategories(){

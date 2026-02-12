@@ -32,10 +32,13 @@ public interface JobService {
 
     List<NearJobResponse> getNearByJobs(double userLat, double userLng, double radius);
 
-    void markUrgent(UUID jobId, boolean urgent);
+
+
+    void notifyUrgentJob(Job job);
 
     List<JobCategoryDto> getCategories();
 
 
     PublicStatsDto getPublicStats();
+
 }
