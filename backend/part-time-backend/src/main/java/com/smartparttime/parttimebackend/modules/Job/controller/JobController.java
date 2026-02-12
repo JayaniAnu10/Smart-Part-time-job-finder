@@ -134,13 +134,7 @@ public class JobController {
     }
 
 
-    @PatchMapping("/{jobId}/urgent")
-    public void markJobUrgent(
-            @PathVariable UUID jobId,
-            @RequestParam boolean urgent
-    ) {
-        jobService.markUrgent(jobId, urgent);
-    }
+ 
 
     @GetMapping("/category")
     public List<JobCategoryDto> getCategories(){
