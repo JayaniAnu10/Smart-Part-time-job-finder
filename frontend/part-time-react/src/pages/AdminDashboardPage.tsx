@@ -1,6 +1,5 @@
 import AdminSidebar from "@/components/adminDashboard/AdminSidebar";
 import StatsSection from "@/components/adminDashboard/StatsSection";
-import RecentActivities from "@/components/adminDashboard/RecentPostedJobs";
 import { motion } from "framer-motion";
 import RecentPostedJobs from "@/components/adminDashboard/RecentPostedJobs";
 
@@ -14,18 +13,20 @@ export default function AdminDashboardPage() {
 
       {/* Main content */}
       <main className="flex-1 p-6 lg:p-10 space-y-10 pt-24 lg:pt-12 relative overflow-hidden">
-        
         {/* Background Ambient Glow (Dark Mode Only) */}
         <div className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] pointer-events-none hidden dark:block" />
 
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="relative"
         >
           <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Admin <span className="text-secondary dark:text-[#fbbf24]">Dashboard</span>
+            Admin{" "}
+            <span className="text-secondary dark:text-[#fbbf24]">
+              Dashboard
+            </span>
           </h1>
           <div className="flex items-center gap-3 mt-2">
             <span className="h-1 w-8 bg-secondary dark:bg-[#fbbf24] rounded-full" />

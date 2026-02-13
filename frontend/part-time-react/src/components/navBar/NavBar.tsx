@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Logo from "../common/Logo";
@@ -17,7 +17,6 @@ import useAuth from "@/hooks/useAuth";
 import useLogout from "@/hooks/useLogout";
 
 const NavBar = () => {
-  const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
   const navigate = useNavigate();
 
