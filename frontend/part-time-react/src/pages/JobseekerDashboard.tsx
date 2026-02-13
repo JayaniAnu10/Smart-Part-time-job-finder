@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import useUnreadNotificationCount from "@/hooks/useUnreadNotificationCount";
 
 import BellIcon from "@/assets/bell.svg";
 import MoneyIcon from "@/assets/money.svg";
@@ -27,6 +28,8 @@ import { Spinner } from "@/components/ui/spinner";
 const JobseekerDashboard = () => {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
+  const { data: unreadCount = 0 } = useUnreadNotificationCount();
+
 
   const { data, isLoading, isError } = useSeekerStat(user?.id!, {
     enabled: !!user?.id,
@@ -69,10 +72,20 @@ const JobseekerDashboard = () => {
             className="gap-2 text-secondary dark:bg-yellow-400 transition-all duration-300
                              hover:scale-105 active:scale-95 hover:bg-yellow-400 hover:shadow-[0_0_4px_rgba(250,204,21,0.5)]"
           >
-            <Link to="/notifications">
-              <img src={BellIcon} alt="notifications" className="h-4 w-4 " />
-              View Notifications
-            </Link>
+            <Link to="/notifications" className="relative flex items-center gap-2">
+  <div className="relative">
+    <img src={BellIcon} alt="notifications" className="h-4 w-4" />
+
+    {unreadCount > 0 && (
+      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+        {unreadCount}
+      </span>
+    )}
+  </div>
+
+  View Notifications
+</Link>
+
           </Button>
         </div>
       </section>

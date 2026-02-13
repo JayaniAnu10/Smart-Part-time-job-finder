@@ -121,7 +121,15 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      { path: "notifications", element: <NotificationPage /> },
+     {
+  path: "notifications",
+  element: (
+    <PrivateRoute requiredRole="jobseeker">
+      <NotificationPage />
+    </PrivateRoute>
+  ),
+},
+
     ],
   },
 
