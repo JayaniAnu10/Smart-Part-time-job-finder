@@ -1,12 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAdminAnalytics } from "@/hooks/useAdminAnalytics";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 // Modern Gradient-ish Professional Colors
 const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#3B82F6"];
@@ -41,7 +35,9 @@ export default function JobsByCategory() {
           <div className="w-full md:w-1/2 h-full">
             {chartData.length === 0 ? (
               <div className="flex items-center justify-center h-full">
-                <p className="text-sm text-muted-foreground italic">No category data available</p>
+                <p className="text-sm text-muted-foreground italic">
+                  No category data available
+                </p>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
@@ -64,10 +60,10 @@ export default function JobsByCategory() {
                     paddingAngle={5} // Adds spacing between segments
                     stroke="none"
                   >
-                    {chartData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={COLORS[index % COLORS.length]} 
+                    {chartData.map((_entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
                         className="hover:opacity-80 transition-opacity duration-300 cursor-pointer"
                       />
                     ))}
@@ -80,10 +76,13 @@ export default function JobsByCategory() {
           {/* Attractive Legend Section */}
           <div className="w-full md:w-1/2 flex flex-col gap-3 px-4">
             {chartData.map((item, index) => (
-              <div key={index} className="flex items-center justify-between group">
+              <div
+                key={index}
+                className="flex items-center justify-between group"
+              >
                 <div className="flex items-center gap-3">
-                  <div 
-                    className="w-3 h-3 rounded-full shadow-sm" 
+                  <div
+                    className="w-3 h-3 rounded-full shadow-sm"
                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   />
                   <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
