@@ -1,0 +1,46 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_ID }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push
+        run: |
+          docker build -t jayani10/daybee-frontend ./Frontend
+          docker build -t jayani10/daybee-nginx ./nginx
+          docker build -t jayani10/daybee-api ./Backend
+
+          docker push jayani10/daybee-frontend
+          docker push jayani10/daybee-nginx
+          docker push jayani10/daybee-api
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to DigitalOcean via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            set -e
+            cd ~/Smart-Part-time-job-finder
+            git pull origin main
+            docker compose pull
+            docker compose up -d
+            docker image prune -f
