@@ -10,5 +10,6 @@
   "logout": "Logout",
   "getStarted": "Get Started",
   "seekerDashboard": "Seeker Dashboard",
-  "employerDashboard": "Employer Dashboard"
+  "employerDashboard": "Employer Dashboard",
+  "adminDashboard": "Admin Dashboard"
 }

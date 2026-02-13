@@ -11,6 +11,7 @@ import com.smartparttime.parttimebackend.modules.Application.repo.JobApplication
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
 import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
+import com.smartparttime.parttimebackend.modules.Job.CacheNames;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
 import com.smartparttime.parttimebackend.modules.Job.dto.*;
@@ -29,6 +30,9 @@ import com.smartparttime.parttimebackend.modules.Recommendation.Services.JobEmbe
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -72,6 +76,8 @@ public class JobServiceImpl implements JobService {
 
     @Transactional
     @Override
+    @CacheEvict(value = {CacheNames.JOB_LIST, CacheNames.PUBLIC_STATS},
+            allEntries = true)
     public JobResponseDto createJob(JobRequestDto request, UUID employerId) {
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
@@ -122,6 +128,7 @@ public class JobServiceImpl implements JobService {
     }
 
 
+    @Cacheable(value = CacheNames.JOB_LIST)
     @Override
     public List<JobResponseDto> getAllJobs() {
         return jobRepo.findAll()
@@ -131,6 +138,7 @@ public class JobServiceImpl implements JobService {
     }
 
 
+    @Cacheable(value = CacheNames.JOB, key = "#jobId")
     @Override
     public JobResponseDto getJobById(UUID jobId) {
         var job = jobRepo.findById(jobId)
@@ -139,7 +147,8 @@ public class JobServiceImpl implements JobService {
         return jobMapper.toDto(job);
     }
 
-
+    @Cacheable(value = CacheNames.JOB_LIST,
+            key = "'employer_' + #employerId + '_' + #page + '_' + #size")
     @Override
     public List<JobResponseDto> getJobsByEmployer(UUID employerId,int page,int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -196,6 +205,10 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = CacheNames.JOB, key = "#jobId"),
+            @CacheEvict(value = CacheNames.JOB_LIST, allEntries = true)
+    })
     public JobResponseDto updateJob(UUID jobId, JobRequestDto request) {
         var job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
@@ -230,6 +243,10 @@ public class JobServiceImpl implements JobService {
 
     @Transactional
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = CacheNames.JOB, key = "#jobId"),
+            @CacheEvict(value = {CacheNames.JOB_LIST, CacheNames.PUBLIC_STATS}, allEntries = true)
+    })
     public void deleteJob(UUID jobId) {
         var job = jobRepo.findById(jobId).orElse(null);
         if (job == null) {
@@ -256,6 +273,8 @@ public class JobServiceImpl implements JobService {
         jobRepo.deleteById(jobId);
     }
 
+    @Cacheable(value = CacheNames.JOB_LIST,
+            key = "'location_' + #location + '_' + #page + '_' + #size")
     @Override
     public Page<JobResponseDto> getByLocation(int page, int size, String location) {
         Pageable pageable = PageRequest.of(page, size);
@@ -263,6 +282,8 @@ public class JobServiceImpl implements JobService {
         return jobs.map(jobMapper::toDto);
     }
 
+    @Cacheable(value = CacheNames.JOB_LIST,
+            key = "'nearby_' + #userLat + '_' + #userLng + '_' + #radius")
     @Override
     public List<NearJobResponse> getNearByJobs(double userLat, double userLng, double radius) {
         var jobs =jobRepo.findNearbyJobs(userLat, userLng, radius);
@@ -323,13 +344,14 @@ public class JobServiceImpl implements JobService {
         );
     }
 
-
+    @Cacheable(value = CacheNames.JOB_CATEGORY)
     @Override
     public List<JobCategoryDto> getCategories() {
         var categories =categoryRepo.findAll();
         return jobCategoryMapper.toDto(categories);
     }
 
+    @Cacheable(value = CacheNames.PUBLIC_STATS)
     @Override
     public PublicStatsDto getPublicStats() {
         PublicStatsDto dto = new PublicStatsDto();

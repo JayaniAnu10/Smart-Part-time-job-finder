@@ -13,7 +13,7 @@ import {
 import AddJobSchedules from "./AddJobSchedules";
 import LocationPicker from "@/components/common/LocationPicker";
 import SkillTag from "@/components/SkillTag";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import useCategory from "@/hooks/useCategory";
 import { useEffect, useState, useRef } from "react";

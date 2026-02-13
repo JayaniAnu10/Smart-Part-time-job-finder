@@ -20,13 +20,10 @@ const ChatBot = () => {
       setIsLoading(true);
       setError("");
 
-      const { data } = await axios.post<ChatResponse>(
-        "http://localhost:8080/api/chat",
-        {
-          prompt,
-          conversationId: conversationId.current,
-        }
-      );
+      const { data } = await axios.post<ChatResponse>("/api/api/chat", {
+        prompt,
+        conversationId: conversationId.current,
+      });
       setMessages((prev) => [...prev, { content: data.message, role: "bot" }]);
     } catch (error) {
       console.error(error);
