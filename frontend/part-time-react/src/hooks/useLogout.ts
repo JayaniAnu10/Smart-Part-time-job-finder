@@ -9,7 +9,7 @@ export default function useLogout() {
 
   return async () => {
     try {
-      await client.post(); // backend clears cookie
+      await client.post({}); // backend clears cookie
     } catch (_) {
       // ignore — even if cookie isn’t there, we'll still clear local state
     }

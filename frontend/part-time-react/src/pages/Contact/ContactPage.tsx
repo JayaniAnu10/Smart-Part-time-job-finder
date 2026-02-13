@@ -1,7 +1,5 @@
 import React from "react";
-import ContactForm from "../../components/Contact/ContactForm";
 import ContactDetails from "../../components/Contact/ContactDetails";
-import HelpCard from "../../components/Contact/HelpCard";
 
 const ContactPage: React.FC = () => {
   return (
