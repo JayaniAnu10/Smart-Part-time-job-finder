@@ -22,7 +22,10 @@ export default function JobsTable({ jobs, refetch }: Props) {
               <tr>
                 <th className="p-5 font-bold uppercase tracking-wider text-left">
                   <div className="flex items-center gap-2">
-                    <Briefcase size={14} className="text-secondary dark:text-[#fbbf24]" />
+                    <Briefcase
+                      size={14}
+                      className="text-secondary dark:text-[#fbbf24]"
+                    />
                     Job Title
                   </div>
                 </th>
@@ -44,15 +47,17 @@ export default function JobsTable({ jobs, refetch }: Props) {
                     Posted
                   </div>
                 </th>
-                <th className="p-5 font-bold uppercase tracking-wider text-right">Actions</th>
+                <th className="p-5 font-bold uppercase tracking-wider text-right">
+                  Actions
+                </th>
               </tr>
             </thead>
 
             {/* Table Body */}
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
               {jobs.map((job) => (
-                <tr 
-                  key={job.id} 
+                <tr
+                  key={job.id}
                   className="group hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors duration-300"
                 >
                   <td className="p-5">
@@ -60,9 +65,9 @@ export default function JobsTable({ jobs, refetch }: Props) {
                       {job.title}
                     </p>
                   </td>
-                  
+
                   <td className="p-5 text-slate-600 dark:text-slate-400 font-medium">
-                    {job.company}
+                    {job.employerEmail}
                   </td>
 
                   <td className="p-5">
@@ -75,7 +80,9 @@ export default function JobsTable({ jobs, refetch }: Props) {
                         }
                       `}
                     >
-                      <span className={`w-1.5 h-1.5 rounded-full mr-2 ${job.status === "ACTIVE" ? "bg-emerald-500 animate-pulse" : "bg-rose-500"}`} />
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full mr-2 ${job.status === "ACTIVE" ? "bg-emerald-500 animate-pulse" : "bg-rose-500"}`}
+                      />
                       {job.status}
                     </span>
                   </td>
@@ -96,16 +103,22 @@ export default function JobsTable({ jobs, refetch }: Props) {
                                  hover:scale-105 active:scale-95 transition-all 
                                  shadow-md dark:shadow-[#fbbf24]/20 group/btn"
                     >
-                      <Eye size={16} className="group-hover/btn:animate-pulse" />
+                      <Eye
+                        size={16}
+                        className="group-hover/btn:animate-pulse"
+                      />
                       View
                     </button>
                   </td>
                 </tr>
               ))}
-              
+
               {jobs.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="p-20 text-center text-slate-400 font-medium italic">
+                  <td
+                    colSpan={5}
+                    className="p-20 text-center text-slate-400 font-medium italic"
+                  >
                     No job postings found matching your criteria.
                   </td>
                 </tr>
