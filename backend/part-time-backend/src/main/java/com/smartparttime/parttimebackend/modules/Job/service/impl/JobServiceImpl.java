@@ -122,6 +122,7 @@ public class JobServiceImpl implements JobService {
         var savedJob = jobRepo.save(job);
         jobEmbeddingCache.addOrUpdate(savedJob);
 
+         notifyUrgentJob(savedJob);
 
         return jobMapper.toDto(savedJob);
     }
@@ -211,14 +212,16 @@ public class JobServiceImpl implements JobService {
     public JobResponseDto updateJob(UUID jobId, JobRequestDto request) {
         var job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
-
-        jobMapper.update(request,job);
+                boolean wasUrgent = job.getIsUrgent();
+                jobMapper.update(request,job);
 
         if (request.getCategoryId() != null) {
             JobCategory category = categoryRepo.findById(request.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             job.setCategory(category);
         }
+
+
 
         try{
             saveJobEmbedding(job,job.getJobSchedules());
@@ -227,7 +230,12 @@ public class JobServiceImpl implements JobService {
         }
 
         var updated = jobRepo.save(job);
+
         jobEmbeddingCache.addOrUpdate(updated);
+
+        if (!wasUrgent && updated.getIsUrgent()) {
+            notifyUrgentJob(updated);
+        }
 
         return jobMapper.toDto(updated);
     }
@@ -317,32 +325,23 @@ public class JobServiceImpl implements JobService {
     }
 
 
-    public void markUrgent(UUID jobId, boolean urgent) {
+    @Override
+    public void notifyUrgentJob(Job job) {
 
-        Job job = jobRepo.findById(jobId)
-                .orElseThrow(() -> new NotFoundException("Job not found"));
+        if (!job.getIsUrgent()) return;
 
-        job.setIsUrgent(urgent);
-        jobRepo.save(job);
+        List<JobSeeker> seekers =
+                jobSeekerRepository.findByLocation(job.getLocation());
 
+        List<UUID> seekerUserIds = seekers.stream()
+                .map(js -> js.getUser().getId())
+                .toList();
 
-        if (urgent) {
-            List<JobSeeker> seekers =
-                    jobSeekerRepository.findMatchingJobSeekers(
-                            job.getRequirements(),
-                            job.getLocation()
-                    );
-
-            List<UUID> seekerUserIds = seekers.stream()
-                    .map(js -> js.getUser().getId())
-                    .toList();
-
-            notificationService.notifyUrgentJobToSeekers(
-                    seekerUserIds,
-                    job.getTitle(),
-                    job.getLocation()
-            );
-        }
+        notificationService.notifyUrgentJobToSeekers(
+                seekerUserIds,
+                job.getTitle(),
+                job.getLocation()
+        );
     }
 
     @Cacheable(value = CacheNames.JOB_CATEGORY)
