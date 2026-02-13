@@ -42,7 +42,7 @@ const NearByJobPage = () => {
       setError(null);
 
       axios
-        .get<NearJobResponse>("http://localhost:8080/jobs/nearby", {
+        .get<NearJobResponse>("/api/jobs/nearby", {
           params: {
             latitude: lat,
             longitude: lng,

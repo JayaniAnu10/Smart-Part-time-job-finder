@@ -11,15 +11,15 @@ import OtherIcon from "@/assets/other.png";
 import TechIcon from "@/assets/tech.png";
 
 const categoryIcons: Record<string, string> = {
-  "delivery & logistics": DeliveryIcon,
-  "food service": FoodIcon,
-  retail: RetailIcon,
-  "events & promotion": EventsIcon,
-  "tutoring & education": TutoringIcon,
-  "tech support": TechIcon,
-  "data entry": DataEntryIcon,
-  "cleaning & maintenance": CleaningIcon,
-  other: OtherIcon,
+  "Delivery & Logistics": DeliveryIcon,
+  "Food Service": FoodIcon,
+  Retail: RetailIcon,
+  "Events & Promotion": EventsIcon,
+  "Tutoring & Education": TutoringIcon,
+  "Tech Support": TechIcon,
+  "Data Entry": DataEntryIcon,
+  "Cleaning & Maintenance": CleaningIcon,
+  Other: OtherIcon,
 };
 
 const BrowseByCategorySection = () => {

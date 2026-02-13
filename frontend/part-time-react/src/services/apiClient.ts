@@ -13,13 +13,13 @@ const processQueue = (error: any, token: string | null = null) => {
 };
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "/api",
   withCredentials: true,
 });
 
 // Separate axios instance for refresh calls to avoid interceptor loops
 const refreshClient = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "/api",
   withCredentials: true,
   timeout: 2000,
 });
