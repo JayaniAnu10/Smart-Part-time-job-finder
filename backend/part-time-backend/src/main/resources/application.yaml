@@ -22,6 +22,8 @@ spring:
           auth: true
           starttls:
             enable: true
+  jpa:
+    show-sql: true
   servlet:
     multipart:
       max-file-size: 10MB
@@ -57,7 +59,4 @@ server:
   servlet:
     context-path: /api
   port: 8080
-
-
-
-
+websiteUrl: http://daybee.jayanidahanayake.me

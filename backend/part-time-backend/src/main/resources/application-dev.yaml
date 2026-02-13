@@ -1,9 +1,0 @@
-spring:
-  jpa:
-    show-sql: true
-websiteUrl: http://localhost:5173
-
-
-
-
-
