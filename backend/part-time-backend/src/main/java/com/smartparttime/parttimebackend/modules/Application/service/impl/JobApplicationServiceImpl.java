@@ -78,13 +78,6 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         application.setSchedule(schedule);
 
         jobApplicationRepository.save(application);
-
-        notificationService.notifyJobApplied(
-                job.getEmployer().getUser().getId(),
-                job.getTitle()
-        );
-
-
         return jobApplicationMapper.toDto(application);
     }
 
