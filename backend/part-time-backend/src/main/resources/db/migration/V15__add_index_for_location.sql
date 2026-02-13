@@ -1,1 +1,0 @@
-CREATE INDEX idx_jobs_location ON job(latitude, longitude);

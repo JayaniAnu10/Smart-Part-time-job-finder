@@ -1,9 +1,13 @@
 spring:
   application:
     name: part-time-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
   cache:
     type: redis
@@ -18,8 +22,6 @@ spring:
           auth: true
           starttls:
             enable: true
-  profiles:
-    active: dev
   servlet:
     multipart:
       max-file-size: 10MB
@@ -51,5 +53,11 @@ stripe:
   webhookSecretKey: ${STRIPE_WEBHOOK_SECRET_KEY}
 sendgrid:
   api-key: ${MAIL_PASSWORD}
+server:
+  servlet:
+    context-path: /api
+  port: 8080
+
+
 
 
