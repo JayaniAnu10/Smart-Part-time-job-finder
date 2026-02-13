@@ -60,7 +60,7 @@ export default function JobsByCategory() {
                     paddingAngle={5} // Adds spacing between segments
                     stroke="none"
                   >
-                    {chartData.map((_entry, index) => (
+                    {chartData.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
