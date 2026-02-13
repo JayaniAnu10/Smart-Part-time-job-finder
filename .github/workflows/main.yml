@@ -20,9 +20,9 @@ jobs:
 
       - name: Build and Push
         run: |
-          docker build -t jayani10/daybee-frontend ./Frontend
+          docker build -t jayani10/daybee-frontend ./frontend/part-time-react
           docker build -t jayani10/daybee-nginx ./nginx
-          docker build -t jayani10/daybee-api ./Backend
+          docker build -t jayani10/daybee-api ./backend/part-time-backend
 
           docker push jayani10/daybee-frontend
           docker push jayani10/daybee-nginx
