@@ -38,17 +38,17 @@ const JobApplicants = () => {
   });
 
   const pendingCount = applicants.filter(
-    (a) => lowerCase(a.status) === "pending"
+    (a) => lowerCase(a.status) === "pending",
   ).length;
   const approvedCount = applicants.filter(
-    (a) => lowerCase(a.status) === "approved"
+    (a) => lowerCase(a.status) === "approved",
   ).length;
   const rejectedCount = applicants.filter(
-    (a) => lowerCase(a.status) === "rejected"
+    (a) => lowerCase(a.status) === "rejected",
   ).length;
 
   return (
-    <div className="mx-3 sm:mx-6 md:mx-20 my-12 flex flex-col gap-8 ">
+    <div className="mx-3 sm:mx-6 md:mx-20 my-10 flex flex-col gap-8 ">
       <div className="flex flex-col gap-2">
         <span className="text-4xl sm:text-4xl font-bold text-[#0f1f3d] dark:text-white">
           Job Applicants

@@ -103,8 +103,10 @@ public class JobSeekerService {
             throw new NotFoundException("JobSeeker not found");
         }
 
-        if (jobSeekerRepository.existsByNic(request.getNic())) {
-            throw new BadRequestException("Job seeker already exists");
+        if (request.getNic() != null &&
+                !request.getNic().equals(jobSeeker.getNic()) &&
+                jobSeekerRepository.existsByNic(request.getNic())) {
+            throw new BadRequestException("NIC already in use by another user");
         }
 
         jobSeekerMapper.update(request,jobSeeker);
@@ -122,16 +124,20 @@ public class JobSeekerService {
         }
 
         String fullName = seeker.getFirstName();
-        var countUpcomingJobs=jobApplicationRepository.countByJobseeker_IdAndStatusNotAndSchedule_StartDatetimeAfter(id,ApplicationStatus.REJECTED, LocalDateTime.now());
-        var activeApplications= jobApplicationRepository.countByJobseeker_IdAndStatusAndSchedule_StartDatetimeAfter(id,ApplicationStatus.PENDING,LocalDateTime.now());
+        var countUpcomingJobs=jobApplicationRepository.countByJobseeker_IdAndStatusAndSchedule_StartDatetimeAfter(id,ApplicationStatus.APPROVED, LocalDateTime.now());
+        var activeApplications= jobApplicationRepository.countByJobseeker_IdAndStatus(id,ApplicationStatus.PENDING);
 
         var earning = attendanceRepository.totalEarning(id, AttendanceStatus.CHECKED_OUT);
-        var trustScore= userRepository.findById(id).get().getTrustScore();
 
-        var upcomingJobs=attendanceRepository.jobsTo(id);
-        return new SeekerStatsDto(fullName, countUpcomingJobs,activeApplications,earning,trustScore,upcomingJobs);
+        var upcomingJobs=attendanceRepository.jobsTo(id,ApplicationStatus.APPROVED);
+        return new SeekerStatsDto(fullName, countUpcomingJobs,activeApplications,earning,upcomingJobs);
 
 
+    }
+
+    public UpcomingJobDetailsDto getUpcomingJobDetails(UUID applicationId, UUID jobseekerId) {
+        return jobApplicationRepository.getUpcomingJobDetails(applicationId, jobseekerId)
+                .orElseThrow(() -> new NotFoundException("Application not found or you don't have access to this job"));
     }
 
     @Transactional

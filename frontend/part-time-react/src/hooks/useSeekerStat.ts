@@ -11,8 +11,8 @@ interface UpcomingJobs {
   title: string;
   name: string;
   minSalary: number;
-  startTime: string;
-  endTime: string;
+  startDatetime: string | null;
+  endDatetime: string | null;
   status: string;
 }
 
@@ -25,11 +25,16 @@ interface JobDetails {
   upcomingJobs: UpcomingJobs[];
 }
 
-const useSeekerStat = (id: string) => {
+interface UseSeekerStatOptions {
+  enabled?: boolean;
+}
+
+const useSeekerStat = (id: string, options?: UseSeekerStatOptions) => {
   const apiClient = new APIClient<JobDetails>(`/jobseeker/stats/${id}`);
   return useQuery<JobDetails, Error>({
     queryKey: ["jobseeker", "stat", id],
     queryFn: apiClient.getAll,
+    enabled: options?.enabled !== undefined ? options.enabled : true,
   });
 };
 

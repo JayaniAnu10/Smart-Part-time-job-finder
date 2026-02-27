@@ -77,8 +77,10 @@ public class EmployerService {
             throw new NotFoundException("User not found");
         }
 
-        if (employerRepository.existsByRegistrationId(request.getRegistrationId())) {
-            throw new BadRequestException("Registration id already exists");
+        if (request.getRegistrationId() != null &&
+                !request.getRegistrationId().equals(employer.getRegistrationId()) &&
+                employerRepository.existsByRegistrationId(request.getRegistrationId())) {
+            throw new BadRequestException("Registration ID already in use by another user");
         }
 
 

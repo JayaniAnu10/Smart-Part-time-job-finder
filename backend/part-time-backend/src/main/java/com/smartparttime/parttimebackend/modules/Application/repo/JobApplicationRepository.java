@@ -3,6 +3,7 @@ package com.smartparttime.parttimebackend.modules.Application.repo;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
 import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpcomingJobDetailsDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface JobApplicationRepository extends JpaRepository<JobApplication, UUID> {
@@ -71,7 +73,45 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
 
     long countByJobseeker_IdAndStatus(UUID jobseekerId, ApplicationStatus status);
 
-    Long countByJobseeker_IdAndStatusNotAndSchedule_StartDatetimeAfter(UUID jobseekerId, ApplicationStatus status, LocalDateTime scheduleStartDatetimeAfter);
+    @Query("""
+        SELECT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpcomingJobDetailsDto(
+            j.id,
+            j.title,
+            j.description,
+            c.category,
+            j.jobType,
+            e.id,
+            e.companyName,
+            e.contactPersonPhone,
+            u.averageRate,
+            s.id,
+            s.startDatetime,
+            s.endDatetime,
+            j.minSalary,
+            j.maxSalary,
+            j.location,
+            j.latitude,
+            j.longitude,
+            j.requirements,
+            j.accommodation,
+            j.requiredGender,
+            a.id,
+            a.status,
+            a.appliedDate
+        )
+        FROM JobApplication a
+        JOIN a.job j
+        JOIN j.category c
+        JOIN j.employer e
+        JOIN e.user u
+        JOIN a.schedule s
+        WHERE a.id = :applicationId
+        AND a.jobseeker.id = :jobseekerId
+    """)
+    Optional<UpcomingJobDetailsDto> getUpcomingJobDetails(
+            @Param("applicationId") UUID applicationId,
+            @Param("jobseekerId") UUID jobseekerId
+    );
 
     Long countByJobseeker_IdAndStatusAndSchedule_StartDatetimeAfter(UUID id, ApplicationStatus applicationStatus, LocalDateTime now);
 }

@@ -5,11 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartparttime.parttimebackend.common.Services.EmailService;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
+import com.smartparttime.parttimebackend.modules.Admin.repo.AdminAnalyticsRepo;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
 import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
+import com.smartparttime.parttimebackend.modules.Job.CacheNames;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
 import com.smartparttime.parttimebackend.modules.Job.dto.*;
@@ -28,6 +30,9 @@ import com.smartparttime.parttimebackend.modules.Recommendation.Services.JobEmbe
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +50,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class JobServiceImpl implements JobService {
-
+    private final AdminAnalyticsRepo analyticsRepo;
     private final EmbeddingService  embeddingService;
     @Autowired
     private final JobRepo jobRepo;
@@ -71,6 +76,8 @@ public class JobServiceImpl implements JobService {
 
     @Transactional
     @Override
+    @CacheEvict(value = {CacheNames.JOB_LIST, CacheNames.PUBLIC_STATS},
+            allEntries = true)
     public JobResponseDto createJob(JobRequestDto request, UUID employerId) {
         var employer = employerRepository.findById(employerId).orElseThrow();
         var job = jobMapper.toEntity(request);
@@ -115,11 +122,13 @@ public class JobServiceImpl implements JobService {
         var savedJob = jobRepo.save(job);
         jobEmbeddingCache.addOrUpdate(savedJob);
 
+         notifyUrgentJob(savedJob);
 
         return jobMapper.toDto(savedJob);
     }
 
 
+    @Cacheable(value = CacheNames.JOB_LIST)
     @Override
     public List<JobResponseDto> getAllJobs() {
         return jobRepo.findAll()
@@ -129,6 +138,7 @@ public class JobServiceImpl implements JobService {
     }
 
 
+    @Cacheable(value = CacheNames.JOB, key = "#jobId")
     @Override
     public JobResponseDto getJobById(UUID jobId) {
         var job = jobRepo.findById(jobId)
@@ -137,7 +147,8 @@ public class JobServiceImpl implements JobService {
         return jobMapper.toDto(job);
     }
 
-
+    @Cacheable(value = CacheNames.JOB_LIST,
+            key = "'employer_' + #employerId + '_' + #page + '_' + #size")
     @Override
     public List<JobResponseDto> getJobsByEmployer(UUID employerId,int page,int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -194,17 +205,23 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = CacheNames.JOB, key = "#jobId"),
+            @CacheEvict(value = CacheNames.JOB_LIST, allEntries = true)
+    })
     public JobResponseDto updateJob(UUID jobId, JobRequestDto request) {
         var job = jobRepo.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
-
-        jobMapper.update(request,job);
+                boolean wasUrgent = job.getIsUrgent();
+                jobMapper.update(request,job);
 
         if (request.getCategoryId() != null) {
             JobCategory category = categoryRepo.findById(request.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             job.setCategory(category);
         }
+
+
 
         try{
             saveJobEmbedding(job,job.getJobSchedules());
@@ -213,7 +230,12 @@ public class JobServiceImpl implements JobService {
         }
 
         var updated = jobRepo.save(job);
+
         jobEmbeddingCache.addOrUpdate(updated);
+
+        if (!wasUrgent && updated.getIsUrgent()) {
+            notifyUrgentJob(updated);
+        }
 
         return jobMapper.toDto(updated);
     }
@@ -221,6 +243,10 @@ public class JobServiceImpl implements JobService {
 
     @Transactional
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = CacheNames.JOB, key = "#jobId"),
+            @CacheEvict(value = {CacheNames.JOB_LIST, CacheNames.PUBLIC_STATS}, allEntries = true)
+    })
     public void deleteJob(UUID jobId) {
         var job = jobRepo.findById(jobId).orElse(null);
         if (job == null) {
@@ -247,6 +273,8 @@ public class JobServiceImpl implements JobService {
         jobRepo.deleteById(jobId);
     }
 
+    @Cacheable(value = CacheNames.JOB_LIST,
+            key = "'location_' + #location + '_' + #page + '_' + #size")
     @Override
     public Page<JobResponseDto> getByLocation(int page, int size, String location) {
         Pageable pageable = PageRequest.of(page, size);
@@ -254,6 +282,8 @@ public class JobServiceImpl implements JobService {
         return jobs.map(jobMapper::toDto);
     }
 
+    @Cacheable(value = CacheNames.JOB_LIST,
+            key = "'nearby_' + #userLat + '_' + #userLng + '_' + #radius")
     @Override
     public List<NearJobResponse> getNearByJobs(double userLat, double userLng, double radius) {
         var jobs =jobRepo.findNearbyJobs(userLat, userLng, radius);
@@ -295,42 +325,44 @@ public class JobServiceImpl implements JobService {
     }
 
 
-    public void markUrgent(UUID jobId, boolean urgent) {
+    @Override
+    public void notifyUrgentJob(Job job) {
 
-        Job job = jobRepo.findById(jobId)
-                .orElseThrow(() -> new NotFoundException("Job not found"));
+        if (!job.getIsUrgent()) return;
 
-        job.setIsUrgent(urgent);
-        jobRepo.save(job);
+        List<JobSeeker> seekers =
+                jobSeekerRepository.findByLocation(job.getLocation());
 
+        List<UUID> seekerUserIds = seekers.stream()
+                .map(js -> js.getUser().getId())
+                .toList();
 
-        if (urgent) {
-            List<JobSeeker> seekers =
-                    jobSeekerRepository.findMatchingJobSeekers(
-                            job.getRequirements(),
-                            job.getLocation()
-                    );
-
-            List<UUID> seekerUserIds = seekers.stream()
-                    .map(js -> js.getUser().getId())
-                    .toList();
-
-            notificationService.notifyUrgentJobToSeekers(
-                    seekerUserIds,
-                    job.getTitle(),
-                    job.getLocation()
-            );
-        }
+        notificationService.notifyUrgentJobToSeekers(
+                seekerUserIds,
+                job.getTitle(),
+                job.getLocation()
+        );
     }
 
+    @Cacheable(value = CacheNames.JOB_CATEGORY)
     @Override
     public List<JobCategoryDto> getCategories() {
         var categories =categoryRepo.findAll();
         return jobCategoryMapper.toDto(categories);
     }
 
+    @Cacheable(value = CacheNames.PUBLIC_STATS)
+    @Override
+    public PublicStatsDto getPublicStats() {
+        PublicStatsDto dto = new PublicStatsDto();
 
+        dto.setTotalJobs(analyticsRepo.getTotalJobs());
+        dto.setActiveJobs(analyticsRepo.getActiveJobs());
+        dto.setTotalJobSeekers(analyticsRepo.getTotalJobSeekers());
+        dto.setTotalEmployers(analyticsRepo.getTotalEmployers());
 
+        return dto;
+    }
 
 
 }

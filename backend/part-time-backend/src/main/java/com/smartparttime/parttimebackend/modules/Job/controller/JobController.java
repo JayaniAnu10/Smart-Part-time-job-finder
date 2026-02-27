@@ -134,13 +134,7 @@ public class JobController {
     }
 
 
-    @PatchMapping("/{jobId}/urgent")
-    public void markJobUrgent(
-            @PathVariable UUID jobId,
-            @RequestParam boolean urgent
-    ) {
-        jobService.markUrgent(jobId, urgent);
-    }
+
 
     @GetMapping("/category")
     public List<JobCategoryDto> getCategories(){
@@ -159,6 +153,11 @@ public class JobController {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
         return ResponseEntity.ok(response.getBody());
+    }
+
+    @GetMapping("/stats")
+    public PublicStatsDto getPublicStats() {
+        return jobService.getPublicStats();
     }
 
 }

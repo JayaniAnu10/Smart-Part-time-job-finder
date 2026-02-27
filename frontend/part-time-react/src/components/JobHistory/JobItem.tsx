@@ -113,10 +113,6 @@ const JobItem = ({ job, onAddRating, onEditRating }: JobItemProps) => {
       </div>
 
       <div className="flex gap-4">
-        <button className="px-6 py-2 border border-slate-300 dark:border-white/10 rounded-lg text-[13.5px] font-medium text-slate-600 dark:text-slate-400 transition-all hover:scale-105">
-          View Details
-        </button>
-
         {hasRating ? (
           <>
             <button

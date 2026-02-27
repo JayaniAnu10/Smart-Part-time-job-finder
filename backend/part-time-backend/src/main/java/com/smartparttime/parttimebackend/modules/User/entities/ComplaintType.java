@@ -1,5 +1,6 @@
 package com.smartparttime.parttimebackend.modules.User.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class ComplaintType {
     @Column(name = "type")
     private String type;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "type")
     private Set<Complaint> complaints = new HashSet<>();
 

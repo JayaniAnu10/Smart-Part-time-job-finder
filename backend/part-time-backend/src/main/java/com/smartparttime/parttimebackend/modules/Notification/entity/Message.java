@@ -20,6 +20,10 @@ public class Message {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "template_key", unique = true, nullable = false)
+    private String templateKey;
+
+
     @OneToMany(mappedBy = "message")
     private Set<Notification> notifications = new HashSet<>();
 

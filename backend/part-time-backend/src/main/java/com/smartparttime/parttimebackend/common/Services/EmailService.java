@@ -1,40 +1,68 @@
 package com.smartparttime.parttimebackend.common.Services;
 
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Attachments;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+import com.sendgrid.helpers.mail.objects.Personalization;
 import com.smartparttime.parttimebackend.modules.Job.entity.Promotion;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class EmailService {
-    private final JavaMailSender mailSender;
+    private SendGrid sendGrid;
+
+    @Value("${sendgrid.api-key}")
+    private String sendGridApiKey;
+
+    @PostConstruct
+    public void init() {
+        if (sendGridApiKey == null || sendGridApiKey.isEmpty()) {
+            throw new RuntimeException("SendGrid API Key not set in environment variables or application.yml!");
+        }
+        sendGrid = new SendGrid(sendGridApiKey);
+    }
 
     public void sendQrCodeEmail(String email, String jobTitle, LocalDateTime startDate,LocalDateTime endDate, byte[] qrCode) {
             try {
-                MimeMessage message = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+                String htmlContent = buildEmailContent(jobTitle, startDate, endDate);
+                Mail mail = new Mail();
+                Email from = new Email("jayanianuththara10@gmail.com"); // sender email
+                mail.setFrom(from);
+                mail.setSubject("Job Application Approved - Your Attendance QR Code");
 
-                helper.setTo(email);
-                helper.setSubject("Job Application Approved - Your Attendance QR Code");
+                Personalization personalization = new Personalization();
+                personalization.addTo(new Email(email));
+                mail.addPersonalization(personalization);
 
-                String htmlContent = buildEmailContent( jobTitle, startDate,endDate);
-                helper.setText(htmlContent, true);
+                Content content = new Content("text/html", htmlContent);
+                mail.addContent(content);
 
-                helper.addAttachment("attendance-qr-code.png",
-                        new ByteArrayResource(qrCode), "image/png");
+                Attachments attachments = new Attachments();
+                attachments.setContent(java.util.Base64.getEncoder().encodeToString(qrCode));
+                attachments.setType("image/png");
+                attachments.setFilename("attendance-qr-code.png");
+                attachments.setDisposition("attachment");
+                attachments.setContentId("QR Code");
 
-                mailSender.send(message);
+                mail.addAttachments(attachments);
 
-            } catch (MessagingException e) {
+                com.sendgrid.Request request = new com.sendgrid.Request();
+                request.setMethod(com.sendgrid.Method.POST);
+                request.setEndpoint("mail/send");
+                request.setBody(mail.build());
+
+                sendGrid.api(request);
+
+            } catch (Exception e) {
                 throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
             }
         }
@@ -90,22 +118,36 @@ public class EmailService {
             """.formatted(jobTitle, startDate, endDate);
         }
 
-        public void sendSimpleEmail(String toEmail, String subject, String body) {
-            try {
-                MimeMessage message = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+    private void sendEmail(String toEmail, String subject, String htmlBody) {
+        try {
 
-                helper.setTo(toEmail);
-                helper.setSubject(subject);
-                helper.setText(body, true);
+            Mail mail = new Mail();
+            mail.setFrom(new Email("jayanianuththara10@gmail.com"));
+            mail.setSubject(subject);
 
-                mailSender.send(message);
+            Personalization personalization = new Personalization();
+            personalization.addTo(new Email(toEmail));
+            mail.addPersonalization(personalization);
 
+            Content content = new Content("text/html", htmlBody);
+            mail.addContent(content);
 
-            } catch (MessagingException e) {
-                throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
-            }
+            com.sendgrid.Request request = new com.sendgrid.Request();
+            request.setMethod(com.sendgrid.Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            sendGrid.api(request);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
         }
+    }
+
+
+    public void sendSimpleEmail(String toEmail, String subject, String body) {
+        sendEmail(toEmail, subject, body);
+    }
 
     @Async
     public void sendJobDeletedEmail(String to,
@@ -142,19 +184,8 @@ public class EmailService {
         </div>
         """.formatted(firstName, lastName, jobTitle);
 
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        sendEmail(to, subject, htmlContent);
 
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true);
-
-            mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-
-            System.err.println("Failed to send HTML email: " + e.getMessage());
-        }
     }
 
 
@@ -254,6 +285,104 @@ public class EmailService {
 
         sendSimpleEmail(email, subject, body);
     }
+
+
+    public void sendComplaintResolvedReporterEmail(
+            String toEmail,
+            String reporterName,
+            String complaintType,
+            String createdAt
+    ) {
+
+        String subject = "Your Complaint Has Been Resolved";
+
+        String body = """
+        <h2>Complaint Update</h2>
+        <p>Dear %s,</p>
+
+        <p>Thank you for reporting a <strong>%s</strong> complaint on <strong>%s</strong>.</p>
+
+        <p>We want to inform you that this complaint has been <strong>reviewed and resolved</strong> by our admin team.</p>
+
+        <p>Your feedback helps us keep the platform safe and fair for everyone.</p>
+
+        <br/>
+        <p>Best regards,<br/>
+        <strong>DayBee.lk Admin Team</strong></p>
+        """.formatted(
+                reporterName,
+                complaintType,
+                createdAt
+        );
+
+        sendSimpleEmail(toEmail, subject, body);
+    }
+
+
+    public void sendComplaintRejectedReporterEmail(
+            String toEmail,
+            String reporterName,
+            String complaintType,
+            String createdAt
+    ) {
+
+        String subject = "Update on Your Complaint";
+
+        String body = """
+        <h2>Complaint Review Update</h2>
+        <p>Dear %s,</p>
+
+        <p>We have carefully reviewed your <strong>%s</strong> complaint submitted on <strong>%s</strong>.</p>
+
+        <p>After evaluation, we found that this complaint does not meet our review criteria and has been <strong>closed</strong>.</p>
+
+        <p>If you believe there is a serious issue, you are welcome to submit a new complaint with more details.</p>
+
+        <br/>
+        <p>Thank you for understanding,<br/>
+        <strong>DayBee.lk Admin Team</strong></p>
+        """.formatted(
+                reporterName,
+                complaintType,
+                createdAt
+        );
+
+        sendSimpleEmail(toEmail, subject, body);
+    }
+
+
+
+    public void sendComplaintResolvedTargetEmail(
+            String toEmail,
+            String targetName,
+            String complaintType
+    ) {
+
+        String subject = "Account Notice from DayBee.lk";
+
+        String body = """
+        <h2>Account Notice</h2>
+        <p>Dear %s,</p>
+
+        <p>A <strong>%s</strong> complaint related to your account was reviewed by our admin team.</p>
+
+        <p>The issue has now been <strong>resolved</strong>.</p>
+
+        <p>Please make sure to follow our community guidelines to avoid future actions.</p>
+
+        <br/>
+        <p>Regards,<br/>
+        <strong>DayBee.lk Admin Team</strong></p>
+        """.formatted(
+                targetName,
+                complaintType
+        );
+
+        sendSimpleEmail(toEmail, subject, body);
+    }
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Logo from "../common/Logo";
@@ -17,7 +17,6 @@ import useAuth from "@/hooks/useAuth";
 import useLogout from "@/hooks/useLogout";
 
 const NavBar = () => {
-  const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
   const navigate = useNavigate();
 
@@ -30,7 +29,6 @@ const NavBar = () => {
     navigate("/");
   }, [logout, navigate]);
 
-  // Action buttons based on roles
   const actionButtons = useMemo(() => {
     if (!accessToken) {
       return [
@@ -39,10 +37,22 @@ const NavBar = () => {
       ];
     }
 
-    const buttons = [];
+    const buttons: any[] = [];
 
-    // Only show GetStarted if user has no role at all
-    if (user && !user.isEmployer && !user.isJobseeker) {
+    if (user?.role === "ADMIN") {
+      buttons.push({
+        label: t("adminDashboard"),
+        to: "/admin/dashboard",
+        variant: "default",
+      });
+    }
+
+    if (
+      user &&
+      !user.isEmployer &&
+      !user.isJobseeker &&
+      user.role !== "ADMIN"
+    ) {
       buttons.push({
         label: t("getStarted"),
         to: "/getstarted",
@@ -53,7 +63,7 @@ const NavBar = () => {
     if (user?.isJobseeker) {
       buttons.push({
         label: t("seekerDashboard"),
-        to: "/dashboard",
+        to: "/seekerDashboard",
         variant: "default",
       });
     }
@@ -84,7 +94,7 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/75 backdrop-blur-lg w-full px-4 lg:px-6 min-h-16 flex items-center justify-between flex-wrap lg:flex-nowrap">
+    <nav className="text-sm fixed top-0 left-0 right-0 z-50 bg-background/75 backdrop-blur-lg w-full px-4 lg:px-6 min-h-16 flex items-center justify-between flex-wrap lg:flex-nowrap">
       <Logo />
 
       {/* Desktop nav links */}
@@ -104,7 +114,6 @@ const NavBar = () => {
         <LanguageSwitcher />
         <ThemeToggle />
 
-        {/* dashboard dropdown (desktop only) */}
         {accessToken && user && (user.isEmployer || user.isJobseeker) && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -113,17 +122,14 @@ const NavBar = () => {
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent
-              align="end"
-              className="flex flex-col gap-2 p-2  "
-            >
-              {user?.isJobseeker && (
+            <DropdownMenuContent align="end" className="p-2">
+              {user.isJobseeker && (
                 <DropdownMenuItem asChild>
                   <Link to="/seekerDashboard">{t("seekerDashboard")}</Link>
                 </DropdownMenuItem>
               )}
 
-              {user?.isEmployer && (
+              {user.isEmployer && (
                 <DropdownMenuItem asChild>
                   <Link to="/empDashboard">{t("employerDashboard")}</Link>
                 </DropdownMenuItem>
@@ -132,18 +138,17 @@ const NavBar = () => {
           </DropdownMenu>
         )}
 
-        {/* Other action buttons (login / get started / logout) */}
         {actionButtons
           .filter(
             (btn) =>
               btn.label !== t("seekerDashboard") &&
-              btn.label !== t("employerDashboard")
+              btn.label !== t("employerDashboard"),
           )
           .map((btn) =>
             btn.to ? (
               <Link key={btn.label} to={btn.to}>
                 <Button
-                  variant={btn.variant as any}
+                  variant={btn.variant}
                   className={`px-3 xl:px-4 text-md ${
                     btn.variant === "default"
                       ? "bg-yellow-400 text-[#0f1f3d] hover:bg-yellow-300"
@@ -156,98 +161,15 @@ const NavBar = () => {
             ) : (
               <Button
                 key={btn.label}
-                variant={btn.variant as any}
-                className={`px-3 xl:px-4 ${
-                  btn.variant === "default"
-                    ? "bg-yellow-400 text-[#0f1f3d]"
-                    : "hover:text-[#0f1f3d]"
-                }`}
-                onClick={btn.onClick}
-              >
-                <LogOut />
-                {btn.label}
-              </Button>
-            )
-          )}
-      </div>
-
-      {/* hamburger */}
-      <div className="lg:hidden flex items-center gap-3">
-        <LanguageSwitcher />
-        <ThemeToggle />
-        <div
-          className="cursor-pointer"
-          onClick={() => setMenuOpen(!isMenuOpen)}
-        >
-          <div
-            className={`bg-yellow-400 w-7 h-1 rounded-full relative transition-all ${
-              isMenuOpen ? "rotate-45 top-2" : ""
-            }`}
-          ></div>
-          <div
-            className={`bg-yellow-400 w-7 h-1 rounded-full mt-1 transition-all ${
-              isMenuOpen ? "opacity-0" : "opacity-100"
-            }`}
-          ></div>
-          <div
-            className={`bg-yellow-400 w-7 h-1 rounded-full mt-1 relative transition-all ${
-              isMenuOpen ? "-rotate-45 -top-2" : ""
-            }`}
-          ></div>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      <div
-        className={`lg:hidden absolute top-16 left-0 w-full bg-white/95 dark:bg-background/95 dark:text-primary flex flex-col p-4 gap-2 font-semibold text-base text-secondary transition-all shadow-lg ${
-          isMenuOpen
-            ? "opacity-100 visible translate-y-0"
-            : "opacity-0 invisible -translate-y-4"
-        }`}
-      >
-        {navLinks.map((link) => (
-          <Link key={link.label} to={link.to}>
-            <Button
-              variant="ghost"
-              className="w-full text-left hover:bg-secondary/30"
-            >
-              {link.label}
-            </Button>
-          </Link>
-        ))}
-
-        <div className="flex flex-col  gap-2 pt-2 border-t border-secondary/20">
-          {actionButtons.map((btn) =>
-            btn.to ? (
-              <Link key={btn.label} to={btn.to}>
-                <Button
-                  variant={btn.variant as any}
-                  className={`w-full text-md ${
-                    btn.variant === "default"
-                      ? "bg-yellow-400 text-[#0f1f3d] hover:bg-yellow-300"
-                      : "hover:bg-yellow-400 hover:text-[#0f1f3d]"
-                  }`}
-                >
-                  {btn.label}
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                key={btn.label}
-                variant={btn.variant as any}
-                className={`w-full ${
-                  btn.variant === "default"
-                    ? "bg-yellow-400 text-[#0f1f3d]"
-                    : "hover:text-[#0f1f3d] "
-                }`}
+                variant={btn.variant}
+                className="px-3 xl:px-4 hover:text-[#0f1f3d]"
                 onClick={btn.onClick}
               >
                 <LogOut size={16} />
                 {btn.label}
               </Button>
-            )
+            ),
           )}
-        </div>
       </div>
     </nav>
   );

@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Admin.controller;
 
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminOverviewDto;
+import com.smartparttime.parttimebackend.modules.Admin.dto.LocationCountDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.TopCategoryDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.TrafficDto;
 import com.smartparttime.parttimebackend.modules.Admin.service.AdminAnalyticsService;
@@ -37,4 +38,13 @@ AdminAnalyticsController {
     public List<TrafficDto> getDailyTraffic() {
         return analyticsService.getDailyTraffic();
     }
+
+
+    @GetMapping("/jobs-by-location")
+    public List<LocationCountDto> getJobsByLocation() {
+        return analyticsService.getJobsByLocation();
+    }
+
+
+
 }

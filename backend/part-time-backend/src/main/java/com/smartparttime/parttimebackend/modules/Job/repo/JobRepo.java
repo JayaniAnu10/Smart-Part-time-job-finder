@@ -4,13 +4,15 @@ import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
-import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -60,6 +62,16 @@ public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExec
         GROUP BY j.id, j.postedDate, j.status, j.title, j.deadline
     """)
     List<JobStatDto> getJobStatsByEmployer(@Param("employerId") UUID employerId);
+
+    @Modifying
+    @Query("""
+    UPDATE Job j 
+    SET j.status = 'CLOSED' 
+    WHERE j.status = 'ACTIVE' 
+    AND j.deadline < :currentTime
+""")
+    int closeExpiredJobs(@Param("currentTime") LocalDateTime currentTime);
+
 
     List<Job> findAllByStatusAndLocationContainsIgnoreCase(JobStatus status, String location);
 

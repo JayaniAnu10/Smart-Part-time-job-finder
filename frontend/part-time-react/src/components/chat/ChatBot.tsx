@@ -9,10 +9,24 @@ type ChatResponse = {
 };
 
 const ChatBot = () => {
+  function generateUUID() {
+    if (crypto.randomUUID) return crypto.randomUUID(); // modern browsers
+    // fallback for older browsers
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      },
+    );
+  }
+
+  const conversationId = useRef(generateUUID());
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const conversationId = useRef(crypto.randomUUID());
 
   const onSubmit = async ({ prompt }: ChatFormData) => {
     try {
@@ -20,13 +34,10 @@ const ChatBot = () => {
       setIsLoading(true);
       setError("");
 
-      const { data } = await axios.post<ChatResponse>(
-        "http://localhost:8080/api/chat",
-        {
-          prompt,
-          conversationId: conversationId.current,
-        }
-      );
+      const { data } = await axios.post<ChatResponse>("/api/api/chat", {
+        prompt,
+        conversationId: conversationId.current,
+      });
       setMessages((prev) => [...prev, { content: data.message, role: "bot" }]);
     } catch (error) {
       console.error(error);

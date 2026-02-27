@@ -1,6 +1,7 @@
 package com.smartparttime.parttimebackend.modules.Admin.service.impl;
 
 import com.smartparttime.parttimebackend.modules.Admin.dto.AdminOverviewDto;
+import com.smartparttime.parttimebackend.modules.Admin.dto.LocationCountDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.TopCategoryDto;
 import com.smartparttime.parttimebackend.modules.Admin.dto.TrafficDto;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminAnalyticsRepo;
@@ -82,4 +83,24 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
 
         return response;
     }
+
+
+    @Override
+    public List<LocationCountDto> getJobsByLocation() {
+
+        List<Object[]> results = analyticsRepo.getJobsByLocation();
+        List<LocationCountDto> response = new ArrayList<>();
+
+        for (Object[] row : results) {
+            LocationCountDto dto = new LocationCountDto();
+            dto.setLocation((String) row[0]);
+            dto.setCount((Long) row[1]);
+            response.add(dto);
+        }
+
+        return response;
+    }
+
+
+
 }

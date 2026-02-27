@@ -10,5 +10,6 @@
   "logout": "வெளியேறு",
   "getStarted": "தொடங்கவும்",
   "seekerDashboard": "வேலை தேடுபவரின் டேஷ்போர்டு",
-  "employerDashboard": "முதலாளியின் டாஷ்போர்டு"
+  "employerDashboard": "முதலாளியின் டாஷ்போர்டு",
+  "adminDashboard": "டாஷ்போர்டு"
 }

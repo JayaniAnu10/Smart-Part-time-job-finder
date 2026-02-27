@@ -15,8 +15,8 @@ export interface NearJobResponse {
 const NearByJobPage = () => {
   const DEFAULT_LAT = 5.939647107591209;
   const DEFAULT_LNG = 80.57449256992793;
-  const [lat, setLat] = useState<number>(DEFAULT_LAT);
-  const [lng, setLng] = useState<number>(DEFAULT_LNG);
+  const [lat] = useState<number>(DEFAULT_LAT);
+  const [lng] = useState<number>(DEFAULT_LNG);
   const [jobs, setJobs] = useState<NearJobResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ const NearByJobPage = () => {
       setError(null);
 
       axios
-        .get<NearJobResponse>("http://localhost:8080/jobs/nearby", {
+        .get<NearJobResponse>("/api/jobs/nearby", {
           params: {
             latitude: lat,
             longitude: lng,
@@ -89,7 +89,7 @@ const NearByJobPage = () => {
   }
 
   return (
-    <div className="p-4 mt-25 mx-9 flex flex-col gap-3">
+    <div className="p-4 mt-15 mx-9 flex flex-col gap-3">
       <div>
         <span className="text-5xl font-bold  dark:text-white  text-secondary">
           Find{" "}

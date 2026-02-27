@@ -1,9 +1,6 @@
 package com.smartparttime.parttimebackend.modules.Rating.service;
 
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingRequest;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingResponse;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.RatingUpdateRequest;
-import com.smartparttime.parttimebackend.modules.Rating.RateDtos.UserAverageRateResponse;
+import com.smartparttime.parttimebackend.modules.Rating.RateDtos.*;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
@@ -27,4 +24,5 @@ public interface RateService {
 
     UserAverageRateResponse getAverageRateOfUser(UUID id);
 
+    Page<RatingWithDetailsResponse> getRatingsByUserWithDetails(UUID userId, int page, int size);
 }

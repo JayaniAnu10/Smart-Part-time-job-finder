@@ -13,13 +13,13 @@ const processQueue = (error: any, token: string | null = null) => {
 };
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "/api",
   withCredentials: true,
 });
 
 // Separate axios instance for refresh calls to avoid interceptor loops
 const refreshClient = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "/api",
   withCredentials: true,
   timeout: 2000,
 });
@@ -117,7 +117,7 @@ class APIClient<T> {
       .then((res) => res.data);
   };
 
-  post = (data: T) => {
+  post = <D = any>(data?: D) => {
     return axiosInstance.post<T>(this.endpoint, data).then((res) => res.data);
   };
 

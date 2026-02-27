@@ -39,20 +39,26 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
             """)
     JobSeekerProfileDetails getJobSeekerProfile(UUID jobSeekerId);
 
-
     @Query("""
-    SELECT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerCompletedJobDto(
+    SELECT DISTINCT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerCompletedJobDto(
         j.title,
         e.companyName,
-        a.checkOutTime,
-        r.rating,
-        a.status
+        (SELECT MAX(att.checkOutTime) 
+         FROM Attendance att 
+         WHERE att.user.id = u.id 
+         AND att.job.id = j.id),
+        COALESCE(r.rating, 0),
+        (SELECT att2.status 
+         FROM Attendance att2 
+         WHERE att2.user.id = u.id 
+         AND att2.job.id = j.id 
+         ORDER BY att2.checkOutTime DESC 
+         LIMIT 1)
     )
     FROM JobApplication ja
     JOIN ja.job j
     JOIN j.employer e
-    LEFT JOIN ja.jobseeker u
-    LEFT JOIN u.attendances a
+    JOIN ja.jobseeker u
     LEFT JOIN Rate r ON r.rateReceiver.id = u.id AND r.job.id = j.id
     WHERE u.id = :jobSeekerId
     AND ja.status = 'APPROVED'
@@ -62,13 +68,10 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
     @Query("""
     SELECT js
     FROM JobSeeker js
-    WHERE 
-        LOWER(js.skills) LIKE LOWER(CONCAT('%', :skills, '%'))
-        AND LOWER(js.address) LIKE LOWER(CONCAT('%', :location, '%'))
-        """)
-    List<JobSeeker> findMatchingJobSeekers(
-            @Param("skills") String skills,
-            @Param("location") String location
-    );
+    WHERE LOWER(js.address) LIKE LOWER(CONCAT('%', :location, '%'))
+""")
+    List<JobSeeker> findByLocation(@Param("location") String location);
+
+
 
 }

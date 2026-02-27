@@ -1,0 +1,71 @@
+services:
+  mysql:
+    image: "mysql:8.0"
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  redis:
+    image: "redis:7-alpine"
+    container_name: redis-cache
+    networks:
+      - app-network
+
+  server:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./backend/part-time-backend
+    container_name: spring-server
+    volumes:
+      - ~/.m2:/root/.m2
+      - ./backend/part-time-backend:/app
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - app-network
+
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./frontend/part-time-react
+    container_name: react-client
+    volumes:
+      - /app/node_modules
+      - ./frontend/part-time-react:/app
+    networks:
+      - app-network
+
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    container_name: nginx-proxy
+    ports:
+      - "3050:80"
+    depends_on:
+      - server
+      - client
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge

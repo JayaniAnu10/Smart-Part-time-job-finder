@@ -12,6 +12,5 @@ public class SeekerStatsDto {
     private Long countUpcomingJobs;
     private Long activeApplications;
     private JobStatsDto earning;
-    private Integer trustScore;
     private List<UpcomingJobsDto> upcomingJobs;
 }

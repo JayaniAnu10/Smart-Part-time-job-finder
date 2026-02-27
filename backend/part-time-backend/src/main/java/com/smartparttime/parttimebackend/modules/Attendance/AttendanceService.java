@@ -1,18 +1,20 @@
 package com.smartparttime.parttimebackend.modules.Attendance;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
-import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
@@ -22,7 +24,7 @@ public class AttendanceService {
 
     public byte[] generateQr(String qrToken) throws WriterException, IOException {
 
-        String url = "http://localhost:8080/attendance/scan?token="+ qrToken;
+        String url = "/api/attendance/scan?token="+ qrToken;
 
         BitMatrix matrix = new MultiFormatWriter().encode(url, BarcodeFormat.QR_CODE, 300, 300);
         ByteArrayOutputStream out = new ByteArrayOutputStream();

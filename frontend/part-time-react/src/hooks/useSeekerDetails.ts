@@ -30,12 +30,13 @@ export interface Profile {
   jobDetails: Job[];
 }
 
-const useSeekerDetails = (id: string) => {
+const useSeekerDetails = (id: string, options?: { enabled?: boolean }) => {
   const apiClient = new APIClient<Profile>(`/jobseeker/profile/${id}`);
 
   return useQuery<Profile, Error>({
     queryKey: ["jobseeker", "profile", id],
-    queryFn: () => apiClient.getAll(),
+    queryFn: apiClient.getAll,
+    enabled: options?.enabled ?? true,
   });
 };
 

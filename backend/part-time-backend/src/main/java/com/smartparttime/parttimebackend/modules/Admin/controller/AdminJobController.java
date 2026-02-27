@@ -65,6 +65,10 @@ public class AdminJobController {
         return adminJobService.getJobDetails(id);
     }
 
+    @GetMapping("/recent")
+    public List<AdminJobDto> getRecentJobs() {
+        return adminJobService.getRecentJobs();
+    }
 
 
 

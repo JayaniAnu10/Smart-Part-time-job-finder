@@ -37,7 +37,7 @@ export default function StatsSection() {
     },
     {
       title: "Pending Reports",
-      value: data.pendingComplaints,
+      value: data.totalComplaints,
       icon: AlertTriangle,
     },
     {
