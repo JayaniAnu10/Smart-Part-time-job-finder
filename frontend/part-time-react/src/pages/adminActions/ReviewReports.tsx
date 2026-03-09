@@ -12,6 +12,7 @@ import { AlertTriangle } from "lucide-react";
 import APIClient from "@/services/apiClient";
 import ComplaintsTable from "@/components/admin/ComplaintsTable";
 import ComplaintDetailsModal from "@/components/admin/ComplaintDetailsModal";
+import AdminSidebar from "@/components/adminDashboard/AdminSidebar";
 
 import type { AdminComplaint } from "@/components/admin/ComplaintsTable";
 
@@ -55,69 +56,80 @@ export default function ReviewReportsPage() {
   }, [complaints, statusFilter]);
 
   return (
-    <div className="p-12 space-y-6">
-      {/* ================= HEADER ================= */}
-      <div>
-        <h1 className="text-3xl font-bold text-secondary dark:text-primary">
-          Review Reports
-        </h1>
-        <p className="text-secondary/70 dark:text-primary/70">
-          Handle user and job related complaints
-        </p>
+    <div className="flex min-h-screen bg-slate-50 dark:bg-[#020617] transition-colors duration-500">
+      
+      {/* Sidebar */}
+      <div className="w-72 shrink-0 border-r border-slate-200 dark:border-slate-800/50 hidden lg:block">
+        <AdminSidebar />
       </div>
 
-      {/* ================= FILTER BAR ================= */}
-      <Card>
-        <CardContent className="flex items-center justify-between gap-4 p-6 flex-wrap">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="h-12 w-[200px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
+      {/* Main Content */}
+      <main className="flex-1 p-12 space-y-6">
 
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="resolved">Resolved</SelectItem>
-              <SelectItem value="rejected">Rejected</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* ================= HEADER ================= */}
+        <div>
+          <h1 className="text-3xl font-bold text-secondary dark:text-primary">
+            Review Reports
+          </h1>
+          <p className="text-secondary/70 dark:text-primary/70">
+            Handle user and job related complaints
+          </p>
+        </div>
 
-          <div className="flex items-center gap-2 text-[#364d7d] font-medium">
-            <AlertTriangle className="h-4 w-4" />
-            <span>{filteredComplaints.length} reports found</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* ================= TABLE ================= */}
-      {loading ? (
+        {/* ================= FILTER BAR ================= */}
         <Card>
-          <CardContent className="p-20 text-center text-secondary/70">
-            Loading complaints...
+          <CardContent className="flex items-center justify-between gap-4 p-6 flex-wrap">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="h-12 w-[200px]">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="resolved">Resolved</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center gap-2 text-[#364d7d] font-medium">
+              <AlertTriangle className="h-4 w-4" />
+              <span>{filteredComplaints.length} reports found</span>
+            </div>
           </CardContent>
         </Card>
-      ) : (
-        <ComplaintsTable
-          complaints={filteredComplaints}
-          onView={(complaint) => {
-            setSelectedComplaint(complaint);
-            setModalOpen(true);
+
+        {/* ================= TABLE ================= */}
+        {loading ? (
+          <Card>
+            <CardContent className="p-20 text-center text-secondary/70">
+              Loading complaints...
+            </CardContent>
+          </Card>
+        ) : (
+          <ComplaintsTable
+            complaints={filteredComplaints}
+            onView={(complaint) => {
+              setSelectedComplaint(complaint);
+              setModalOpen(true);
+            }}
+          />
+        )}
+
+        {/* ================= MODAL ================= */}
+        <ComplaintDetailsModal
+          open={modalOpen}
+          complaint={selectedComplaint}
+          onClose={() => {
+            setModalOpen(false);
+            setSelectedComplaint(null);
+          }}
+          onActionSuccess={() => {
+            fetchComplaints();
           }}
         />
-      )}
 
-      {/* ================= MODAL ================= */}
-      <ComplaintDetailsModal
-        open={modalOpen}
-        complaint={selectedComplaint}
-        onClose={() => {
-          setModalOpen(false);
-          setSelectedComplaint(null);
-        }}
-        onActionSuccess={() => {
-          fetchComplaints(); // refresh table after resolve/reject
-        }}
-      />
+      </main>
     </div>
   );
 }
