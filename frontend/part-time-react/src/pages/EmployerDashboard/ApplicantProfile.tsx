@@ -28,11 +28,10 @@ const ApplicantProfile = () => {
   const { id } = useParams<{ id: string }>();
 
   const { data, isLoading, isError } = useSeekerDetails(id!);
-  const { data: complaintTypes, isLoading: typesLoading } =
-    useComplaintTypes();
+  const { data: complaintTypes, isLoading: typesLoading } = useComplaintTypes();
 
   const loggedUser = useAuthStore((state) => state.user);
-  const { mutate, isLoading: isSubmitting } = useCreateComplaint();
+  const { mutate, isPending: isSubmitting } = useCreateComplaint();
 
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState("");
@@ -69,7 +68,7 @@ const ApplicantProfile = () => {
         onError: () => {
           alert("Failed to submit complaint");
         },
-      }
+      },
     );
   };
 

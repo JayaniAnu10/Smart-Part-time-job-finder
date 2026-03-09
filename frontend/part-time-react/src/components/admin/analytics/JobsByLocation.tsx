@@ -14,8 +14,8 @@ import { useAdminAnalytics } from "@/hooks/useAdminAnalytics";
 // Professional Multi-color Palette
 const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981"];
 
-/*  Helper function to extract city/district from long address */
-function extractCity(location) {
+/* Helper function to extract city/district from long address */
+function extractCity(location: string) {
   if (!location) return "Unknown";
 
   const parts = location.split(",").map((p) => p.trim());
@@ -34,14 +34,14 @@ function extractCity(location) {
     return parts[0];
   }
 
-  // fallback (last meaningful location)
+  // fallback
   return parts[parts.length - 5] || parts[0];
 }
 
 export default function JobsByLocation() {
   const { jobsByLocation } = useAdminAnalytics();
 
-  // 🔹 Clean and sort data
+  // Clean and sort data
   const data = [...(jobsByLocation || [])]
     .map((item) => ({
       location: extractCity(item.location),
@@ -96,8 +96,10 @@ export default function JobsByLocation() {
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              
+            <BarChart
+              data={data}
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            >
               <CartesianGrid
                 vertical={false}
                 strokeDasharray="3 3"
@@ -143,7 +145,6 @@ export default function JobsByLocation() {
                   />
                 ))}
               </Bar>
-
             </BarChart>
           </ResponsiveContainer>
         )}

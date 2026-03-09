@@ -36,13 +36,17 @@ export default function RecentPostedJobs() {
 
         {error && (
           <div className="p-4 text-center">
-             <p className="text-sm text-red-500 bg-red-50 dark:bg-red-500/10 py-2 rounded-lg">{error}</p>
+            <p className="text-sm text-red-500 bg-red-50 dark:bg-red-500/10 py-2 rounded-lg">
+              {error}
+            </p>
           </div>
         )}
 
         {!loading && jobs.length === 0 && (
           <div className="py-10 text-center">
-            <p className="text-sm text-zinc-400">No recent opportunities found.</p>
+            <p className="text-sm text-zinc-400">
+              No recent opportunities found.
+            </p>
           </div>
         )}
 
@@ -70,12 +74,15 @@ export default function RecentPostedJobs() {
                 <h4 className="font-bold text-zinc-800 dark:text-zinc-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                   {job.title}
                 </h4>
-                <ChevronRight size={16} className="text-zinc-300 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                <ChevronRight
+                  size={16}
+                  className="text-zinc-300 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0"
+                />
               </div>
 
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                  {job.company}
+                  {job.companyName}
                 </span>
                 <span className="h-1 w-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
                 <div className="flex items-center gap-1 text-[11px] font-medium text-zinc-400">
@@ -86,13 +93,17 @@ export default function RecentPostedJobs() {
 
               {/* Status Pill */}
               <div className="flex items-center gap-2">
-                <span className={cn(
-                  "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
-                  job.status === "ACTIVE" 
-                    ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" 
-                    : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
-                )}>
-                  {job.status === "ACTIVE" && <Zap size={10} className="fill-current" />}
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                    job.status === "ACTIVE"
+                      ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+                      : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
+                  )}
+                >
+                  {job.status === "ACTIVE" && (
+                    <Zap size={10} className="fill-current" />
+                  )}
                   {job.status}
                 </span>
               </div>

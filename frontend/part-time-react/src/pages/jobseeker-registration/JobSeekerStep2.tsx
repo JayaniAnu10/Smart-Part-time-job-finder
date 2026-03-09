@@ -70,6 +70,7 @@ export default function JobSeekerStep3() {
           const msg =
             error.response?.data.error ||
             "Job Seeker signup failed. Please try again.";
+          console.log("ERROR RESPONSE:", error.response?.data);
           toast.error(msg);
         } else {
           toast.error("Job Seeker signup failed. Please try again.");
@@ -118,7 +119,7 @@ export default function JobSeekerStep3() {
             <UploadButton
               label="Upload Photo"
               onChange={(file) => {
-                setPhoto(file), setData({ profilePicture: file });
+                (setPhoto(file), setData({ profilePicture: file }));
               }}
             />
           </div>

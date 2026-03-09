@@ -10,5 +10,6 @@
   "logout": "පිටවීම",
   "getStarted": "ආරම්භ කරන්න",
   "seekerDashboard": "රැකියා සොයන්නාගේ උපකරණ පුවරුව",
-  "employerDashboard": "සේවායෝජකයාගේ උපකරණ පුවරුව"
+  "employerDashboard": "සේවායෝජකයාගේ උපකරණ පුවරුව",
+  "adminDashboard": "උපකරණ පුවරුව"
 }

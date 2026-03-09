@@ -34,12 +34,12 @@ interface JobResponse {
 
 const useAddJob = (
   id: string,
-  onAddSuccess: (jobId: string, jobTitle: string) => void
+  onAddSuccess: (jobId: string, jobTitle: string) => void,
 ) => {
-  const apiClient = new APIClient<JobResponse, JobData>(`jobs/create/${id}`);
+  const apiClient = new APIClient<JobResponse>(`jobs/create/${id}`);
 
   return useMutation<JobResponse, Error, JobData>({
-    mutationFn: (data: JobData) => apiClient.post(data as any),
+    mutationFn: (data: JobData) => apiClient.post(data),
     onSuccess: (data) => {
       toast.success("Job post created successfully! 🎉");
       onAddSuccess(data.id, data.title);

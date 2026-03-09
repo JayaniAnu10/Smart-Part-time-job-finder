@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Logo from "../common/Logo";
@@ -17,7 +17,6 @@ import useAuth from "@/hooks/useAuth";
 import useLogout from "@/hooks/useLogout";
 
 const NavBar = () => {
-  const [isMenuOpen, setMenuOpen] = useState(false);
   const { t } = useTranslation("navBar");
   const navigate = useNavigate();
 
@@ -40,16 +39,14 @@ const NavBar = () => {
 
     const buttons: any[] = [];
 
-  
     if (user?.role === "ADMIN") {
       buttons.push({
-        label: t("dashboard"),
+        label: t("adminDashboard"),
         to: "/admin/dashboard",
         variant: "default",
       });
     }
 
-    
     if (
       user &&
       !user.isEmployer &&
@@ -117,43 +114,35 @@ const NavBar = () => {
         <LanguageSwitcher />
         <ThemeToggle />
 
-        
-        {accessToken &&
-          user &&
-          (user.isEmployer || user.isJobseeker) && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="bg-yellow-400 text-[#0f1f3d] hover:bg-yellow-300 text-md">
-                  {t("dashboard")}
-                </Button>
-              </DropdownMenuTrigger>
+        {accessToken && user && (user.isEmployer || user.isJobseeker) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-yellow-400 text-[#0f1f3d] hover:bg-yellow-300 text-md">
+                {t("dashboard")}
+              </Button>
+            </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="p-2">
-                {user.isJobseeker && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/seekerDashboard">
-                      {t("seekerDashboard")}
-                    </Link>
-                  </DropdownMenuItem>
-                )}
+            <DropdownMenuContent align="end" className="p-2">
+              {user.isJobseeker && (
+                <DropdownMenuItem asChild>
+                  <Link to="/seekerDashboard">{t("seekerDashboard")}</Link>
+                </DropdownMenuItem>
+              )}
 
-                {user.isEmployer && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/empDashboard">
-                      {t("employerDashboard")}
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+              {user.isEmployer && (
+                <DropdownMenuItem asChild>
+                  <Link to="/empDashboard">{t("employerDashboard")}</Link>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
-        
         {actionButtons
           .filter(
             (btn) =>
               btn.label !== t("seekerDashboard") &&
-              btn.label !== t("employerDashboard")
+              btn.label !== t("employerDashboard"),
           )
           .map((btn) =>
             btn.to ? (
@@ -173,13 +162,13 @@ const NavBar = () => {
               <Button
                 key={btn.label}
                 variant={btn.variant}
-                className="px-3 xl:px-4"
+                className="px-3 xl:px-4 hover:text-[#0f1f3d]"
                 onClick={btn.onClick}
               >
                 <LogOut size={16} />
                 {btn.label}
               </Button>
-            )
+            ),
           )}
       </div>
     </nav>

@@ -25,7 +25,6 @@ public class NotificationService {
     private final NotificationRepo notificationRepo;
     private final MessageRepo messageRepo;
     private final UserRepository userRepo;
-    private final EmailService emailService;
     private final JobSeekerRepository jobSeekerRepository;
 
 
@@ -132,11 +131,5 @@ public class NotificationService {
 
         notificationRepo.saveAll(notifications);
     }
-
-
-
-
-
-
 
 }
