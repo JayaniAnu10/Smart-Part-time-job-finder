@@ -8,11 +8,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import utils.WaitUtils;
 
-public class PostLoginRegistrationPage extends BaseTest {
+public class PostLoginJobseekerRegistrationPage extends BaseTest {
 
     WaitUtils wait;
 
-    public PostLoginRegistrationPage(WebDriver driver) {
+    public PostLoginJobseekerRegistrationPage(WebDriver driver) {
         super(driver);
         wait = new WaitUtils(driver);
     }
