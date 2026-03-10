@@ -2,18 +2,23 @@ package tests;
 
 import org.testng.annotations.Test;
 import pages.LoginPage;
+
 public class LoginTest extends BaseTest{
 
     LoginPage loginPage;
 
-    @Test
-    public void testLogin() {
+    public void login(String email, String password) {
         loginPage = new LoginPage(driver);
-
         loginPage.openLoginPage();
         loginPage.clickLoginTab();
-        loginPage.enterEmail("lakshikasandeepani33@gmail.com");
-        loginPage.enterPassword("123456");
+        loginPage.enterEmail(email);
+        loginPage.enterPassword(password);
         loginPage.clickLogin();
+    }
+
+    @Test
+    public void testLogin() {
+        login("rmlakshikarathnayake@gmail.com" , "123456");
+
     }
 }
