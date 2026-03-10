@@ -4,8 +4,6 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import utils.WaitUtils;
-
-
 public class LoginPage extends BaseTest {
 
     WaitUtils wait;
@@ -16,13 +14,9 @@ public class LoginPage extends BaseTest {
     }
 
     By LoginNavButton = By.xpath("//button[text()='Login']");
-
     By LoginTab = By.xpath("(//button[text()='Login'])[1]");
-
-    By emailField = By.name("email");
-
+    By emailField = By.xpath("//*[@id=\"auth-container\"]/div/div[3]/form/div[1]/div/input");
     By passwordField = By.name("password");
-
     By loginButton = By.xpath("(//button[text()='Login'])[2]");
 
     public void openLoginPage(){

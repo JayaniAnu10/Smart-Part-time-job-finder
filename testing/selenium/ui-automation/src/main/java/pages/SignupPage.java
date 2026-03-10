@@ -15,17 +15,11 @@ public class SignupPage extends BaseTest {
     }
 
     By LoginNavButton = By.xpath("//button[text()='Login']");
-
     By signupTab = By.xpath("//button[text()='Sign Up'][1]");
-
     By emailField = By.name("email");
-
     By contactNoField = By.name("contact");
-
     By passwordField = By.name("password");
-
     By confirmPasswordField = By.name("confirmPassword");
-
     By signupButton = By.xpath("(//button[text()='Sign Up'])[2]");
 
     public void openSignupPage(){
