@@ -2,10 +2,10 @@ package base;
 
 import org.openqa.selenium.WebDriver;
 
-public class BaseTest {
+public class BasePage {
     public WebDriver driver;
 
-    public BaseTest(WebDriver driver) {
+    public BasePage(WebDriver driver) {
         this.driver = driver;
     }
 

@@ -1,10 +1,10 @@
 package pages;
 
-import base.BaseTest;
+import base.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import utils.WaitUtils;
-public class LoginPage extends BaseTest {
+public class LoginPage extends BasePage {
 
     WaitUtils wait;
 
