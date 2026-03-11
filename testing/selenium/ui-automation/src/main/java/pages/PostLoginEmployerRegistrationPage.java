@@ -1,6 +1,6 @@
 package pages;
 
-import base.BaseTest;
+import base.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -8,14 +8,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import utils.WaitUtils;
 
-public class PostLoginEmployerRegistrationPage extends BaseTest {
+public class PostLoginEmployerRegistrationPage extends BasePage {
     WaitUtils wait;
 
     public PostLoginEmployerRegistrationPage(WebDriver driver) {
         super(driver);
         wait = new WaitUtils(driver);
     }
-
 
     By getStartedBtn = By.xpath("//button[normalize-space()='Get Started']");
     By getStartedFreeButton = By.xpath("//a[normalize-space()='Get Started Free']");
@@ -87,10 +86,6 @@ public class PostLoginEmployerRegistrationPage extends BaseTest {
     public void enterDescription(String description){
         driver.findElement(descriptionField).sendKeys(description);
     }
-
-//    public void acceptTerms(){
-//        wait.waitForElementClickable(termsCheckbox).click();
-//    }
 
     public void acceptTerms() {
 

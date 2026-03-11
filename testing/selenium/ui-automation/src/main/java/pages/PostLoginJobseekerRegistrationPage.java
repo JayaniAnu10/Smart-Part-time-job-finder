@@ -1,6 +1,6 @@
 package pages;
 
-import base.BaseTest;
+import base.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import utils.WaitUtils;
 
-public class PostLoginJobseekerRegistrationPage extends BaseTest {
+public class PostLoginJobseekerRegistrationPage extends BasePage {
 
     WaitUtils wait;
 
