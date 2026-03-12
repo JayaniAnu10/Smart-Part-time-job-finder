@@ -14,17 +14,41 @@ import { useAdminAnalytics } from "@/hooks/useAdminAnalytics";
 // Professional Multi-color Palette
 const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981"];
 
+/* Helper function to extract city/district from long address */
+function extractCity(location: string) {
+  if (!location) return "Unknown";
+
+  const parts = location.split(",").map((p) => p.trim());
+
+  // Look for "District"
+  const districtPart = parts.find((p) =>
+    p.toLowerCase().includes("district")
+  );
+
+  if (districtPart) {
+    return districtPart.replace(/district/i, "").trim();
+  }
+
+  // If simple city like "Galle"
+  if (parts.length === 1) {
+    return parts[0];
+  }
+
+  // fallback
+  return parts[parts.length - 5] || parts[0];
+}
+
 export default function JobsByLocation() {
   const { jobsByLocation } = useAdminAnalytics();
 
-  // 🔹 Type safety and sorting for a better visual flow
+  // Clean and sort data
   const data = [...(jobsByLocation || [])]
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5)
     .map((item) => ({
-      location: item.location,
+      location: extractCity(item.location),
       count: item.count,
-    }));
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
 
   return (
     <Card className="rounded-3xl border-none bg-card shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
@@ -38,6 +62,7 @@ export default function JobsByLocation() {
               Geographical job distribution
             </p>
           </div>
+
           <div className="h-10 w-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
             <svg
               className="w-6 h-6 text-amber-600 dark:text-amber-400"
@@ -112,7 +137,7 @@ export default function JobsByLocation() {
                 barSize={45}
                 animationDuration={1500}
               >
-                {data.map((_, index) => (
+                {data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
