@@ -191,6 +191,7 @@ public class JobServiceImpl implements JobService {
         }
 
         spec = spec.and(JobSpec.notExpired());
+        spec = spec.and(JobSpec.orderByPromotion());
 
         Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
         Page<JobListingDetailsDto> jobDtosPage = jobsPage.map(jobMapper::toListing);

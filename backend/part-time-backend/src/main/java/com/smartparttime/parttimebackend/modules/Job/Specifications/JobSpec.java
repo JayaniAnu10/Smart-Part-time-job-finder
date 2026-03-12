@@ -3,6 +3,7 @@ package com.smartparttime.parttimebackend.modules.Job.Specifications;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
@@ -19,6 +20,26 @@ public class JobSpec {
                     cb.like(cb.lower(root.get("requirements")), pattern),
                     cb.like(cb.lower(root.get("description")), pattern)
             );
+        };
+    }
+
+    public static Specification<Job> orderByPromotion() {
+        return (root, query, cb) -> {
+
+            Join<Object, Object> promoJoin = root.join("promotions", JoinType.LEFT);
+            Join<Object, Object> categoryJoin = promoJoin.join("promotionCategory", JoinType.LEFT);
+
+            query.orderBy(
+                    cb.asc(
+                            cb.selectCase()
+                                    .when(cb.equal(categoryJoin.get("name"), "Premium"), 1)
+                                    .when(cb.equal(categoryJoin.get("name"), "Standard"), 2)
+                                    .when(cb.equal(categoryJoin.get("name"), "Basic"), 3)
+                                    .otherwise(4)
+                    )
+            );
+
+            return null;
         };
     }
 
