@@ -20,7 +20,6 @@ function extractCity(location: string) {
 
   const parts = location.split(",").map((p) => p.trim());
 
-  // Look for "District"
   const districtPart = parts.find((p) =>
     p.toLowerCase().includes("district")
   );
@@ -29,23 +28,33 @@ function extractCity(location: string) {
     return districtPart.replace(/district/i, "").trim();
   }
 
-  // If simple city like "Galle"
   if (parts.length === 1) {
     return parts[0];
   }
 
-  // fallback
   return parts[parts.length - 5] || parts[0];
 }
 
 export default function JobsByLocation() {
   const { jobsByLocation } = useAdminAnalytics();
 
-  // Clean and sort data
-  const data = [...(jobsByLocation || [])]
-    .map((item) => ({
-      location: extractCity(item.location),
-      count: item.count,
+  /* 🔹 GROUP SAME LOCATIONS TOGETHER */
+  const grouped: Record<string, number> = {};
+
+  (jobsByLocation || []).forEach((item) => {
+    const city = extractCity(item.location);
+
+    if (!grouped[city]) {
+      grouped[city] = 0;
+    }
+
+    grouped[city] += item.count;
+  });
+
+  const data = Object.entries(grouped)
+    .map(([location, count]) => ({
+      location,
+      count,
     }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
