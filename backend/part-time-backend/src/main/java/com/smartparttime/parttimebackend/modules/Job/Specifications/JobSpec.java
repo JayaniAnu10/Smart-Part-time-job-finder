@@ -24,31 +24,6 @@ public class JobSpec {
         };
     }
 
-    public static Specification<Job> orderByPromotion() {
-        return (root, query, cb) -> {
-
-            if (query.getResultType() != Long.class) {   // avoid affecting count query
-
-                Join<Object, Object> promoJoin = root.join("promotions", JoinType.LEFT);
-                Join<Object, Object> categoryJoin = promoJoin.join("category", JoinType.LEFT);
-
-                query.distinct(true);
-
-                query.orderBy(
-                        cb.asc(
-                                cb.selectCase()
-                                        .when(cb.equal(categoryJoin.get("name"), "Premium"), 1)
-                                        .when(cb.equal(categoryJoin.get("name"), "Standard"), 2)
-                                        .when(cb.equal(categoryJoin.get("name"), "Basic"), 3)
-                                        .otherwise(4)
-                        ),
-                        cb.desc(root.get("postedDate")) // secondary sorting
-                );
-            }
-
-            return null;
-        };
-    }
 
     public static Specification<Job> hasMinSalaryGreaterThanOrEqualTo(BigDecimal minSalary) {
         return (root, query, cb) ->   cb.greaterThanOrEqualTo(root.get("minSalary"), minSalary );
@@ -57,6 +32,7 @@ public class JobSpec {
     public static Specification<Job> hasMaxSalaryLessThanOrEqualTo(BigDecimal maxSalary) {
         return (root, query, cb) ->  cb.lessThanOrEqualTo(root.get("maxSalary"), maxSalary);
     }
+
 
     public static Specification<Job> hasCategory(String category) {
         return (root, query, cb) -> {
