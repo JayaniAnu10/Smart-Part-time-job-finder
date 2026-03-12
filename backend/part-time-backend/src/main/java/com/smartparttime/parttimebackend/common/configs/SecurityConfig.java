@@ -103,7 +103,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/jobs/create/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/jobs/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/jobs").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/jobs/**").permitAll()
                         .requestMatchers(HttpMethod.PATCH,"/jobs/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/jobs/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/applications").permitAll()
