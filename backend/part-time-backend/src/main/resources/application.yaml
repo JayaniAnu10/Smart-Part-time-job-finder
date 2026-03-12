@@ -24,10 +24,18 @@ spring:
             enable: true
   jpa:
     show-sql: true
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Colombo
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  jackson:
+    time-zone: Asia/Colombo
+    serialization:
+      write-dates-as-timestamps: false
   cloud:
     azure:
       storage:
