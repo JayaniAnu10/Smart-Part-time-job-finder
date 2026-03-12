@@ -1,20 +1,44 @@
 package com.smartparttime.parttimebackend.modules.Job.service.impl;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartparttime.parttimebackend.common.Services.EmailService;
+import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminAnalyticsRepo;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
-import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.CacheNames;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.Specifications.JobSpec;
-import com.smartparttime.parttimebackend.modules.Job.dto.*;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobCategoryDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobListingDetailsDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobListingResponse;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobRequestDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.JobResponseDto;
+import com.smartparttime.parttimebackend.modules.Job.dto.NearJobResponse;
+import com.smartparttime.parttimebackend.modules.Job.dto.PublicStatsDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
@@ -27,25 +51,9 @@ import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
 import com.smartparttime.parttimebackend.modules.Recommendation.Services.JobEmbeddingCache;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -191,8 +199,9 @@ public class JobServiceImpl implements JobService {
         }
 
         spec = spec.and(JobSpec.notExpired());
+        spec = spec.and(JobSpec.orderedByPromotion());
 
-        Page<Job> jobsPage= jobRepo.findAll(spec, pageable);
+        Page<Job> jobsPage = jobRepo.findAll(spec, pageable);
         Page<JobListingDetailsDto> jobDtosPage = jobsPage.map(jobMapper::toListing);
         long totalJobs = jobRepo.count(JobSpec.notExpired());
 
@@ -221,7 +230,9 @@ public class JobServiceImpl implements JobService {
             job.setCategory(category);
         }
 
-
+        if(request.getDeadline()!=null){
+            job.setStatus(JobStatus.ACTIVE);
+        }
 
         try{
             saveJobEmbedding(job,job.getJobSchedules());

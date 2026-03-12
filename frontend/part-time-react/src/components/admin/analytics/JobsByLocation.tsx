@@ -20,9 +20,8 @@ function extractCity(location: string) {
 
   const parts = location.split(",").map((p) => p.trim());
 
-  const districtPart = parts.find((p) =>
-    p.toLowerCase().includes("district")
-  );
+  // Look for "District"
+  const districtPart = parts.find((p) => p.toLowerCase().includes("district"));
 
   if (districtPart) {
     return districtPart.replace(/district/i, "").trim();
@@ -146,7 +145,7 @@ export default function JobsByLocation() {
                 barSize={45}
                 animationDuration={1500}
               >
-                {data.map((entry, index) => (
+                {data.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}

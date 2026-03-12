@@ -1,6 +1,5 @@
 package com.smartparttime.parttimebackend.modules.Job.repo;
 
-import com.smartparttime.parttimebackend.modules.Employer.Employer;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
 import com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
@@ -17,7 +16,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 import java.util.UUID;
 
-public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExecutor<Job> {
+public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExecutor<Job>,
+        JobRepositoryCustom {
 
     Page<Job> findByEmployer_Id(UUID employerId, Pageable pageable);
 
@@ -45,8 +45,6 @@ public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExec
 
     long countByEmployer_IdAndStatus(UUID employerId, JobStatus status);
 
-    Employer findByEmployer_Id(UUID employerId);
-
     @Query(value="""
         SELECT new com.smartparttime.parttimebackend.modules.Job.dto.JobStatDto(
             COUNT(ja),
@@ -72,12 +70,5 @@ public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExec
 """)
     int closeExpiredJobs(@Param("currentTime") LocalDateTime currentTime);
 
-
-    List<Job> findAllByStatusAndLocationContainsIgnoreCase(JobStatus status, String location);
-
     List<Job> findAllByStatus(JobStatus status);
-
-    List<Job> findAllByStatusAndRequiredGenderContainingIgnoreCase(JobStatus status, String requiredGender);
-
-    List<Job> findAllById(UUID id);
 }
