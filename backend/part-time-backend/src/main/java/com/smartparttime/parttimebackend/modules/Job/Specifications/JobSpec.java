@@ -26,18 +26,24 @@ public class JobSpec {
     public static Specification<Job> orderByPromotion() {
         return (root, query, cb) -> {
 
-            Join<Object, Object> promoJoin = root.join("promotions", JoinType.LEFT);
-            Join<Object, Object> categoryJoin = promoJoin.join("promotionCategory", JoinType.LEFT);
+            if (query.getResultType() != Long.class) {   // avoid affecting count query
 
-            query.orderBy(
-                    cb.asc(
-                            cb.selectCase()
-                                    .when(cb.equal(categoryJoin.get("name"), "Premium"), 1)
-                                    .when(cb.equal(categoryJoin.get("name"), "Standard"), 2)
-                                    .when(cb.equal(categoryJoin.get("name"), "Basic"), 3)
-                                    .otherwise(4)
-                    )
-            );
+                Join<Object, Object> promoJoin = root.join("promotions", JoinType.LEFT);
+                Join<Object, Object> categoryJoin = promoJoin.join("promotionCategory", JoinType.LEFT);
+
+                query.distinct(true);
+
+                query.orderBy(
+                        cb.asc(
+                                cb.selectCase()
+                                        .when(cb.equal(categoryJoin.get("name"), "Premium"), 1)
+                                        .when(cb.equal(categoryJoin.get("name"), "Standard"), 2)
+                                        .when(cb.equal(categoryJoin.get("name"), "Basic"), 3)
+                                        .otherwise(4)
+                        ),
+                        cb.desc(root.get("postedDate")) // secondary sorting
+                );
+            }
 
             return null;
         };
