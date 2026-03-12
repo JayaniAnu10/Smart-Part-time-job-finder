@@ -1,15 +1,16 @@
 package com.smartparttime.parttimebackend.modules.Job.Specifications;
 
-import com.smartparttime.parttimebackend.modules.Job.entity.Job;
-import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import com.smartparttime.parttimebackend.modules.Job.entity.Job;
+import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
+
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 
 public class JobSpec {
     public static Specification<Job> hasTitleRequirementsDescription(String keyword) {
@@ -29,7 +30,7 @@ public class JobSpec {
             if (query.getResultType() != Long.class) {   // avoid affecting count query
 
                 Join<Object, Object> promoJoin = root.join("promotions", JoinType.LEFT);
-                Join<Object, Object> categoryJoin = promoJoin.join("promotionCategory", JoinType.LEFT);
+                Join<Object, Object> categoryJoin = promoJoin.join("category", JoinType.LEFT);
 
                 query.distinct(true);
 
@@ -49,11 +50,6 @@ public class JobSpec {
         };
     }
 
-    /*public static Specification<Job> hasDescription(String description) {
-        return (root, query, cb) ->  cb.like( cb.lower(root.get("description")),
-                "%" + description.toLowerCase() + "%");
-    }*/
-
     public static Specification<Job> hasMinSalaryGreaterThanOrEqualTo(BigDecimal minSalary) {
         return (root, query, cb) ->   cb.greaterThanOrEqualTo(root.get("minSalary"), minSalary );
     }
@@ -61,11 +57,6 @@ public class JobSpec {
     public static Specification<Job> hasMaxSalaryLessThanOrEqualTo(BigDecimal maxSalary) {
         return (root, query, cb) ->  cb.lessThanOrEqualTo(root.get("maxSalary"), maxSalary);
     }
-
-    /*public static Specification<Job> hasRequirements(String requirements) {
-        return  (root, query, cb) ->   cb.like( cb.lower(root.get("requirements")),
-                "%" + requirements.toLowerCase() + "%");
-    }*/
 
     public static Specification<Job> hasCategory(String category) {
         return (root, query, cb) -> {
