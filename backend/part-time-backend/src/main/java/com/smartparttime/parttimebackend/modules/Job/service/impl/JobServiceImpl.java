@@ -221,7 +221,9 @@ public class JobServiceImpl implements JobService {
             job.setCategory(category);
         }
 
-
+        if(request.getDeadline()!=null){
+            job.setStatus(JobStatus.ACTIVE);
+        }
 
         try{
             saveJobEmbedding(job,job.getJobSchedules());
