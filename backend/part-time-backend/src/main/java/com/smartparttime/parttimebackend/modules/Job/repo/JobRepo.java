@@ -16,7 +16,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 import java.util.UUID;
 
-public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExecutor<Job> {
+public interface JobRepo extends JpaRepository<Job, UUID> , JpaSpecificationExecutor<Job>,
+        JobRepositoryCustom {
 
     Page<Job> findByEmployer_Id(UUID employerId, Pageable pageable);
 
