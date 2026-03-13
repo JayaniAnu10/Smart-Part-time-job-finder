@@ -88,6 +88,12 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
                 </div>
               </div>
               <div className="flex items-center gap-3 md:flex-row flex-col">
+                {/* Promotion Badge */}
+                {job.promotionCategoryName && (
+                  <Badge className="bg-orange-500 text-white hover:bg-orange-600">
+                    {job.promotionCategoryName}
+                  </Badge>
+                )}
                 {/* Status Badge with conditional styling */}
                 <Badge
                   variant={job.status === "ACTIVE" ? "default" : "secondary"}

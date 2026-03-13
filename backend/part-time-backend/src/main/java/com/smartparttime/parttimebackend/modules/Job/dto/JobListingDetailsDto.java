@@ -1,12 +1,11 @@
 package com.smartparttime.parttimebackend.modules.Job.dto;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import lombok.Data;
 
 @Data
 public class JobListingDetailsDto {
@@ -36,4 +35,6 @@ public class JobListingDetailsDto {
     private String employer;
 
     private Boolean isUrgent;
+
+    private String promotionCategoryName;
 }

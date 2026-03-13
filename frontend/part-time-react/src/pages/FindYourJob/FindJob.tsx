@@ -81,7 +81,7 @@ const FindJob = () => {
   const { data, isLoading } = useJobs(
     { titleSearch, locationSearch, selectedDate, ...filters },
     queryParams.toString(),
-    { page }
+    { page },
   );
 
   const { data: recommendedJobs = [] } = useRecommended(user?.id);
@@ -327,6 +327,11 @@ const FindJob = () => {
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 flex-wrap mb-1">
+                              {job.promotionCategoryName && (
+                                <Badge className="text-sm bg-orange-500 text-white hover:bg-orange-600">
+                                  {job.promotionCategoryName}
+                                </Badge>
+                              )}
                               {job.isUrgent && (
                                 <Badge
                                   variant="destructive"

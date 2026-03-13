@@ -10,7 +10,9 @@ import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerR
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.EmployerStats;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerDtos.UpdateEmployerRequest;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
+import com.smartparttime.parttimebackend.modules.Job.PromoStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
+import com.smartparttime.parttimebackend.modules.Job.repo.PromotionRepository;
 import com.smartparttime.parttimebackend.modules.User.*;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
 import jakarta.transaction.Transactional;
@@ -24,7 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -35,6 +39,7 @@ public class EmployerService {
     private final AzureImageStorageClient imageStorageClient;
     private final JobRepo jobRepo;
     private final JobApplicationRepository jobApplicationRepository;
+    private final PromotionRepository promotionRepository;
 
     @Transactional
     public EmployerDto addEmployee(@Valid EmployerRegisterRequest request, MultipartFile logo) throws IOException {
@@ -167,6 +172,15 @@ public class EmployerService {
         var jobs = jobRepo.getJobStatsByEmployer(id);
         var monthRate =calculateMonthlyGrowth(id);
 
+        Map<UUID, String> promoMap = promotionRepository
+                .findByJob_Employer_IdAndStatus(id, PromoStatus.ACTIVE)
+                .stream()
+                .collect(Collectors.toMap(
+                        p -> p.getJob().getId(),
+                        p -> p.getCategory() != null ? p.getCategory().getName() : "",
+                        (existing, newVal) -> existing
+                ));
+        jobs.forEach(jobStat -> jobStat.setPromotionCategoryName(promoMap.get(jobStat.getId())));
 
         return employerMapper.toEmpStat(jobCount,applicantCount,pendingReviewCount,jobs,monthRate);
     }
