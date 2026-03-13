@@ -121,14 +121,14 @@ public class JobServiceImpl implements JobService {
         job.setAvailableVacancies(totalRequiredWorkers);
 
 
-        /*try{
+        try{
             saveJobEmbedding(job, job.getJobSchedules());
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
-*/
+
         var savedJob = jobRepo.save(job);
-        /*jobEmbeddingCache.addOrUpdate(savedJob);*/
+        jobEmbeddingCache.addOrUpdate(savedJob);
 
          notifyUrgentJob(savedJob);
 
