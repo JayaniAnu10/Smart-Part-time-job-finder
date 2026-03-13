@@ -1,22 +1,25 @@
 package com.smartparttime.parttimebackend.modules.Application.service;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
 import com.smartparttime.parttimebackend.common.Services.EmailService;
-import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
 import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceService;
 import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
-import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class JobApplicationAsyncService {
 
     private final JobRepo jobRepo;
@@ -54,9 +57,16 @@ public class JobApplicationAsyncService {
 
             emailService.sendQrCodeEmail(email,  jobTitle, scheduleStartDate,scheduleEndDate, qrCode);
 
+                log.info("QR email sent for applicationId={}, seekerId={}, jobId={}",
+                    application.getId(),
+                    application.getJobseeker().getId(),
+                    job.getId());
+
 
         }catch(Exception e){
-            throw new RuntimeException("Failed  to process application approval", e);
+                log.error("Failed to process approval for applicationId={}. QR/email flow failed.",
+                    application.getId(), e);
+                throw new RuntimeException("Failed to process application approval", e);
         }
 
 
