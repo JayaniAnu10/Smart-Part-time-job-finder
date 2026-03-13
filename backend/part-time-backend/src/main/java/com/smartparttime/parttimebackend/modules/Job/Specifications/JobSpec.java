@@ -6,9 +6,11 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.smartparttime.parttimebackend.modules.Job.PromoStatus;
 import com.smartparttime.parttimebackend.modules.Job.entity.Job;
 import com.smartparttime.parttimebackend.modules.Job.entity.JobSchedule;
 import com.smartparttime.parttimebackend.modules.Job.entity.Promotion;
+import com.smartparttime.parttimebackend.modules.Job.entity.PromotionCategory;
 
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
@@ -72,38 +74,47 @@ public class JobSpec {
         return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("deadline"), LocalDateTime.now());
     }
 
-    /**
-     * Applies promotion-based ordering: jobs with active (non-expired) promotions appear first.
-     * Uses a subquery to avoid duplicate rows from a JOIN on the promotions collection,
-     * which would otherwise break pagination.
-     * We check the result type so the count query (used by Spring Data for pagination) is unaffected.
-     */
+        /**
+         * Applies promotion-tier ordering:
+         * Premium -> Standard -> Basic -> normal (non-promoted) jobs.
+         * Uses subqueries to avoid duplicates that would break pagination.
+         */
     public static Specification<Job> orderedByPromotion() {
         return (root, query, cb) -> {
-            // Skip ordering for the count query Spring Data JPA runs for pagination
             if (Long.class.equals(query.getResultType()) || long.class.equals(query.getResultType())) {
                 return cb.conjunction();
             }
 
             LocalDateTime now = LocalDateTime.now();
 
-            // Subquery: count active promotions for each job
-            Subquery<Long> activePromoCount = query.subquery(Long.class);
-            Root<Promotion> promoRoot = activePromoCount.from(Promotion.class);
-            activePromoCount.select(cb.count(promoRoot))
+            // Subquery: get the best (lowest) rank among active promotions of this job.
+            // premium=1, standard=2, basic=3, any other plan=4
+            Subquery<Integer> promoRankSubquery = query.subquery(Integer.class);
+            Root<Promotion> promoRoot = promoRankSubquery.from(Promotion.class);
+            Join<Promotion, PromotionCategory> categoryJoin = promoRoot.join("category");
+
+            Expression<Integer> promoRank = cb.<Integer>selectCase()
+                .when(cb.equal(cb.lower(categoryJoin.get("name")), "premium"), 1)
+                .when(cb.equal(cb.lower(categoryJoin.get("name")), "standard"), 2)
+                .when(cb.equal(cb.lower(categoryJoin.get("name")), "basic"), 3)
+                .otherwise(4);
+
+            promoRankSubquery.select(cb.min(promoRank))
                     .where(
                             cb.equal(promoRoot.get("job"), root),
-                            cb.greaterThan(promoRoot.<LocalDateTime>get("expiryDate"), now)
+                    cb.equal(promoRoot.get("status"), PromoStatus.ACTIVE),
+                    cb.greaterThan(promoRoot.<LocalDateTime>get("expiryDate"), now)
                     );
 
-            // CASE WHEN active promotion exists THEN 1 ELSE 0 → order DESC (promoted first)
-            Expression<Integer> hasActivePromotion = cb.<Integer>selectCase()
-                    .when(cb.gt(activePromoCount, 0L), 1)
-                    .otherwise(0);
+            // If no active promotion exists, put job after all known promo tiers.
+            Expression<Integer> effectiveRank = cb.coalesce(promoRankSubquery.getSelection(), 5);
 
-            query.orderBy(cb.desc(hasActivePromotion));
+            query.orderBy(
+                cb.asc(effectiveRank),
+                cb.desc(root.get("postedDate"))
+            );
 
-            return cb.conjunction(); // Does not add a WHERE condition; only affects ORDER BY
+            return cb.conjunction();
         };
     }
 }

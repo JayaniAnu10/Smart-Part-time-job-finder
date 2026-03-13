@@ -89,8 +89,31 @@ const FindJob = () => {
   const filteredJobs = data?.jobs.content ?? [];
   const totalPages = data?.jobs.totalPages ?? 1;
 
-  // Sort jobs based on sortBy
+  const getPromotionRank = (promotionCategoryName?: string | null) => {
+    if (!promotionCategoryName) return 4;
+
+    switch (promotionCategoryName.trim().toLowerCase()) {
+      case "premium":
+        return 1;
+      case "standard":
+        return 2;
+      case "basic":
+        return 3;
+      default:
+        return 4;
+    }
+  };
+
+  // Always keep promotion tier priority first, then apply selected secondary sort.
   const sortedJobs = [...filteredJobs].sort((a, b) => {
+    const promotionRankDiff =
+      getPromotionRank(a.promotionCategoryName) -
+      getPromotionRank(b.promotionCategoryName);
+
+    if (promotionRankDiff !== 0) {
+      return promotionRankDiff;
+    }
+
     switch (sortBy) {
       case "newest":
         return (
@@ -105,7 +128,9 @@ const FindJob = () => {
       case "salary-low":
         return a.minSalary - b.minSalary;
       default:
-        return 0; // no sorting
+        return (
+          new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime()
+        );
     }
   });
 
