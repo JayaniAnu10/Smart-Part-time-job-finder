@@ -1,7 +1,7 @@
 import type { JobStats } from "@/hooks/useEmpStats";
 
 import { Badge } from "@/components/ui/badge";
-import { Edit, Eye, Trash2, Users } from "lucide-react";
+import { Award, Crown, Edit, Eye, Star, Trash2, Users } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 import useDelJob from "@/hooks/useDelJob";
@@ -22,6 +22,46 @@ export const getDaysAgo = (date: string) => {
   if (diffDays === 0) return "Today";
   if (diffDays === 1) return "1 day ago";
   return `${diffDays} days ago`;
+};
+
+const renderPromotionBadge = (promotionCategoryName?: string | null) => {
+  if (!promotionCategoryName) return null;
+
+  const normalized = promotionCategoryName.trim().toLowerCase();
+
+  if (normalized === "premium") {
+    return (
+      <Badge className="bg-amber-500 text-white hover:bg-amber-600">
+        <Crown className="w-3 h-3 mr-1" />
+        {promotionCategoryName}
+      </Badge>
+    );
+  }
+
+  if (normalized === "standard") {
+    return (
+      <Badge className="bg-sky-600 text-white hover:bg-sky-700">
+        <Award className="w-3 h-3 mr-1" />
+        {promotionCategoryName}
+      </Badge>
+    );
+  }
+
+  if (normalized === "basic") {
+    return (
+      <Badge className="bg-orange-500 text-white hover:bg-orange-600">
+        <Star className="w-3 h-3 mr-1" />
+        {promotionCategoryName}
+      </Badge>
+    );
+  }
+
+  return (
+    <Badge className="bg-orange-500 text-white hover:bg-orange-600">
+      <Star className="w-3 h-3 mr-1" />
+      {promotionCategoryName}
+    </Badge>
+  );
 };
 
 const EmpJobPost = ({ jobs, empId }: Props) => {
@@ -89,11 +129,7 @@ const EmpJobPost = ({ jobs, empId }: Props) => {
               </div>
               <div className="flex items-center gap-3 md:flex-row flex-col">
                 {/* Promotion Badge */}
-                {job.promotionCategoryName && (
-                  <Badge className="bg-orange-500 text-white hover:bg-orange-600">
-                    {job.promotionCategoryName}
-                  </Badge>
-                )}
+                {renderPromotionBadge(job.promotionCategoryName)}
                 {/* Status Badge with conditional styling */}
                 <Badge
                   variant={job.status === "ACTIVE" ? "default" : "secondary"}

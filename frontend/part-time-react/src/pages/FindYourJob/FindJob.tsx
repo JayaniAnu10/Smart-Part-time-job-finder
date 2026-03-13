@@ -8,15 +8,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Award,
   ArrowLeft,
   ArrowRight,
   Building2,
   Calendar,
   Clock,
+  Crown,
   DollarSign,
   MapPin,
   Search,
   Sparkles,
+  Star,
   TrendingUp,
   Users,
   Zap,
@@ -136,6 +139,46 @@ const FindJob = () => {
 
   const shortenLocation = (location: string) => {
     return location.split(",")[0];
+  };
+
+  const renderPromotionBadge = (promotionCategoryName?: string | null) => {
+    if (!promotionCategoryName) return null;
+
+    const normalized = promotionCategoryName.trim().toLowerCase();
+
+    if (normalized === "premium") {
+      return (
+        <Badge className="text-sm bg-amber-500 text-white hover:bg-amber-600">
+          <Crown className="w-3 h-3 mr-1" />
+          {promotionCategoryName}
+        </Badge>
+      );
+    }
+
+    if (normalized === "standard") {
+      return (
+        <Badge className="text-sm bg-sky-600 text-white hover:bg-sky-700">
+          <Award className="w-3 h-3 mr-1" />
+          {promotionCategoryName}
+        </Badge>
+      );
+    }
+
+    if (normalized === "basic") {
+      return (
+        <Badge className="text-sm bg-orange-500 text-white hover:bg-orange-600">
+          <Star className="w-3 h-3 mr-1" />
+          {promotionCategoryName}
+        </Badge>
+      );
+    }
+
+    return (
+      <Badge className="text-sm bg-orange-500 text-white hover:bg-orange-600">
+        <Star className="w-3 h-3 mr-1" />
+        {promotionCategoryName}
+      </Badge>
+    );
   };
 
   return (
@@ -352,11 +395,7 @@ const FindJob = () => {
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 flex-wrap mb-1">
-                              {job.promotionCategoryName && (
-                                <Badge className="text-sm bg-orange-500 text-white hover:bg-orange-600">
-                                  {job.promotionCategoryName}
-                                </Badge>
-                              )}
+                              {renderPromotionBadge(job.promotionCategoryName)}
                               {job.isUrgent && (
                                 <Badge
                                   variant="destructive"
