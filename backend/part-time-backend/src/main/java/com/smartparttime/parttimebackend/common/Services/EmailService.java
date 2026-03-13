@@ -36,39 +36,24 @@ public class EmailService {
 
     public void sendQrCodeEmail(String email, String jobTitle, LocalDateTime startDate,LocalDateTime endDate, byte[] qrCode) {
             try {
+                if (email == null || email.isBlank()) {
+                    throw new RuntimeException("Cannot send QR email: recipient email is empty");
+                }
+                if (qrCode == null || qrCode.length == 0) {
+                    throw new RuntimeException("Cannot send QR email: generated QR code is empty");
+                }
+
                 String htmlContent = buildEmailContent(jobTitle, startDate, endDate);
-                Mail mail = new Mail();
-                Email from = new Email("jayanianuththara10@gmail.com"); // sender email
-                mail.setFrom(from);
-                mail.setSubject("Job Application Approved - Your Attendance QR Code");
-
-                Personalization personalization = new Personalization();
-                personalization.addTo(new Email(email));
-                mail.addPersonalization(personalization);
-
-                Content content = new Content("text/html", htmlContent);
-                mail.addContent(content);
+                String subject = "Job Application Approved - Your Attendance QR Code";
 
                 Attachments attachments = new Attachments();
                 attachments.setContent(java.util.Base64.getEncoder().encodeToString(qrCode));
                 attachments.setType("image/png");
                 attachments.setFilename("attendance-qr-code.png");
                 attachments.setDisposition("attachment");
-                attachments.setContentId("QR Code");
+                attachments.setContentId("attendance-qr-code");
 
-                mail.addAttachments(attachments);
-
-                com.sendgrid.Request request = new com.sendgrid.Request();
-                request.setMethod(com.sendgrid.Method.POST);
-                request.setEndpoint("mail/send");
-                request.setBody(mail.build());
-
-                Response response = sendGrid.api(request);
-                int statusCode = response.getStatusCode();
-                if (statusCode < 200 || statusCode >= 300) {
-                    throw new RuntimeException("SendGrid rejected QR email. status="
-                            + statusCode + ", body=" + response.getBody());
-                }
+                sendSimpleEmail(email, subject, htmlContent, attachments);
 
             } catch (Exception e) {
                 throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
@@ -126,7 +111,7 @@ public class EmailService {
             """.formatted(jobTitle, startDate, endDate);
         }
 
-    private void sendEmail(String toEmail, String subject, String htmlBody) {
+    private void sendEmail(String toEmail, String subject, String htmlBody, Attachments attachments) {
         try {
 
             Mail mail = new Mail();
@@ -140,12 +125,21 @@ public class EmailService {
             Content content = new Content("text/html", htmlBody);
             mail.addContent(content);
 
+            if (attachments != null) {
+                mail.addAttachments(attachments);
+            }
+
             com.sendgrid.Request request = new com.sendgrid.Request();
             request.setMethod(com.sendgrid.Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
 
-            sendGrid.api(request);
+            Response response = sendGrid.api(request);
+            int statusCode = response.getStatusCode();
+            if (statusCode < 200 || statusCode >= 300) {
+                throw new RuntimeException("SendGrid rejected email. status="
+                        + statusCode + ", body=" + response.getBody());
+            }
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
@@ -154,7 +148,11 @@ public class EmailService {
 
 
     public void sendSimpleEmail(String toEmail, String subject, String body) {
-        sendEmail(toEmail, subject, body);
+        sendEmail(toEmail, subject, body, null);
+    }
+
+    public void sendSimpleEmail(String toEmail, String subject, String body, Attachments attachments) {
+        sendEmail(toEmail, subject, body, attachments);
     }
 
     @Async
@@ -192,7 +190,7 @@ public class EmailService {
         </div>
         """.formatted(firstName, lastName, jobTitle);
 
-        sendEmail(to, subject, htmlContent);
+        sendEmail(to, subject, htmlContent, null);
 
     }
 
