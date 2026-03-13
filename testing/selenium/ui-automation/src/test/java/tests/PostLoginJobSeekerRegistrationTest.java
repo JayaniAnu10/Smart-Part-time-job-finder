@@ -22,7 +22,7 @@ public class PostLoginJobSeekerRegistrationTest extends BaseTest {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
         seekerRegistrationPage = new PostLoginJobseekerRegistrationPage(driver);
-        seekerRegistrationPage.clickGetStarted();
+        seekerRegistrationPage.clickGetStartedFreeBtn();
         seekerRegistrationPage.selectJobSeekerRegistration();
         seekerRegistrationPage.enterFirstName("John");
         seekerRegistrationPage.enterLastName("Doe");

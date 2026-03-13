@@ -43,7 +43,7 @@ public class PostLoginEmployerRegistrationTest extends BaseTest {
         );
 
         Assert.assertNotNull(dashboardBtn);
-        Assert.assertTrue(dashboardBtn.isDisplayed(),"User was not directed to landing page after registration");
+        Assert.assertTrue(dashboardBtn.isDisplayed(), "User was not directed to landing page after registration");
 
 
 
