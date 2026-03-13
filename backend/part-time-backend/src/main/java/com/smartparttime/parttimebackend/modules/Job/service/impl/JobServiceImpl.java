@@ -234,6 +234,25 @@ public class JobServiceImpl implements JobService {
             job.setStatus(JobStatus.ACTIVE);
         }
 
+        if (request.getSchedules() != null && !request.getSchedules().isEmpty()) {
+            // Replace schedules on update so edited start/end times are persisted.
+            job.getJobSchedules().clear();
+
+            Set<JobSchedule> updatedSchedules = request.getSchedules().stream()
+                    .map(dto -> {
+                        JobSchedule schedule = new JobSchedule();
+                        schedule.setStartDatetime(dto.getStartDatetime());
+                        schedule.setEndDatetime(dto.getEndDatetime());
+                        long hours = java.time.Duration.between(dto.getStartDatetime(), dto.getEndDatetime()).toHours();
+                        schedule.setWorkingHours((int) hours);
+                        schedule.setRequiredWorkers(dto.getRequiredWorkers());
+                        schedule.setJob(job);
+                        return schedule;
+                    }).collect(Collectors.toSet());
+
+            job.getJobSchedules().addAll(updatedSchedules);
+        }
+
         try{
             saveJobEmbedding(job,job.getJobSchedules());
         }catch (Exception e){
