@@ -72,7 +72,7 @@ public class JobseekerProfilePage extends BasePage {
         assert lastName != null;
         return lastName.getAttribute("value");
     }
-    
+
     public String getPhone() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement phone = wait.until(
