@@ -111,11 +111,11 @@ const HeroSection = () => {
             variants={scaleIn}
             className="relative w-full flex justify-center md:justify-end"
           >
-            <div className="relative w-[360px] h-[520px]">
+            <div className="relative w-64 sm:w-80 md:w-[360px] aspect-[3/4]">
               <motion.div
                 variants={fadeUp}
                 transition={{ delay: 0.2 }}
-                className="absolute left-3 top-0 -translate-x-1/2 w-[225px] h-[455px] rounded-[120px] bg-none 
+                className="absolute left-3 top-0 -translate-x-1/2 w-40 sm:w-48 md:w-56 aspect-[2/4] rounded-[120px] bg-none 
                                      filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
               >
                 <img
@@ -128,7 +128,7 @@ const HeroSection = () => {
               <motion.div
                 variants={fadeUp}
                 transition={{ delay: 0.4 }}
-                className="absolute top-0 right-3 w-[210px] h-[220px] rounded-full bg-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
+                className="absolute top-0 right-3 w-32 sm:w-40 md:w-52 aspect-square rounded-full bg-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
                 style={{ borderRadius: "50% 50% 50% 0%" }}
               >
                 <img
@@ -142,7 +142,7 @@ const HeroSection = () => {
               <motion.div
                 variants={fadeUp}
                 transition={{ delay: 0.6 }}
-                className="absolute bottom-16 right-3 w-[210px] h-[220px] rounded-full bg-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
+                className="absolute bottom-16 right-3 w-32 sm:w-40 md:w-52 aspect-square rounded-full bg-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
                 style={{ borderRadius: "0% 50% 50% 50%" }}
               >
                 <img
