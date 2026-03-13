@@ -39,6 +39,27 @@ const benefitOptions = [
 
 const requiredGenderOptions = ["Male", "Female", "Male & Female both"];
 
+const toApiLocalDateTime = (value: string) => {
+  if (!value) return value;
+  return value.length === 16 ? `${value}:00` : value;
+};
+
+const toDateTimeLocalValue = (dateString: string) => {
+  if (!dateString) return "";
+
+  // Backend usually returns LocalDateTime like "2026-03-13T14:30:00"
+  // which can be used directly for datetime-local input by trimming seconds.
+  const hasTimezone = /[zZ]|[+-]\d{2}:\d{2}$/.test(dateString);
+  if (!hasTimezone) {
+    return dateString.slice(0, 16);
+  }
+
+  // If timezone is present, convert to local wall-clock time for input display.
+  const date = new Date(dateString);
+  const tzOffset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - tzOffset).toISOString().slice(0, 16);
+};
+
 const EditJob = () => {
   const navigate = useNavigate();
   const { jobId } = useParams<{ jobId: string }>();
@@ -91,12 +112,6 @@ const EditJob = () => {
     "male & female both": "Male & Female both",
   };
 
-  const formatForDateTimeLocal = (dateString: string) => {
-    const date = new Date(dateString);
-    const tzOffset = date.getTimezoneOffset() * 60000;
-    return new Date(date.getTime() - tzOffset).toISOString().slice(0, 16);
-  };
-
   useEffect(() => {
     if (!jobData || !categories || isDataInitialized.current) return;
 
@@ -114,11 +129,11 @@ const EditJob = () => {
       requiredGender:
         genderMap[jobData.requiredGender.toLowerCase()] ??
         jobData.requiredGender,
-      deadline: formatForDateTimeLocal(jobData.deadline),
+      deadline: toDateTimeLocalValue(jobData.deadline),
       schedules:
         jobData.jobSchedules?.map((s) => ({
-          startDatetime: formatForDateTimeLocal(s.startDatetime),
-          endDatetime: formatForDateTimeLocal(s.endDatetime),
+          startDatetime: toDateTimeLocalValue(s.startDatetime),
+          endDatetime: toDateTimeLocalValue(s.endDatetime),
           requiredWorkers: s.requiredWorkers,
         })) ?? [],
     };
@@ -140,11 +155,11 @@ const EditJob = () => {
       maxSalary: Number(data.maxSalary),
       isUrgent,
       accommodation: benefits.join(", "),
-      deadline: new Date(data.deadline).toISOString(),
+      deadline: toApiLocalDateTime(data.deadline),
       schedules: data.schedules.map((s) => ({
         ...s,
-        startDatetime: new Date(s.startDatetime).toISOString(),
-        endDatetime: new Date(s.endDatetime).toISOString(),
+        startDatetime: toApiLocalDateTime(s.startDatetime),
+        endDatetime: toApiLocalDateTime(s.endDatetime),
       })),
     };
 
