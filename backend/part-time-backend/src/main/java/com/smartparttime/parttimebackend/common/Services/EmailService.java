@@ -1,5 +1,12 @@
 package com.smartparttime.parttimebackend.common.Services;
 
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Attachments;
@@ -7,13 +14,9 @@ import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
 import com.smartparttime.parttimebackend.modules.Job.entity.Promotion;
+
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -60,7 +63,12 @@ public class EmailService {
                 request.setEndpoint("mail/send");
                 request.setBody(mail.build());
 
-                sendGrid.api(request);
+                Response response = sendGrid.api(request);
+                int statusCode = response.getStatusCode();
+                if (statusCode < 200 || statusCode >= 300) {
+                    throw new RuntimeException("SendGrid rejected QR email. status="
+                            + statusCode + ", body=" + response.getBody());
+                }
 
             } catch (Exception e) {
                 throw new RuntimeException("Failed to send email: " + e.getMessage(), e);

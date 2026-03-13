@@ -1,12 +1,16 @@
 package com.smartparttime.parttimebackend.modules.Application.service.impl;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
-import com.smartparttime.parttimebackend.common.Services.EmailService;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.JobApplication;
-import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicantsResponse;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationRequest;
 import com.smartparttime.parttimebackend.modules.Application.dtos.JobApplicationResponse;
@@ -14,26 +18,14 @@ import com.smartparttime.parttimebackend.modules.Application.mapper.JobApplicati
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationAsyncService;
 import com.smartparttime.parttimebackend.modules.Application.service.JobApplicationService;
-import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
-import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
-import com.smartparttime.parttimebackend.modules.Attendance.AttendanceService;
-import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobRepo;
 import com.smartparttime.parttimebackend.modules.Job.repo.JobScheduleRepository;
 import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeekerRepository;
 import com.smartparttime.parttimebackend.modules.Notification.service.NotificationService;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
+
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -154,12 +146,16 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             throw new NotFoundException("Application not found");
         }
 
-        application.setStatus(status);
-        jobApplicationRepository.save(application);
+        if (status == ApplicationStatus.APPROVED && application.getStatus() == ApplicationStatus.APPROVED) {
+            throw new BadRequestException("Application is already approved");
+        }
 
-        if(application.getJob().getAvailableVacancies()<=0){
+        if (status == ApplicationStatus.APPROVED && application.getJob().getAvailableVacancies() <= 0) {
             throw new BadRequestException("Already vacancies are filled");
         }
+
+        application.setStatus(status);
+        jobApplicationRepository.save(application);
 
         if(status == ApplicationStatus.APPROVED) {
             asyncService.approveApplication(application);
