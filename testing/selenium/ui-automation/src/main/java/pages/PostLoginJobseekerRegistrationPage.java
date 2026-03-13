@@ -18,6 +18,7 @@ public class PostLoginJobseekerRegistrationPage extends BasePage {
     }
 
     By getStartedBtn = By.xpath("//button[normalize-space()='Get Started']");
+    By getStartedFreeButton = By.xpath("//a[normalize-space()='Get Started Free']");
     By seekerRegCard = By.xpath("//*[@id=\"auth-container\"]/div/div[2]/div[1]/button");
     //jobseeker
     By firstName = By.xpath("//input[@placeholder='John']");
@@ -31,10 +32,15 @@ public class PostLoginJobseekerRegistrationPage extends BasePage {
     By termsCheckbox = By.xpath("//input[@type='checkbox']");
     By createAccountButton = By.xpath("//button[normalize-space()='Create Account']");
 
-    public void clickGetStarted(){
-        WebElement button = wait.waitForElementClickable(getStartedBtn);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+//    public void clickGetStarted(){
+//        WebElement button = wait.waitForElementClickable(getStartedBtn);
+//        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+//        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+//    }
+
+    public void clickGetStartedFreeBtn(){
+        wait.waitForElementClickable(getStartedFreeButton);
+        driver.findElement(getStartedFreeButton).click();
     }
 
     public void selectJobSeekerRegistration(){
