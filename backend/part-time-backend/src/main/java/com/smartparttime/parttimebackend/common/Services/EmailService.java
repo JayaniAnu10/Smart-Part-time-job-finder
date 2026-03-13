@@ -103,7 +103,6 @@ public class EmailService {
     // QR Code email  (FIXED: @Async added, %% escaping, date formatting)
     // -------------------------------------------------------------------------
 
-    @Async
     public void sendQrCodeEmail(String email, String jobTitle,
                                 LocalDateTime startDate, LocalDateTime endDate,
                                 byte[] qrCode) {
