@@ -37,6 +37,11 @@ const benefitOptions = [
 
 const requiredGenderOptions = ["Male", "Female", "Male & Female both"];
 
+const toApiLocalDateTime = (value: string) => {
+  if (!value) return value;
+  return value.length === 16 ? `${value}:00` : value;
+};
+
 const PostJob = () => {
   const user = useAuthStore((s) => s.user);
   const navigate = useNavigate();
@@ -80,11 +85,11 @@ const PostJob = () => {
       maxSalary: Number(data.maxSalary),
       isUrgent,
       accommodation: benefits.join(", "),
-      deadline: new Date(data.deadline).toISOString(),
+      deadline: toApiLocalDateTime(data.deadline),
       schedules: data.schedules.map((s) => ({
         ...s,
-        startDatetime: new Date(s.startDatetime).toISOString(),
-        endDatetime: new Date(s.endDatetime).toISOString(),
+        startDatetime: toApiLocalDateTime(s.startDatetime),
+        endDatetime: toApiLocalDateTime(s.endDatetime),
       })),
     };
 
@@ -335,7 +340,7 @@ const PostJob = () => {
                       setBenefits((prev) =>
                         prev.includes(benefit)
                           ? prev.filter((b) => b !== benefit)
-                          : [...prev, benefit]
+                          : [...prev, benefit],
                       );
                     }}
                   />
