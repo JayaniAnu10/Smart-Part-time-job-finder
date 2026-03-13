@@ -2,13 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import {
+  Award,
   MapPin,
   Clock,
+  Crown,
   DollarSign,
   Briefcase,
   Calendar,
   Users,
   ArrowLeft,
+  Star,
   Zap,
   Map,
   CalendarClock,
@@ -62,6 +65,46 @@ const JobProfile = () => {
         .filter((a) => a.length > 0)
     : [];
 
+  const renderPromotionBadge = (promotionCategoryName?: string | null) => {
+    if (!promotionCategoryName) return null;
+
+    const normalized = promotionCategoryName.trim().toLowerCase();
+
+    if (normalized === "premium") {
+      return (
+        <Badge className="text-sm bg-amber-500 text-white hover:bg-amber-600">
+          <Crown className="w-3 h-3 mr-1" />
+          {promotionCategoryName}
+        </Badge>
+      );
+    }
+
+    if (normalized === "standard") {
+      return (
+        <Badge className="text-sm bg-sky-600 text-white hover:bg-sky-700">
+          <Award className="w-3 h-3 mr-1" />
+          {promotionCategoryName}
+        </Badge>
+      );
+    }
+
+    if (normalized === "basic") {
+      return (
+        <Badge className="text-sm bg-orange-500 text-white hover:bg-orange-600">
+          <Star className="w-3 h-3 mr-1" />
+          {promotionCategoryName}
+        </Badge>
+      );
+    }
+
+    return (
+      <Badge className="text-sm bg-orange-500 text-white hover:bg-orange-600">
+        <Star className="w-3 h-3 mr-1" />
+        {promotionCategoryName}
+      </Badge>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center ">
@@ -106,11 +149,7 @@ const JobProfile = () => {
                 </p>
               </div>
               <div className="flex items-center gap-2 w-full md:w-auto">
-                {data?.promotionCategoryName && (
-                  <Badge className="text-sm bg-orange-500 text-white hover:bg-orange-600">
-                    {data.promotionCategoryName}
-                  </Badge>
-                )}
+                {renderPromotionBadge(data?.promotionCategoryName)}
                 {data?.isUrgent && (
                   <Badge variant="destructive" className="text-sm">
                     <Zap className="w-3 h-3 mr-1" />

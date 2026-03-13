@@ -8,11 +8,13 @@ import { Button } from "../ui/button";
 import { useAuthStore } from "@/store/AuthStore";
 import {
   DropdownMenu,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import useLogout from "@/hooks/useLogout";
 
@@ -108,6 +110,51 @@ const NavBar = () => {
             <Link to={link.to}>{link.label}</Link>
           </Button>
         ))}
+      </div>
+
+      {/* Mobile controls */}
+      <div className="flex lg:hidden items-center gap-2 ml-auto">
+        <LanguageSwitcher />
+        <ThemeToggle />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="border border-border text-foreground hover:bg-yellow-400 hover:text-[#0f1f3d]"
+              aria-label="Open navigation menu"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end" className="w-64 p-2">
+            <DropdownMenuLabel>{t("dashboard")}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            {navLinks.map((link) => (
+              <DropdownMenuItem key={link.label} asChild>
+                <Link to={link.to}>{link.label}</Link>
+              </DropdownMenuItem>
+            ))}
+
+            <DropdownMenuSeparator />
+
+            {actionButtons.map((btn) =>
+              btn.to ? (
+                <DropdownMenuItem key={btn.label} asChild>
+                  <Link to={btn.to}>{btn.label}</Link>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem key={btn.label} onClick={btn.onClick}>
+                  <LogOut size={16} />
+                  {btn.label}
+                </DropdownMenuItem>
+              ),
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="hidden lg:flex items-center gap-3">
