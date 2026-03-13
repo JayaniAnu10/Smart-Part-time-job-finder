@@ -31,6 +31,7 @@ interface JobDetails {
   longitude: number;
   isUrgent: boolean;
   requiredGender: string;
+  promotionCategoryName?: string | null;
 }
 
 const useJobDetails = (id: string) => {

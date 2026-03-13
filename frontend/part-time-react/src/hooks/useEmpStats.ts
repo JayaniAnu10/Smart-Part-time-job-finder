@@ -8,6 +8,7 @@ export interface JobStats {
   status: string;
   title: string;
   deadline: Date;
+  promotionCategoryName?: string | null;
 }
 
 export interface Stats {

@@ -1,17 +1,14 @@
 package com.smartparttime.parttimebackend.modules.Job.dto;
 
-import com.smartparttime.parttimebackend.modules.Employer.Employer;
-import com.smartparttime.parttimebackend.modules.Job.JobStatus;
-import com.smartparttime.parttimebackend.modules.Job.entity.JobCategory;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import com.smartparttime.parttimebackend.modules.Job.JobStatus;
+
+import lombok.Data;
 
 @Data
 public class JobResponseDto implements Serializable {
@@ -61,5 +58,7 @@ public class JobResponseDto implements Serializable {
     private Boolean isUrgent;
 
     private String requiredGender;
+
+    private String promotionCategoryName;
 
 }

@@ -24,6 +24,7 @@ interface Job {
   totalVacancies: number;
   employer: string;
   isUrgent: boolean;
+  promotionCategoryName?: string | null;
 }
 
 interface JobListing {
