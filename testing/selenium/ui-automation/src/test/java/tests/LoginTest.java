@@ -15,7 +15,7 @@ public class LoginTest extends BaseTest{
     public void testLogin() {
         login("testuser2@example.com" , "123456");
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+       WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement dashboardBtn = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(
                         By.xpath("//button[normalize-space()='Dashboard']")
