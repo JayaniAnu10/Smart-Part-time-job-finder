@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Search, Briefcase, Users, Building2 } from "lucide-react";
 
-import heroImage from "@/assets/hero1.jpg";
+import heroImage from "@/assets/hero1.jpeg";
 import heroImage1 from "@/assets/hero2.jpeg";
 import heroImage2 from "@/assets/hero4.jpg";
 
@@ -111,11 +111,11 @@ const HeroSection = () => {
             variants={scaleIn}
             className="relative w-full flex justify-center md:justify-end"
           >
-            <div className="relative w-[360px] h-[520px]">
+            <div className="relative w-[360px] h-[520px] ml-auto ">
               <motion.div
                 variants={fadeUp}
                 transition={{ delay: 0.2 }}
-                className="absolute left-3 top-0 -translate-x-1/2 w-[225px] h-[455px] rounded-[120px] bg-none 
+                className="absolute left-3 top-0 -translate-x-1/2 w-[225px] h-[455px] bg-none 
                                      filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]"
               >
                 <img
