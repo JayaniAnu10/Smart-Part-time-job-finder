@@ -158,7 +158,15 @@ public class JobApplicationServiceImpl implements JobApplicationService {
         jobApplicationRepository.save(application);
 
         if(status == ApplicationStatus.APPROVED) {
-            asyncService.approveApplication(application);
+            asyncService.approveApplication(
+                    application.getId(),
+                    application.getJob().getId(),
+                    application.getJobseeker().getId(),
+                    application.getJobseeker().getEmail(),
+                    application.getJob().getTitle(),
+                    application.getSchedule() != null ? application.getSchedule().getStartDatetime() : null,
+                    application.getSchedule() != null ? application.getSchedule().getEndDatetime() : null
+            );
 
         }
 
