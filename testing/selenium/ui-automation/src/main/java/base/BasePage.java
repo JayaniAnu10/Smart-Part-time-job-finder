@@ -23,13 +23,9 @@ public class BasePage {
         int attempts = 0;
         while (attempts < 3) {
             try {
-                // Wait for overlay to disappear if present
+
                 wait.waitForElementInvisible(statusOverlay);
-
-                // Wait for logout button clickable
                 WebElement btn = wait.waitForElementClickable(logoutButton);
-
-                // Scroll into view and click
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btn);
                 btn.click();
                 break; // success, exit loop
