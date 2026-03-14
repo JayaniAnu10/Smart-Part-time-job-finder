@@ -28,7 +28,7 @@ public class BasePage {
                 WebElement btn = wait.waitForElementClickable(logoutButton);
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btn);
                 btn.click();
-                break; // success, exit loop
+                break;
             } catch (org.openqa.selenium.ElementClickInterceptedException e) {
                 attempts++;
             }
