@@ -1,13 +1,14 @@
 package com.smartparttime.parttimebackend.modules.JobSeeker;
 
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerCompletedJobDto;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerProfileDetails;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.UUID;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerCompletedJobDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerProfileDetails;
 
 public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
     boolean existsByNic(String nic);
@@ -30,8 +31,10 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
                 )
                 FROM User u
                 JOIN u.jobSeeker js
-                LEFT JOIN Attendance a
-                    ON a.user.id = u.id AND a.status = 'CHECKED_OUT'
+                LEFT JOIN JobApplication a
+                    ON a.jobseeker.id = u.id
+                    AND a.status = 'APPROVED'
+                    AND a.schedule.startDatetime <= CURRENT_TIMESTAMP
                 WHERE u.id = :jobSeekerId
                 GROUP BY js.id, js.firstName, js.lastName, u.email, u.averageRate,
                          u.contact, js.address, js.bio, js.skills, u.isVerified,
@@ -43,25 +46,18 @@ public interface JobSeekerRepository extends JpaRepository<JobSeeker, UUID> {
     SELECT DISTINCT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerCompletedJobDto(
         j.title,
         e.companyName,
-        (SELECT MAX(att.checkOutTime) 
-         FROM Attendance att 
-         WHERE att.user.id = u.id 
-         AND att.job.id = j.id),
+        COALESCE(ja.schedule.endDatetime, ja.schedule.startDatetime),
         COALESCE(r.rating, 0),
-        (SELECT att2.status 
-         FROM Attendance att2 
-         WHERE att2.user.id = u.id 
-         AND att2.job.id = j.id 
-         ORDER BY att2.checkOutTime DESC 
-         LIMIT 1)
+        ja.status
     )
     FROM JobApplication ja
     JOIN ja.job j
     JOIN j.employer e
     JOIN ja.jobseeker u
-    LEFT JOIN Rate r ON r.rateReceiver.id = u.id AND r.job.id = j.id
+    LEFT JOIN Rate r ON r.rateReceiver.id = e.user.id AND r.rater.id = u.id AND r.job.id = j.id
     WHERE u.id = :jobSeekerId
     AND ja.status = 'APPROVED'
+    AND ja.schedule.startDatetime <= CURRENT_TIMESTAMP
 """)
     List<JobSeekerCompletedJobDto> getJobSeekerJobs(UUID jobSeekerId);
 

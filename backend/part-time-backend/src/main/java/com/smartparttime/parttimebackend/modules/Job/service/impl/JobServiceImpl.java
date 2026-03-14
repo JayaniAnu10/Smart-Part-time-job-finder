@@ -27,7 +27,6 @@ import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminAnalyticsRepo;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
-import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
 import com.smartparttime.parttimebackend.modules.Employer.EmployerRepository;
 import com.smartparttime.parttimebackend.modules.Job.CacheNames;
 import com.smartparttime.parttimebackend.modules.Job.JobStatus;
@@ -76,8 +75,6 @@ public class JobServiceImpl implements JobService {
     private final NotificationService notificationService;
     @Autowired
     private final JobCategoryMapper jobCategoryMapper;
-    @Autowired
-    private final AttendanceRepository attendanceRepository;
     private final JobEmbeddingCache jobEmbeddingCache;
     private final EmailService emailService;
 
@@ -283,8 +280,6 @@ public class JobServiceImpl implements JobService {
             throw new NotFoundException("Job not found");
         }
 
-        var attendances = attendanceRepository.findByJob_Id(jobId);
-
         var applicants=jobApplicationRepository.getJobApplicationsByJob_Id(jobId);
 
         applicants.stream()
@@ -298,7 +293,6 @@ public class JobServiceImpl implements JobService {
 
         jobEmbeddingCache.remove(jobId);
         jobApplicationRepository.deleteAll(applicants);
-        attendanceRepository.deleteAll(attendances);
 
         jobRepo.deleteById(jobId);
     }

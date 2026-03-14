@@ -1,22 +1,32 @@
 package com.smartparttime.parttimebackend.modules.User.entities;
 
-import com.smartparttime.parttimebackend.modules.Employer.Employer;
-import com.smartparttime.parttimebackend.modules.Application.JobApplication;
-import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
-import com.smartparttime.parttimebackend.modules.Notification.entity.Notification;
-import com.smartparttime.parttimebackend.modules.Payment.Payment;
-import com.smartparttime.parttimebackend.modules.Rating.Rate;
-import com.smartparttime.parttimebackend.modules.User.Role;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Employer.Employer;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobSeeker;
+import com.smartparttime.parttimebackend.modules.Notification.entity.Notification;
+import com.smartparttime.parttimebackend.modules.Payment.Payment;
+import com.smartparttime.parttimebackend.modules.Rating.Rate;
+import com.smartparttime.parttimebackend.modules.User.Role;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -53,9 +63,6 @@ public class User {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Attendance> attendances = new HashSet<>();
 
     @OneToMany(mappedBy = "reporter")
     private Set<Complaint> reporter = new HashSet<>();

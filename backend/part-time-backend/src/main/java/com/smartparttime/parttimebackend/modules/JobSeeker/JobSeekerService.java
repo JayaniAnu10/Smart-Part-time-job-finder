@@ -1,36 +1,44 @@
 package com.smartparttime.parttimebackend.modules.JobSeeker;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
 import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.common.imageStorage.AzureImageStorageClient;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
+import com.smartparttime.parttimebackend.modules.Application.JobApplication;
 import com.smartparttime.parttimebackend.modules.Application.repo.JobApplicationRepository;
-import com.smartparttime.parttimebackend.modules.Attendance.Attendance;
-import com.smartparttime.parttimebackend.modules.Attendance.AttendanceRepository;
-import com.smartparttime.parttimebackend.modules.Attendance.AttendanceStatus;
-import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.*;
+import com.smartparttime.parttimebackend.modules.Job.entity.Job;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.CompletedJobDetailDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobHistoryResponseDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerApplicantProfile;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobSeekerRegisterRequest;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.SeekerStatsDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpcomingJobDetailsDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpdateJobSeekerRequest;
+import com.smartparttime.parttimebackend.modules.Rating.Rate;
 import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
 import com.smartparttime.parttimebackend.modules.User.repo.UserRepository;
+
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-import com.smartparttime.parttimebackend.modules.Rating.RateRepository;
-import com.smartparttime.parttimebackend.modules.Rating.Rate;
-import com.smartparttime.parttimebackend.modules.Job.entity.Job;
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.util.*;
-import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -41,7 +49,6 @@ public class JobSeekerService {
     private final UserRepository userRepository;
     private final AzureImageStorageClient imageStorageClient;
     private final JobApplicationRepository jobApplicationRepository;
-    private final AttendanceRepository attendanceRepository;
     private final RateRepository rateRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -127,9 +134,9 @@ public class JobSeekerService {
         var countUpcomingJobs=jobApplicationRepository.countByJobseeker_IdAndStatusAndSchedule_StartDatetimeAfter(id,ApplicationStatus.APPROVED, LocalDateTime.now());
         var activeApplications= jobApplicationRepository.countByJobseeker_IdAndStatus(id,ApplicationStatus.PENDING);
 
-        var earning = attendanceRepository.totalEarning(id, AttendanceStatus.CHECKED_OUT);
+        var earning = jobApplicationRepository.totalEarning(id, ApplicationStatus.APPROVED);
 
-        var upcomingJobs=attendanceRepository.jobsTo(id,ApplicationStatus.APPROVED);
+        var upcomingJobs=jobApplicationRepository.jobsTo(id,ApplicationStatus.APPROVED);
         return new SeekerStatsDto(fullName, countUpcomingJobs,activeApplications,earning,upcomingJobs);
 
 
@@ -230,32 +237,33 @@ public class JobSeekerService {
 
     public JobHistoryResponseDto getJobHistory(UUID seekerId) {
         // Verify job seeker exists
-        var seeker = jobSeekerRepository.findById(seekerId)
-                .orElseThrow(() -> new NotFoundException("Job seeker not found"));
+        jobSeekerRepository.findById(seekerId)
+            .orElseThrow(() -> new NotFoundException("Job seeker not found"));
 
         // Get user for average rate
         var user = userRepository.findById(seekerId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        // Get all completed attendances for this seeker
-        var completedAttendances = attendanceRepository.findByUser_IdAndStatus(
+        // Completed jobs are derived from approved applications whose schedule has started.
+        var completedApplications = jobApplicationRepository.findCompletedApplicationsByStartedSchedule(
                 seekerId,
-                AttendanceStatus.CHECKED_OUT
+                ApplicationStatus.APPROVED,
+                LocalDateTime.now()
         );
 
         // Calculate total earnings and group by job
         BigDecimal totalEarnings = BigDecimal.ZERO;
-        Map<UUID, List<Attendance>> jobAttendanceMap = new HashMap<>();
+        Map<UUID, List<JobApplication>> jobApplicationMap = new HashMap<>();
 
-        for (Attendance attendance : completedAttendances) {
-            if (attendance.getJob() != null) {
-                jobAttendanceMap
-                        .computeIfAbsent(attendance.getJob().getId(), k -> new ArrayList<>())
-                        .add(attendance);
+        for (JobApplication application : completedApplications) {
+            if (application.getJob() != null) {
+                jobApplicationMap
+                        .computeIfAbsent(application.getJob().getId(), k -> new ArrayList<>())
+                        .add(application);
 
                 // Add to total earnings
-                if (attendance.getJob().getMinSalary() != null) {
-                    totalEarnings = totalEarnings.add(attendance.getJob().getMinSalary());
+                if (application.getJob().getMinSalary() != null) {
+                    totalEarnings = totalEarnings.add(application.getJob().getMinSalary());
                 }
             }
         }
@@ -263,13 +271,13 @@ public class JobSeekerService {
         // Build completed job details
         List<CompletedJobDetailDto> completedJobs = new ArrayList<>();
 
-        for (Map.Entry<UUID, List<Attendance>> entry : jobAttendanceMap.entrySet()) {
+        for (Map.Entry<UUID, List<JobApplication>> entry : jobApplicationMap.entrySet()) {
             UUID jobId = entry.getKey();
-            List<Attendance> attendances = entry.getValue();
+            List<JobApplication> applications = entry.getValue();
 
-            if (attendances.isEmpty()) continue;
+            if (applications.isEmpty()) continue;
 
-            Job job = attendances.get(0).getJob();
+            Job job = applications.get(0).getJob();
 
             // Get employer name
             String employerName = job.getEmployer() != null ?
@@ -279,16 +287,16 @@ public class JobSeekerService {
             List<LocalDateTime> scheduleDates = new ArrayList<>();
             double totalWorkedHours = 0.0;
 
-            for (Attendance attendance : attendances) {
-                if (attendance.getSchedule() != null) {
-                    scheduleDates.add(attendance.getSchedule().getStartDatetime());
+            for (JobApplication application : applications) {
+                if (application.getSchedule() != null) {
+                    scheduleDates.add(application.getSchedule().getStartDatetime());
 
                     // Calculate worked hours from schedule
-                    if (attendance.getSchedule().getStartDatetime() != null &&
-                            attendance.getSchedule().getEndDatetime() != null) {
+                    if (application.getSchedule().getStartDatetime() != null &&
+                            application.getSchedule().getEndDatetime() != null) {
 
-                        LocalDateTime start = attendance.getSchedule().getStartDatetime();
-                        LocalDateTime end = attendance.getSchedule().getEndDatetime();
+                        LocalDateTime start = application.getSchedule().getStartDatetime();
+                        LocalDateTime end = application.getSchedule().getEndDatetime();
 
                         Duration duration = Duration.between(start, end);
                         totalWorkedHours += duration.toMinutes() / 60.0;
@@ -303,7 +311,8 @@ public class JobSeekerService {
                     jobId
             );
 
-            Integer rating = (rate != null) ? rate.getRating() : 0;
+                Integer score = rate != null ? rate.getRating() : null;
+                Integer rating = score != null ? score : 0;
             UUID ratingId = (rate != null) ? rate.getId() : null;
             String ratingComment = (rate != null) ? rate.getComment() : null;
 
@@ -328,7 +337,7 @@ public class JobSeekerService {
                 user.getAverageRate() : BigDecimal.ZERO;
 
         return new JobHistoryResponseDto(
-                (long) jobAttendanceMap.size(),
+            (long) jobApplicationMap.size(),
                 totalEarnings,
                 averageRate,
                 completedJobs

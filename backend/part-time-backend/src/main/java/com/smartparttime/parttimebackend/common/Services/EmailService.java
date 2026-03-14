@@ -1,8 +1,5 @@
 package com.smartparttime.parttimebackend.common.Services;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -31,8 +28,6 @@ public class EmailService {
     private String sendGridApiKey;
 
     private static final String FROM_EMAIL = "jayanianuththara10@gmail.com";
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
 
     @PostConstruct
     public void init() {
@@ -97,115 +92,6 @@ public class EmailService {
     public void sendSimpleEmail(String toEmail, String subject, String body,
                                 Attachments attachments) {
         sendEmail(toEmail, subject, body, attachments);
-    }
-
-    // -------------------------------------------------------------------------
-    // QR Code email  (FIXED: @Async added, %% escaping, date formatting)
-    // -------------------------------------------------------------------------
-
-    public void sendQrCodeEmail(String email, String jobTitle,
-                                LocalDateTime startDate, LocalDateTime endDate,
-                                byte[] qrCode) {
-        try {
-            if (email == null || email.isBlank()) {
-                throw new RuntimeException("Cannot send QR email: recipient email is empty");
-            }
-            if (qrCode == null || qrCode.length == 0) {
-                throw new RuntimeException("Cannot send QR email: generated QR code is empty");
-            }
-
-            String htmlContent = buildQrEmailContent(jobTitle, startDate, endDate);
-            String subject = "Job Application Approved - Your Attendance QR Code";
-
-            Attachments attachments = new Attachments();
-            attachments.setContent(java.util.Base64.getEncoder().encodeToString(qrCode));
-            attachments.setType("image/png");
-            attachments.setFilename("attendance-qr-code.png");
-            attachments.setDisposition("attachment");
-            attachments.setContentId("attendance-qr-code");
-
-            sendSimpleEmail(email, subject, htmlContent, attachments);
-
-        } catch (Exception e) {
-            log.error("Failed to send QR code email to {}: {}", email, e.getMessage(), e);
-            throw new RuntimeException("Failed to send QR code email: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Builds the HTML body for the QR code email.
-     *
-     * IMPORTANT: Any literal '%' inside a String.formatted() / String.format() template
-     * must be escaped as '%%' to avoid MissingFormatArgumentException.
-     * CSS properties such as "max-width: 600px" are safe, but "width: 100%" must be
-     * written as "width: 100%%".
-     */
-    private String buildQrEmailContent(String jobTitle,
-                                       LocalDateTime startDate,
-                                       LocalDateTime endDate) {
-
-        String formattedStart = startDate != null ? startDate.format(DATE_FORMATTER) : "N/A";
-        String formattedEnd   = endDate   != null ? endDate.format(DATE_FORMATTER)   : "N/A";
-
-        // NOTE: every CSS percentage (100%%, etc.) is doubled so .formatted() does not
-        // mistake it for a format specifier.
-        return """
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
-                        .wrapper { background-color: #f0f0f0; padding: 30px 0; }
-                        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; }
-                        .header { background-color: #19183B; color: #ffffff; padding: 30px 20px; text-align: center; }
-                        .header h1 { margin: 0; font-size: 26px; }
-                        .content { padding: 30px; background-color: #f9f9f9; }
-                        .footer { background-color: #17313E; color: #ffffff; padding: 15px; text-align: center; font-size: 12px; }
-                        .highlight { color: #19183B; font-weight: bold; }
-                        .info-box { background-color: #ffffff; padding: 15px 20px; margin: 20px 0; border-left: 4px solid #19183B; border-radius: 0 4px 4px 0; }
-                        .info-box p { margin: 6px 0; }
-                        ul { padding-left: 20px; }
-                        ul li { margin-bottom: 6px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="wrapper">
-                        <div class="container">
-                            <div class="header">
-                                <h1>Congratulations!</h1>
-                                <p style="margin: 8px 0 0;">Your application has been approved</p>
-                            </div>
-                            <div class="content">
-                                <h2>Dear Sir/Madam,</h2>
-                                <p>Great news! Your application has been <span class="highlight">APPROVED</span>.</p>
-
-                                <div class="info-box">
-                                    <p><strong>Job Title:</strong> %s</p>
-                                    <p><strong>Start Date:</strong> %s</p>
-                                    <p><strong>End Date:</strong> %s</p>
-                                </div>
-
-                                <p>Your attendance QR code is attached to this email. Please:</p>
-                                <ul>
-                                    <li>Save the QR code on your phone</li>
-                                    <li>Present it when marking your attendance</li>
-                                    <li>Keep it secure and do not share it with others</li>
-                                </ul>
-
-                                <p>We look forward to having you on board!</p>
-
-                                <p>Best regards,<br>
-                                <strong>DayBee.lk Team</strong></p>
-                            </div>
-                            <div class="footer">
-                                <p>This is an automated message. Please do not reply to this email.</p>
-                                <p>&copy; 2026 DayBee.lk. All rights reserved.</p>
-                            </div>
-                        </div>
-                    </div>
-                </body>
-                </html>
-                """.formatted(jobTitle, formattedStart, formattedEnd);
     }
 
     // -------------------------------------------------------------------------

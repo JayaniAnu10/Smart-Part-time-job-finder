@@ -42,7 +42,7 @@ const GetStarted = () => {
             "Post unlimited job listings",
             "Access verified job seekers",
             "Manage applications easily",
-            "QR-based attendance tracking",
+            "Hire reliable workers faster",
           ]}
           navigateTo="/employer/register/step1"
         />
