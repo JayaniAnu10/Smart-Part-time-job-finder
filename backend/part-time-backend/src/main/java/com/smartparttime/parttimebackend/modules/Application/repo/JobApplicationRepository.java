@@ -1,19 +1,22 @@
 package com.smartparttime.parttimebackend.modules.Application.repo;
 
-import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
-import com.smartparttime.parttimebackend.modules.Application.JobApplication;
-import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
-import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpcomingJobDetailsDto;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
+import com.smartparttime.parttimebackend.modules.Application.JobApplication;
+import com.smartparttime.parttimebackend.modules.Application.dtos.ApplicantsResponse;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobStatsDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpcomingJobDetailsDto;
+import com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpcomingJobsDto;
 
 public interface JobApplicationRepository extends JpaRepository<JobApplication, UUID> {
 
@@ -50,7 +53,10 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
         u.averageRate,
         js.address,
         js.profilePicture,
-        CAST((SELECT COUNT(a.id) FROM Attendance a WHERE a.user = u AND a.status = 'CHECKED_OUT') AS int),
+        CAST((SELECT COUNT(a.id) FROM JobApplication a
+              WHERE a.jobseeker = u
+            AND a.status = 'APPROVED'
+            AND a.schedule.startDatetime <= CURRENT_TIMESTAMP) AS int),
         ja.appliedDate
     )
     FROM JobApplication ja
@@ -112,6 +118,60 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
             @Param("applicationId") UUID applicationId,
             @Param("jobseekerId") UUID jobseekerId
     );
+
+    @Query("""
+    SELECT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.JobStatsDto(
+        COUNT(a.job),
+        COALESCE(SUM(a.job.minSalary), 0)
+    )
+    FROM JobApplication a
+    JOIN a.schedule s
+    WHERE a.jobseeker.id = :jobseekerId
+      AND a.status = :status
+      AND s.startDatetime <= CURRENT_TIMESTAMP
+""")
+    JobStatsDto totalEarning(
+            @Param("jobseekerId") UUID jobseekerId,
+            @Param("status") ApplicationStatus status
+    );
+
+    @Query("""
+    SELECT new com.smartparttime.parttimebackend.modules.JobSeeker.JobseekerDtos.UpcomingJobsDto(
+        a.id,
+        j.title,
+        j.employer.companyName,
+        j.minSalary,
+        s.startDatetime,
+        s.endDatetime,
+        a.status
+    )
+    FROM JobApplication a
+    JOIN a.schedule s
+    JOIN s.job j
+    WHERE a.jobseeker.id = :jobseekerId
+      AND a.status = :approvedStatus
+      AND s.startDatetime >= CURRENT_TIMESTAMP
+""")
+    List<UpcomingJobsDto> jobsTo(
+            @Param("jobseekerId") UUID jobseekerId,
+            @Param("approvedStatus") ApplicationStatus approvedStatus
+    );
+
+        @Query("""
+        SELECT a
+        FROM JobApplication a
+        JOIN FETCH a.job j
+        LEFT JOIN FETCH j.employer
+        JOIN FETCH a.schedule s
+        WHERE a.jobseeker.id = :jobseekerId
+            AND a.status = :status
+            AND s.startDatetime <= :currentTime
+        """)
+        List<JobApplication> findCompletedApplicationsByStartedSchedule(
+            @Param("jobseekerId") UUID jobseekerId,
+            @Param("status") ApplicationStatus status,
+            @Param("currentTime") LocalDateTime currentTime
+        );
 
     Long countByJobseeker_IdAndStatusAndSchedule_StartDatetimeAfter(UUID id, ApplicationStatus applicationStatus, LocalDateTime now);
 }
