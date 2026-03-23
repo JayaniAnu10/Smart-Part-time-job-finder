@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartparttime.parttimebackend.common.Services.EmailService;
 import com.smartparttime.parttimebackend.common.Services.EmbeddingService;
+import com.smartparttime.parttimebackend.common.exceptions.BadRequestException;
 import com.smartparttime.parttimebackend.common.exceptions.NotFoundException;
 import com.smartparttime.parttimebackend.modules.Admin.repo.AdminAnalyticsRepo;
 import com.smartparttime.parttimebackend.modules.Application.ApplicationStatus;
@@ -116,10 +117,17 @@ public class JobServiceImpl implements JobService {
 
         job.setAvailableVacancies(totalRequiredWorkers);
 
+
+        try{
+           saveJobEmbedding(job, job.getJobSchedules());
+        }catch (Exception e){
+          throw new BadRequestException(e.getMessage());
+        }
+
         var savedJob = jobRepo.save(job);
         jobEmbeddingCache.addOrUpdate(savedJob);
 
-        notifyUrgentJob(savedJob);
+         notifyUrgentJob(savedJob);
 
         return jobMapper.toDto(savedJob);
     }
@@ -240,6 +248,12 @@ public class JobServiceImpl implements JobService {
                     }).collect(Collectors.toSet());
 
             job.getJobSchedules().addAll(updatedSchedules);
+        }
+
+        try{
+            saveJobEmbedding(job,job.getJobSchedules());
+        }catch (Exception e){
+            throw new BadRequestException("Json embedding conflict.");
         }
 
         var updated = jobRepo.save(job);
